@@ -1,11 +1,11 @@
 package com.capstone.service;
 
 import com.capstone.entity.LocalCurrencyFranchise;
-import com.capstone.entity.LocalCurrencyFranchiseSpecification;
 import com.capstone.repository.LocalCurrencyFranchiseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,17 +21,25 @@ public class LocalCurrencyFranchiseServiceImpl implements LocalCurrencyFranchise
     }
 
     @Override
-    public Page<LocalCurrencyFranchise> find(List<Integer> sectorCode, Pageable pageable) {
-        return repository.findBySectorCodeIn(sectorCode, pageable);
+    public Page<LocalCurrencyFranchise> findBySectorCodeIn(List<Integer> sectorCode, Pageable pageRequest) {
+        return repository.findBySectorCodeIn(sectorCode, pageRequest);
     }
 
     @Override
-    public List<LocalCurrencyFranchise> find(BigDecimal fromLatitude, BigDecimal toLatitude, BigDecimal fromLongitude, BigDecimal toLongitude) {
-        return repository.findAll(LocalCurrencyFranchiseSpecification.inside(fromLatitude, toLatitude, fromLongitude, toLongitude));
+    public List<LocalCurrencyFranchise> findByLatitudeAndLongitude(BigDecimal fromLatitude, BigDecimal toLatitude, BigDecimal fromLongitude, BigDecimal toLongitude) {
+        BigDecimal mediumLatitude = toLatitude.subtract(fromLatitude).divide(BigDecimal.valueOf(2));
+        BigDecimal mediumLongitude = toLongitude.subtract(fromLongitude).divide(BigDecimal.valueOf(2));
+        List<LocalCurrencyFranchise> list = repository.findAll();
+        list.sort((o1, o2) -> {
+            BigDecimal len1 = o1.getLatitude().subtract(mediumLatitude).pow(2).add(o1.getLongitude().subtract(mediumLongitude).pow(2));
+            BigDecimal len2 = o2.getLatitude().subtract(mediumLatitude).pow(2).add(o2.getLongitude().subtract(mediumLongitude).pow(2));
+            return len2.compareTo(len1);
+        });
+        return list;
     }
 
     @Override
-    public Page<LocalCurrencyFranchise> find(String cityName, Pageable pageable) {
-        return repository.findByCityNameContaining(cityName, pageable);
+    public Page<LocalCurrencyFranchise> findByCityName(String cityName, Pageable pageRequest) {
+        return repository.findByCityNameContaining(cityName, pageRequest);
     }
 }

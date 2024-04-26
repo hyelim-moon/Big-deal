@@ -1,7 +1,7 @@
 package com.capstone.repository;
 
 import com.capstone.entity.LocalCurrencyFranchise;
-import com.capstone.entity.LocalCurrencyFranchiseSpecification;
+import com.capstone.vo.SearchLocalCurrencyFranchise;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,19 +40,12 @@ public class LocalCurrencyFranchiseRepositoryTest {
             Assertions.assertTrue(list.contains(franchise.getSectorCode()));
         }
     }
-    @Test
-    public void findByPoint() {
-        pointSelect("37.64373254","37.64373254","127.1415573","127.1415573");
-        pointSelect("37.59", "37.6", "0","150");
-        pointSelect("30", "29", "-10", "-20");
-    }
-    private void pointSelect(String fromLatitudeString, String toLatitudeString, String fromLongitudeString, String toLongitudeString) {
+    private void checkPosition(List<LocalCurrencyFranchise> franchisesList, String fromLatitudeString, String toLatitudeString, String fromLongitudeString, String toLongitudeString) {
         BigDecimal fromLatitude, toLatitude, fromLongitude, toLongitude;
         fromLatitude = new BigDecimal(fromLatitudeString);
         toLatitude = new BigDecimal(toLatitudeString);
         fromLongitude = new BigDecimal(fromLongitudeString);
         toLongitude = new BigDecimal(toLongitudeString);
-        List<LocalCurrencyFranchise> franchisesList = repository.findAll(LocalCurrencyFranchiseSpecification.inside(fromLatitude, toLatitude, fromLongitude, toLongitude));
         for (LocalCurrencyFranchise franchise : franchisesList) {
             Assertions.assertTrue(franchise.getLatitude().compareTo(fromLatitude) >= 0 && franchise.getLatitude().compareTo(toLatitude) <= 0);
             Assertions.assertTrue(franchise.getLongitude().compareTo(fromLongitude) >= 0 && franchise.getLongitude().compareTo(toLongitude) <= 0);
