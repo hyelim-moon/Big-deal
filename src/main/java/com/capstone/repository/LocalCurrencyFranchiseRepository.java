@@ -19,4 +19,5 @@ public interface LocalCurrencyFranchiseRepository extends JpaRepository<LocalCur
     Page<LocalCurrencyFranchise> findByCityNameContaining(String cityName, Pageable pageable);
     List<LocalCurrencyFranchise> findByLatitudeBetweenAndLongitudeBetween(BigDecimal fromLatitude, BigDecimal toLatitude, BigDecimal fromLongitude, BigDecimal toLongitude);
     List<LocalCurrencyFranchise> findByLatitudeBetweenAndLongitudeBetweenAndSectorCodeIn(BigDecimal fromLatitude, BigDecimal toLatitude, BigDecimal fromLongitude, BigDecimal toLongitude, List<Integer> sectorCode);
+    Page<LocalCurrencyFranchise> findByCityNameContainingAndNameContaining(String cityName, String name, Pageable pageable);
 }
