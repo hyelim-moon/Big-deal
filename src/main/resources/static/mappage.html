@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>가맹점 찾기</title>
+    <link rel="stylesheet" href="mappage.css" />
+  </head>
+  <body>
+    <header>
+      <img
+        src="img/MainLogo.png"
+        alt="지역화폐 로고"
+        width="150"
+        height="150"
+      />
+      <nav>
+        <ul class="option">
+          <li><button>옵션1</button></li>
+          <li><button>옵션2</button></li>
+        </ul>
+        <ul class="user-action">
+          <li><button>로그인</button></li>
+          <li><button>회원가입</button></li>
+          <li><button>마이페이지</button></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- 검색 섹션 -->
+    <section class="search-section">
+      <form action="#" method="get">
+        <select name="region" id="region">
+          <option value="region1">지역 선택</option>
+          <option value="region2">수원시</option>
+          <option value="region3">성남시</option>
+          <option value="region4">안양시</option>
+          <option value="region5">안산시</option>
+          <option value="region6">고양시</option>
+          <option value="region7">용인시</option>
+          <option value="region8">부천시</option>
+          <option value="region9">의정부시</option>
+        </select>
+        <select name="category" id="category">
+          <option value="category1">업종 선택</option>
+          <option value="category2">편의점 및 슈퍼마켓</option>
+          <option value="category3">음식점 및 카페</option>
+          <option value="category4">소매상점</option>
+          <option value="category5">미용실</option>
+          <option value="category6">헬스클럽</option>
+          <option value="category7">호텔</option>
+          <option value="category8">학원</option>
+          <option value="category9">약국</option>
+        </select>
+        <select name="moneytype" id="moneytype">
+          <option value="moneytype1">지역화폐 종류</option>
+          <option value="moneytype2">지류형 지역화폐</option>
+          <option value="moneytype3">모바일형 지역화폐</option>
+          <option value="moneytype4">전자 화폐</option>
+        </select>
+        <input
+          type="text"
+          id="search"
+          name="search"
+          placeholder="원하는 가맹점을 검색해보세요."
+        />
+        <button type="submit">검색</button>
+      </form>
+    </section>
+
+    <!-- 업장 상세내용 -->
+    <div class="main-container">
+      <div class="container">
+        <div class="box-container">
+          <div class="box-section">가게이름</div>
+          <div class="box-section">가게주소</div>
+          <div class="box-section">가게번호</div>
+          <div class="box-section">필요정보</div>
+        </div>
+        <div class="box-container">
+          <div class="box-section">가게이름</div>
+          <div class="box-section">가게주소</div>
+          <div class="box-section">가게번호</div>
+          <div class="box-section">필요정보</div>
+        </div>
+        <div class="box-container">
+          <div class="box-section">가게이름</div>
+          <div class="box-section">가게주소</div>
+          <div class="box-section">가게번호</div>
+          <div class="box-section">필요정보</div>
+        </div>
+        <div class="box-container">
+          <div class="box-section">가게이름</div>
+          <div class="box-section">가게주소</div>
+          <div class="box-section">가게번호</div>
+          <div class="box-section">필요정보</div>
+        </div>
+      </div>
+
+      <!-- 지도 컨테이너 -->
+      <div class="map-container">
+        <div id="map"></div>
+        <script
+          type="text/javascript"
+          src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b43e302547d37e9c52e6fc0644fae888"
+        ></script>
+        <script>
+          var mapContainer = document.getElementById("map");
+          var mapOption = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667),
+            level: 3,
+          };
+
+          var map = new kakao.maps.Map(mapContainer, mapOption);
+          // 지도를 클릭한 위치에 표출할 마커입니다
+          var mapTypeControl = new kakao.maps.MapTypeControl();
+
+          // 지도 타입 컨트롤을 지도에 표시합니다
+          map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+          function getInfo() {
+            // 지도의 현재 중심좌표를 얻어옵니다
+            var center = map.getCenter();
+
+            // 지도의 현재 레벨을 얻어옵니다
+            var level = map.getLevel();
+
+            // 지도타입을 얻어옵니다
+            var mapTypeId = map.getMapTypeId();
+
+            // 지도의 현재 영역을 얻어옵니다
+            var bounds = map.getBounds();
+
+            // 영역의 남서쪽 좌표를 얻어옵니다
+            var swLatLng = bounds.getSouthWest();
+
+            // 영역의 북동쪽 좌표를 얻어옵니다
+            var neLatLng = bounds.getNorthEast();
+
+            // 영역정보를 문자열로 얻어옵니다. ((남,서), (북,동)) 형식입니다
+            var boundsStr = bounds.toString();
+
+            var message = "지도 중심좌표는 위도 " + center.getLat() + ", <br>";
+            message += "경도 " + center.getLng() + " 이고 <br>";
+            message += "지도 레벨은 " + level + " 입니다 <br> <br>";
+            message += "지도 타입은 " + mapTypeId + " 이고 <br> ";
+            message +=
+              "지도의 남서쪽 좌표는 " +
+              swLatLng.getLat() +
+              ", " +
+              swLatLng.getLng() +
+              " 이고 <br>";
+            message +=
+              "북동쪽 좌표는 " +
+              neLatLng.getLat() +
+              ", " +
+              neLatLng.getLng() +
+              " 입니다";
+
+            // 개발자도구를 통해 직접 message 내용을 확인해 보세요.
+            // ex) console.log(message);
+          }
+        </script>
+      </div>
+    </div>
+  </body>
+</html>
