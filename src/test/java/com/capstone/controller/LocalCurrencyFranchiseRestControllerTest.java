@@ -31,11 +31,13 @@ public class LocalCurrencyFranchiseRestControllerTest {
     @Test
     public void between() throws Exception {
         String url = "/franchise?fromLa=37.64373254&toLa=37.64373254&fromLo=127.1415573&toLo=127.1415573";
+
         final ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
         result
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].latitude").value(new BigDecimal("37.64373254").setScale(30)))
                 .andExpect(jsonPath("$[0].longitude").value(new BigDecimal("127.1415573").setScale(30)));
+
     }
 
 }

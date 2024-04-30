@@ -17,7 +17,7 @@ import java.util.List;
 public class LocalCurrencyFranchiseServiceTest {
     @Autowired
     private LocalCurrencyFranchiseService service;
-    @DisplayName("sucesse")
+    @DisplayName("success")
     @Test
     public void getTest() {
         LocalCurrencyFranchise f1 = service.find(2230441596L);
