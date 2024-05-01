@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LocalCurrencyFranchise {
+public class Franchise {
     @Id
     @Column
     private Long registerNumber;

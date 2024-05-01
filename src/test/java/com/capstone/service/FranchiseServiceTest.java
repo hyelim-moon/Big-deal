@@ -1,11 +1,10 @@
 package com.capstone.service;
 
-import com.capstone.entity.LocalCurrencyFranchise;
+import com.capstone.entity.Franchise;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,13 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-public class LocalCurrencyFranchiseServiceTest {
+public class FranchiseServiceTest {
     @Autowired
-    private LocalCurrencyFranchiseService service;
+    private FranchiseService service;
     @DisplayName("success")
     @Test
     public void getTest() {
-        LocalCurrencyFranchise f1 = service.find(2230441596L);
+        Franchise f1 = service.find(2230441596L);
     }
     @DisplayName("exception")
     @Test
@@ -31,8 +30,8 @@ public class LocalCurrencyFranchiseServiceTest {
     public void findBySectorCode() {
         List<Integer> sectorCodeList = new ArrayList<>();
         sectorCodeList.add(2310);
-        Page<LocalCurrencyFranchise> page = service.findBySectorCodeIn(sectorCodeList, Pageable.ofSize(10));
-        for (LocalCurrencyFranchise f : page) {
+        Page<Franchise> page = service.findBySectorCodeIn(sectorCodeList, Pageable.ofSize(10));
+        for (Franchise f : page) {
             Assertions.assertTrue(sectorCodeList.contains(f.getSectorCode()));
         }
     }
