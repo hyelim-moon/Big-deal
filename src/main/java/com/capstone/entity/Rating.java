@@ -2,6 +2,7 @@ package com.capstone.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,13 @@ public class Rating {
     private LocalDateTime registerDateTime;
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime deleteDateTime;
+    @Builder
+    public Rating(String memberUuid, String franchiseUuid, Integer starRating, String review, LocalDateTime registerDateTime, LocalDateTime deleteDateTime) {
+        this.memberUuid = memberUuid;
+        this.franchiseUuid = franchiseUuid;
+        this.starRating = starRating;
+        this.review = review;
+        this.registerDateTime = registerDateTime;
+        this.deleteDateTime = deleteDateTime;
+    }
 }

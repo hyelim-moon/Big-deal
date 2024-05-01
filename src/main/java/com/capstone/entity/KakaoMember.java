@@ -1,12 +1,11 @@
 package com.capstone.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class KakaoMember {
@@ -16,4 +15,9 @@ public class KakaoMember {
     @OneToOne
     @JoinColumn(name="uuid")
     private Member member;
+    @Builder
+    public KakaoMember(Long id, Member member) {
+        this.id = id;
+        this.member = member;
+    }
 }
