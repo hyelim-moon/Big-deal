@@ -28,7 +28,7 @@ public class FranchiseServiceImpl implements FranchiseService {
     public List<Franchise> findByLatitudeAndLongitude(BigDecimal fromLatitude, BigDecimal toLatitude, BigDecimal fromLongitude, BigDecimal toLongitude) {
         BigDecimal mediumLatitude = toLatitude.subtract(fromLatitude).divide(BigDecimal.valueOf(2));
         BigDecimal mediumLongitude = toLongitude.subtract(fromLongitude).divide(BigDecimal.valueOf(2));
-        List<Franchise> list = repository.findAll();
+        List<Franchise> list = repository.findByLatitudeBetweenAndLongitudeBetween(fromLatitude, toLatitude, fromLongitude, toLongitude);
         list.sort((o1, o2) -> {
             BigDecimal len1 = o1.getLatitude().subtract(mediumLatitude).pow(2).add(o1.getLongitude().subtract(mediumLongitude).pow(2));
             BigDecimal len2 = o2.getLatitude().subtract(mediumLatitude).pow(2).add(o2.getLongitude().subtract(mediumLongitude).pow(2));
