@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @SpringBootTest
 @AutoConfigureMockMvc
-public class LocalCurrencyFranchiseRestControllerTest {
+public class FranchiseRestControllerTest {
     @Autowired
     protected MockMvc mockMvc;
     @Autowired
