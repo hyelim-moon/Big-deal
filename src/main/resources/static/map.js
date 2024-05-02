@@ -13,8 +13,8 @@ var clusterer = new kakao.maps.MarkerClusterer({
     minLevel: 10
 });
 
-// 지도 이벤트 리스너 등록, 지도의 범위가 변경되었을 때 실행됩니다.
-kakao.maps.event.addListener(map, 'idle', function() {
+// 지도 이벤트 리스너 등록, 지도의 범위가 변경되었을 때 실행됩니다 --> 지도 로딩이 완료된 후 한 번만 데이터를 로드하도록 변경.
+kakao.maps.event.addListener(map, 'tilesloaded', function() {
     loadMarkers(); // 지도의 보이는 영역이 변경될 때마다 마커를 로드
 });
 
