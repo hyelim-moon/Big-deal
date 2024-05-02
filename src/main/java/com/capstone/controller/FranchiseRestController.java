@@ -16,6 +16,7 @@ import java.util.List;
 public class FranchiseRestController {
     @Autowired
     private FranchiseService service;
+
     @GetMapping(value="sector/{sector}")
     public List<Franchise> searchBySector() {
         List<Franchise> list = null;
