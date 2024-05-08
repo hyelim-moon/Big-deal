@@ -1,5 +1,6 @@
 package com.capstone.service;
 
+import com.capstone.dto.FranchiseInfoResponse;
 import com.capstone.dto.FranchiseResponse;
 import com.capstone.entity.Franchise;
 import com.capstone.repository.FranchiseRepository;
@@ -26,8 +27,8 @@ public class FranchiseServiceImpl implements FranchiseService {
         });
     }
     @Override
-    public Franchise findById(String uuid) {
-        return repository.findById(uuid).orElseThrow(IllegalArgumentException::new);
+    public FranchiseInfoResponse findById(String uuid) {
+        return new FranchiseInfoResponse(repository.findById(uuid).orElseThrow(IllegalArgumentException::new));
     }
 
     @Override

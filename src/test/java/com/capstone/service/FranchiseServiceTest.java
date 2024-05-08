@@ -1,5 +1,6 @@
 package com.capstone.service;
 
+import com.capstone.dto.FranchiseInfoResponse;
 import com.capstone.dto.FranchiseResponse;
 import com.capstone.entity.Franchise;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +22,7 @@ public class FranchiseServiceTest {
     @DisplayName("success")
     @Test
     public void getTest() {
-        Franchise f1 = service.findById("1");
+        FranchiseInfoResponse f1 = service.findById("1");
     }
     @DisplayName("exception")
     @Test

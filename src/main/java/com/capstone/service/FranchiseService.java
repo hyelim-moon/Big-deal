@@ -1,5 +1,6 @@
 package com.capstone.service;
 
+import com.capstone.dto.FranchiseInfoResponse;
 import com.capstone.dto.FranchiseResponse;
 import com.capstone.entity.Franchise;
 import org.springframework.data.domain.Page;
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface FranchiseService {
-    Franchise findById(String uuid);
+    FranchiseInfoResponse findById(String uuid);
     Page<Franchise> findBySectorCodeIn(List<Integer> sectorCode, Pageable pageRequest);
     List<Franchise> findByLatitudeAndLongitude(BigDecimal fromLatitude, BigDecimal toLatitude, BigDecimal fromLongitude, BigDecimal toLongitude);
     List<FranchiseResponse> findByCenter(BigDecimal latitude, BigDecimal longitude);
