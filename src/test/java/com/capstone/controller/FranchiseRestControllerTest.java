@@ -30,7 +30,7 @@ public class FranchiseRestControllerTest {
     }
     @Test
     public void between() throws Exception {
-        String url = "/franchise?fromLa=37.64373254&toLa=37.64373254&fromLo=127.1415573&toLo=127.1415573";
+        String url = "/api/franchise?fromLa=37.64373254&toLa=37.64373254&fromLo=127.1415573&toLo=127.1415573";
 
         final ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
         result
@@ -40,12 +40,15 @@ public class FranchiseRestControllerTest {
 
     }
     @Test
-    public void betweenSome() throws Exception {
-        String url = "/franchise?fromLa=37.64373254&toLa=37.64373254";
+    public void betweenNegative() throws Exception {
+        String url = "/api/franchise?fromLa=37.64373254&toLa=37.64373254";
 
         final ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
         result.andExpect(status().is4xxClientError());
 
+        url = "/api/franchise?fromLa=three&toLa=two&fromLo=one&toLo=fire";
+        final ResultActions charResult = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
+        charResult.andExpect(status().is4xxClientError());
     }
 
 }

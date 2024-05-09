@@ -59,7 +59,7 @@ public class FranchiseRepositoryTest {
         }
     }
     @Test
-    public void nullableTest() {
+    public void nullableTest() {  // What do we need to result this case?
         Assertions.assertThrows(JpaSystemException.class, () -> repository.save(new Franchise()));
         Assertions.assertThrows(RuntimeException.class, () -> repository.save(new Franchise("",null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)));
     }
