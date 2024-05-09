@@ -60,6 +60,11 @@ function loadData() {
 // 키워드 검색을 요청하는 함수
 function searchPlaces() {
     var keyword = document.getElementById('keyword').value;
+    /*
+    var region = document.getElementById('region').value;
+    var category = document.getElementById('sectors').value;
+    var moneytype = document.getElementById('moneytype').value;
+    */
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         alert('키워드를 입력해주세요!');
@@ -67,6 +72,7 @@ function searchPlaces() {
     }
 
     // 장소검색 객체를 통해 키워드로 장소검색을 요청
+    /*ps.keywordSearch(keyword, region, category, moneytype, placesSearchCB);*/
     ps.keywordSearch(keyword, placesSearchCB);
 }
 

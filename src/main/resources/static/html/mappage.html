@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>가맹점 찾기</title>
-  <link rel="stylesheet" href="mappage.css">
+  <link rel="stylesheet" href="../css/mappage.css">
 </head>
 <body>
 <header>
-  <img src="img/MainLogo.png" alt="지역화폐 로고" width="150" height="150">
+  <img src="../img/MainLogo.png" alt="지역화폐 로고" width="150" height="150">
   <nav>
     <ul class="option">
       <li><button>옵션1</button></li>
@@ -25,11 +25,13 @@
     <option value="region1">지역 선택</option>
     <option value="region2">수원시</option>
   </select>
-  <select name="category" id="category">
-    <option value="category1">업종 선택</option>
+  <select name="sectors" id="sectors">
+    <option value="sectors1">업종 선택</option>
+    <option value="sectors2">음식점</option>
   </select>
   <select name="moneytype" id="moneytype">
     <option value="moneytype1">지역화폐 종류</option>
+    <option value="moneytype2">지류형</option>
   </select>
   <form onsubmit="searchPlaces(); return false;">
     <input type="text" id="keyword" name="search" placeholder="원하는 가맹점을 검색해보세요.">
@@ -45,6 +47,6 @@
   </div>
 </div>
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b43e302547d37e9c52e6fc0644fae888&libraries=services,clusterer"></script>
-<script src="map.js"></script>
+<script src="../js/map.js"></script>
 </body>
 </html>
