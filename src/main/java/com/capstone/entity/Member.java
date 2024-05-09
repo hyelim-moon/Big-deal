@@ -1,5 +1,6 @@
 package com.capstone.entity;
 
+import com.capstone.dto.UpdateMemberRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,5 +36,11 @@ public class Member {
         this.id = id;
         this.password = password;
         this.email = email;
+    }
+    public Member update(String id, String password, String email) {
+        this.id = id;
+        this.password = password;
+        this.email = email;
+        return this;
     }
 }

@@ -40,16 +40,30 @@ public class FranchiseServiceImpl implements FranchiseService {
     public List<Franchise> findByLatitudeAndLongitude(BigDecimal fromLatitude, BigDecimal toLatitude, BigDecimal fromLongitude, BigDecimal toLongitude) {
         BigDecimal mediumLatitude = toLatitude.subtract(fromLatitude).divide(BigDecimal.valueOf(2));
         BigDecimal mediumLongitude = toLongitude.subtract(fromLongitude).divide(BigDecimal.valueOf(2));
-        return repository.findByLatitudeBetweenAndLongitudeBetween(fromLatitude, toLatitude, fromLongitude, toLongitude).stream().sorted(sortStrategy(mediumLatitude, mediumLongitude)).toList();
+        return repository
+                .findByLatitudeBetweenAndLongitudeBetween(fromLatitude, toLatitude, fromLongitude, toLongitude)
+                .stream()
+                .sorted(sortStrategy(mediumLatitude, mediumLongitude))
+                .toList();
     }
 
     @Override
     public List<FranchiseResponse> findByCenter(BigDecimal latitude, BigDecimal longitude) {
-        return repository.findAll().stream().filter(franchise -> franchise.getLatitude() != null && franchise.getLongitude() != null).sorted(sortStrategy(latitude, longitude)).map(FranchiseResponse::new).toList();
+        return repository
+                .findAll()
+                .stream()
+                .filter(franchise -> franchise.getLatitude() != null && franchise.getLongitude() != null)
+                .sorted(sortStrategy(latitude, longitude))
+                .map(FranchiseResponse::new)
+                .toList();
     }
 
     @Override
     public Page<Franchise> findByCityName(String cityName, Pageable pageRequest) {
         return repository.findByCityNameContaining(cityName, pageRequest);
+    }
+    @Override
+    public List<FranchiseResponse> findAll() {
+        return repository.findAll().stream().map(FranchiseResponse::new).toList();
     }
 }

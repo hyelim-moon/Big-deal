@@ -8,15 +8,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class AddMemberRequest {
+public class MemberResponse {
+    private String uuid;
     private String id;
-    private String password;
     private String email;
-    public Member toEntity() {
-        return Member.builder()
-                .id(id)
-                .password(password)
-                .email(email)
-                .build();
+    public MemberResponse(Member member) {
+        this.uuid = member.getUuid();
+        this.id = member.getId();
+        this.email = member.getEmail();
     }
 }
