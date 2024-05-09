@@ -20,59 +20,60 @@ var ps = new kakao.maps.services.Places();
 
 // 지정된 위경도에 위치하는 가맹점들의 위치를 가져와 마커를 생성하고 인포윈도우 표시
 function loadData() {
-    // 특정한 위도와 경도 범위 지정
-        var fromLa = 37.0;
-        var toLa = 38.0;
-        var fromLo = 126.0;
-        var toLo = 128.0;
+    var la = 37.5518911; // 예시 위도
+    var lo = 126.9917937; // 예시 경도
 
-        // URL 동적 생성
-        var url = `/franchise?fromLa=${fromLa}&toLa=${toLa}&fromLo=${fromLo}&toLo=${toLo}`;
+    var url = `/api/franchise?la=${la}&lo=${lo}`;  // URL 수정
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
+        console.log("Franchise data:", data);
+
             var localMarkers = data.map(function (franchise) {
                 var markerPosition = new kakao.maps.LatLng(franchise.latitude, franchise.longitude);
                 var marker = new kakao.maps.Marker({
                     position: markerPosition
                 });
 
-                // 클릭 이벤트 리스너 설정
-                kakao.maps.event.addListener(marker, 'click', function() {
-                    var content = '<div style="padding:5px; white-space: nowrap;">' +
-                                  '<strong>상호명:</strong> ' + name + '<br>' +
-                                  '<strong>업종:</strong> ' + sector + '<br>' +
-                                  '<strong>주소:</strong> ' + map_address + '</div>';
-                    infowindow.setContent(content);
-                    infowindow.open(map, marker);
-                });
+                // 클로저를 이용하여 각 마커의 이벤트 리스너에 franchise 데이터를 고정
+                kakao.maps.event.addListener(marker, 'click', (function(franchise) {
+                    return function() {
+                        var content = '<div style="padding:5px; white-space: nowrap;">' +
+                                      '<strong>상호명:</strong> ' + franchise.name + '<br>' +
+                                      /*'<strong>업종:</strong> ' + franchise.sector + '<br>' +*/
+                                      '<strong>주소:</strong> ' + franchise.mapAddress + '<br>' +
+                                      '<strong>카드:</strong> ' + franchise.card + '<br>' +
+                                      '<strong>지류:</strong> ' + franchise.paper + '<br>' +
+                                      '<strong>모바일:</strong> ' + franchise.mobile + '</div>';
+                        infowindow.setContent(content);
+                        infowindow.open(map, marker);
+                    };
+                })(franchise));
 
                 return marker;
             });
 
-            clusterer.addMarkers(localMarkers);
+            clusterer.addMarkers(localMarkers); // 클러스터러에 마커들을 추가
             markers = markers.concat(localMarkers);
         })
-        .catch(err => console.error('Error loading the franchise data:', err));
+        .catch(err => {
+            console.error('Error loading the franchise data:', err);
+            alert('데이터를 불러오는 중 오류가 발생했습니다.');
+        });
 }
+
+
 
 // 키워드 검색을 요청하는 함수
 function searchPlaces() {
     var keyword = document.getElementById('keyword').value;
-    /*
-    var region = document.getElementById('region').value;
-    var category = document.getElementById('sectors').value;
-    var moneytype = document.getElementById('moneytype').value;
-    */
-
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         alert('키워드를 입력해주세요!');
         return false;
     }
 
     // 장소검색 객체를 통해 키워드로 장소검색을 요청
-    /*ps.keywordSearch(keyword, region, category, moneytype, placesSearchCB);*/
     ps.keywordSearch(keyword, placesSearchCB);
 }
 
@@ -98,10 +99,9 @@ function displayPlaces(places) {
     removeAllChildNods(listEl);
     removeMarker();
 
-    console.log("Displaying places:", places);  // 데이터 검사를 위한 로그
+    console.log("Places data:", places); // 데이터 콘솔에 출력
 
     places.forEach(function(place, index) {
-        console.log("Place data:", place);  // 각 장소 데이터 로그
         var markerPosition = new kakao.maps.LatLng(place.y, place.x);
         var marker = new kakao.maps.Marker({
             position: markerPosition
@@ -142,8 +142,11 @@ function getListItem(index, place) {
     var el = document.createElement('li'),
     itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
               '<div class="info">' +
-              '<h5>' + place.place_name + '</h5>' +  // 데이터 경로 확인 후 수정
-              '<span>' + place.address_name + '</span>' +  // 주소 표시 추가
+              '<h5>' +  place.place_name + '</h5>' +
+              '<span>' + '주소 : ' + place.address_name + '<br>' +
+                        '도로명 주소 : ' + place.road_address_name + '<br>' +
+                        '카테고리 : ' + place.category_name + '<br>' +
+                        '장소 주소 : ' + place.place_url + '</span>' +
               '</div>';
 
     el.innerHTML = itemStr;

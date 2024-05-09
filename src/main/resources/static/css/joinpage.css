@@ -1,0 +1,33 @@
+body {
+    background-color: #f8f9fa; /* 부트스트랩 기본 배경색 */
+}
+
+header {
+    background-color: #f8f9fa; /* mappage의 헤더 배경색과 동일 */
+    padding: 20px 0;
+}
+
+header img {
+    display: block;
+    margin: 0 auto; /* 로고를 가운데 정렬 */
+}
+
+.join-section {
+    margin-top: 50px; /* mappage의 검색 섹션과 동일한 상단 여백 */
+}
+
+/* 회원 가입 폼의 너비 조정 */
+.join-section form {
+    max-width: 500px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 가운데 정렬 */
+}
+
+/* 중복확인, 인증번호 받기, 재발송 버튼을 텍스트 상자 오른쪽에 붙이기 */
+.join-section .mb-3.d-flex.align-items-center {
+    position: relative;
+}
+
+.join-section .mb-3.d-flex.align-items-center .btn-primary {
+    position: absolute;
+    right: 0;
+}
