@@ -1,3 +1,45 @@
+.map-container { position: relative; width: 100%; height: 500px; }
+#menu_wrap { position: absolute; top: 10px; right: 10px; width: 250px; padding: 5px; background: rgba(255, 255, 255, 0.7); z-index: 1; font-size: 12px; border-radius: 10px; overflow: auto; }
+#placesList li { list-style: none; background: #fff; padding: 10px; border-bottom: 1px solid #ddd; }
+#pagination { text-align: center; margin-top: 10px; }
+.map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
+.map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
+.map_wrap {position:relative;width:100%;height:500px;}
+#menu_wrap {position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
+.bg_white {background:#fff;}
+#menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
+#menu_wrap .option{text-align: center;}
+#menu_wrap .option p {margin:10px 0;}
+#menu_wrap .option button {margin-left:5px;}
+#placesList { padding: 0; margin: 0; overflow: auto;}
+#placesList li {list-style: none;}
+#placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
+#placesList .item span {display: block;margin-top:4px;}
+#placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+#placesList .item .info{padding:0px 0 16px 45px;}
+#placesList .info .gray {color:#8a8a8a;}
+#placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+#placesList .info .tel {color:#009900;}
+#placesList .item .markerbg {float:left;position:absolute;width:36px; height:40px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;}
+#placesList .item .marker_1 {background-position: 0 -10px;}
+#placesList .item .marker_2 {background-position: 0 -56px;}
+#placesList .item .marker_3 {background-position: 0 -102px}
+#placesList .item .marker_4 {background-position: 0 -148px;}
+#placesList .item .marker_5 {background-position: 0 -194px;}
+#placesList .item .marker_6 {background-position: 0 -240px;}
+#placesList .item .marker_7 {background-position: 0 -286px;}
+#placesList .item .marker_8 {background-position: 0 -332px;}
+#placesList .item .marker_9 {background-position: 0 -378px;}
+#placesList .item .marker_10 {background-position: 0 -423px;}
+#placesList .item .marker_11 {background-position: 0 -470px;}
+#placesList .item .marker_12 {background-position: 0 -516px;}
+#placesList .item .marker_13 {background-position: 0 -562px;}
+#placesList .item .marker_14 {background-position: 0 -608px;}
+#placesList .item .marker_15 {background-position: 0 -654px;}
+#pagination {margin:10px auto;text-align: center;}
+#pagination a {display:inline-block;margin-right:10px;}
+#pagination .on {font-weight: bold; cursor: default;color:#777;}
+
 header {
   display: flex;
   padding: 0 10px;
@@ -41,82 +83,56 @@ nav {
 }
 
 .search-section {
-  display: flex; /* Flex 컨테이너 설정 */
-  flex-wrap: wrap; /* 요소들이 넘칠 경우 다음 줄로 이동 */
-  gap: 10px; /* 요소들 사이의 공간을 설정 */
-  margin-top: 100px; /* 상단 여백 */
-  box-sizing: border-box; /* 전체 너비에 패딩과 보더를 포함 */
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    margin-top: 20px; /* 상단 여백을 조정하였습니다. */
+    margin-bottom: 5px;
+    padding: 2px;
+    box-sizing: border-box;
+}
+
+.search-section select, .search-section input[type="text"], .search-section button {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px; /* 글꼴 크기를 조정하였습니다. */
+    height: 60px;
 }
 
 .search-section form {
-  display: flex; /* 폼을 flex 컨테이너로 설정 */
-  width: 100%; /* 폼의 너비를 100%로 설정 */
-  flex-wrap: wrap; /* 요소들이 넘칠 경우 다음 줄로 이동 */
-  gap: 10px; /* 요소들 사이의 공간을 설정 */
-  margin-bottom: 5px;
-}
-
-.search-section select,
-.search-section input[type="text"],
-.search-section button {
-  height: 60px; /* 모든 요소의 높이를 동일하게 설정 */
-  border: 1px solid #ccc; /* 보더 설정 */
-  border-radius: 5px; /* 테두리 반경 설정 */
-  padding: 5px 15px; /* 패딩 설정 */
-  font-size: 16px; /* 글꼴 크기 설정 */
-  box-sizing: border-box; /* 보더와 패딩을 너비에 포함 */
-}
-
-.search-section select {
-  flex-grow: 0; /* 남은 공간을 균등하게 채우도록 설정 */
-}
-
-.search-section input[type="text"] {
-  flex-grow: 2; /* 검색 입력 필드가 더 많은 공간을 차지하도록 설정 */
+    display: flex;
+    flex: 1; /* form이 남은 공간을 모두 차지하도록 설정 */
+    gap: 5px;
 }
 
 .search-section button {
-  flex-grow: 0; /* 버튼이 컨텐츠 너비를 기준으로 크기가 결정되도록 설정 */
-  padding: 5px 20px; /* 버튼의 좌우 패딩 */
-  white-space: nowrap; /* 버튼 내부의 텍스트가 줄바꿈 되지 않도록 설정 */
+    white-space: nowrap; /* 버튼 텍스트가 줄 바뀜 없이 한 줄에 표시되도록 설정 */
+    padding: 5px 20px; /* 좌우 패딩 조정 */
+}
+
+#keyword {
+    flex-grow: 1; /* 입력 필드가 더 많은 공간을 차지하도록 설정합니다. */
+    height: auto;
 }
 
 /* 지도 섹션 */
-
-body {
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #ffffff;
-  font-family: Arial, sans-serif;
-}
-
-.main-container {
-  display: flex;
-  width: 100vw;
-}
-
-.container {
-  width: 290px;
-  background-color: #f0f0f0;
-  display: flex;
-  flex-direction: column;
-}
-
-.box-container {
-  border: 1px solid black;
-  padding: 20px;
-  background-color: #a09d9d; /* 검정색 배경 */
-  color: #000000; /* 흰색 글씨 */
-  text-align: center;
+html, body {
+    height: 100%; /* 최소 높이를 뷰포트의 100%로 설정 */
+    margin: 0; /* 여백 제거 */
+    padding: 0; /* 패딩 제거 */
+    display: flex;
+    flex-direction: column; /* 자식 요소들을 세로로 쌓음 */
 }
 
 .map-container {
-  flex-grow: 1; /* 나머지 공간 모두 사용 */
-  display: flex; /* Flex 컨테이너 설정 */
-}
-#map {
-  width: 100%;
-  height: 100%;
+    flex-grow: 1; /* 남은 공간 모두 사용 */
+    width: 100%;
+    height: 100%; /* 컨테이너의 높이를 100%로 설정 */
 }
 
+#map {
+    width: 100%;
+    height: 100%; /* 지도의 높이를 컨테이너 높이의 100%로 설정 */
+}

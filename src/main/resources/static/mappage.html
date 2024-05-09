@@ -1,108 +1,50 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/html">
-  <head>
-    <meta charset="UTF-8" />
-    <title>가맹점 찾기</title>
-    <link rel="stylesheet" href="mappage.css" />
-  </head>
-  <body>
-    <header>
-      <img
-        src="img/MainLogo.png"
-        alt="지역화폐 로고"
-        width="150"
-        height="150"
-      />
-      <nav>
-        <ul class="option">
-          <li><button>옵션1</button></li>
-          <li><button>옵션2</button></li>
-        </ul>
-        <ul class="user-action">
-          <li><button>로그인</button></li>
-          <li><button>회원가입</button></li>
-          <li><button>마이페이지</button></li>
-        </ul>
-      </nav>
-    </header>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>가맹점 찾기</title>
+  <link rel="stylesheet" href="mappage.css">
+</head>
+<body>
+<header>
+  <img src="img/MainLogo.png" alt="지역화폐 로고" width="150" height="150">
+  <nav>
+    <ul class="option">
+      <li><button>옵션1</button></li>
+      <li><button>옵션2</button></li>
+    </ul>
+    <ul class="user-action">
+      <li><button>로그인</button></li>
+      <li><button>회원가입</button></li>
+      <li><button>마이페이지</button></li>
+    </ul>
+  </nav>
+</header>
+<div class="search-section">
+  <select name="region" id="region">
+    <option value="region1">지역 선택</option>
+    <option value="region2">수원시</option>
+  </select>
+  <select name="category" id="category">
+    <option value="category1">업종 선택</option>
+  </select>
+  <select name="moneytype" id="moneytype">
+    <option value="moneytype1">지역화폐 종류</option>
+  </select>
+  <form onsubmit="searchPlaces(); return false;">
+    <input type="text" id="keyword" name="search" placeholder="원하는 가맹점을 검색해보세요.">
+    <button type="submit">검색</button>
+  </form>
+</div>
 
-    <!-- 검색 섹션 -->
-    <section class="search-section">
-      <form action="#" method="get">
-        <select name="region" id="region">
-          <option value="region1">지역 선택</option>
-          <option value="region2">수원시</option>
-          <option value="region3">성남시</option>
-          <option value="region4">안양시</option>
-          <option value="region5">안산시</option>
-          <option value="region6">고양시</option>
-          <option value="region7">용인시</option>
-          <option value="region8">부천시</option>
-          <option value="region9">의정부시</option>
-        </select>
-        <select name="category" id="category">
-          <option value="category1">업종 선택</option>
-          <option value="category2">편의점 및 슈퍼마켓</option>
-          <option value="category3">음식점 및 카페</option>
-          <option value="category4">소매상점</option>
-          <option value="category5">미용실</option>
-          <option value="category6">헬스클럽</option>
-          <option value="category7">호텔</option>
-          <option value="category8">학원</option>
-          <option value="category9">약국</option>
-        </select>
-        <select name="moneytype" id="moneytype">
-          <option value="moneytype1">지역화폐 종류</option>
-          <option value="moneytype2">지류형 지역화폐</option>
-          <option value="moneytype3">모바일형 지역화폐</option>
-          <option value="moneytype4">전자 화폐</option>
-        </select>
-        <input
-          type="text"
-          id="search"
-          name="search"
-          placeholder="원하는 가맹점을 검색해보세요."
-        />
-        <button type="submit">검색</button>
-      </form>
-    </section>
-
-    <!-- 업장 상세내용 -->
-    <div class="main-container">
-      <div class="container">
-        <div class="box-container">
-          <div class="box-section">가게이름</div>
-          <div class="box-section">가게주소</div>
-          <div class="box-section">가게번호</div>
-          <div class="box-section">필요정보</div>
-        </div>
-        <div class="box-container">
-          <div class="box-section">가게이름</div>
-          <div class="box-section">가게주소</div>
-          <div class="box-section">가게번호</div>
-          <div class="box-section">필요정보</div>
-        </div>
-        <div class="box-container">
-          <div class="box-section">가게이름</div>
-          <div class="box-section">가게주소</div>
-          <div class="box-section">가게번호</div>
-          <div class="box-section">필요정보</div>
-        </div>
-        <div class="box-container">
-          <div class="box-section">가게이름</div>
-          <div class="box-section">가게주소</div>
-          <div class="box-section">가게번호</div>
-          <div class="box-section">필요정보</div>
-        </div>
-      </div>
-
-      <!-- 지도 컨테이너 -->
-      <div class="map-container">
-        <div id="map"></div>
-        <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b43e302547d37e9c52e6fc0644fae888&libraries=clusterer"></script>
-        <script src="map.js"></script>
-
-      </div>
-    </div>
-  </body>
+<div class="map-container">
+  <div id="map" style="width: 100%; height: 100%;"></div>
+  <div id="menu_wrap">
+    <ul id="placesList"></ul>
+    <div id="pagination"></div>
+  </div>
+</div>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b43e302547d37e9c52e6fc0644fae888&libraries=services,clusterer"></script>
+<script src="map.js"></script>
+</body>
 </html>
