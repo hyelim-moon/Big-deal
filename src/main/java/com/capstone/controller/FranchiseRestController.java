@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="/franchise")
+@RequestMapping(value="/api/franchise")
 public class FranchiseRestController {
     @Autowired
     private FranchiseService service;
@@ -26,7 +26,7 @@ public class FranchiseRestController {
         return list;
     }
     @GetMapping(value="")
-    public ResponseEntity<List<Franchise>> search(@RequestParam String fromLa, @RequestParam String toLa, @RequestParam String fromLo, @RequestParam String toLo) {
-        return ResponseEntity.ok().body(service.findByLatitudeAndLongitude(new BigDecimal(fromLa), new BigDecimal(toLa), new BigDecimal(fromLo), new BigDecimal(toLo)));
+    public ResponseEntity<List<Franchise>> search(@RequestParam BigDecimal fromLa, @RequestParam BigDecimal toLa, @RequestParam BigDecimal fromLo, @RequestParam BigDecimal toLo) {
+        return ResponseEntity.ok().body(service.findByLatitudeAndLongitude(fromLa, toLa, fromLo, toLo));
     }
 }
