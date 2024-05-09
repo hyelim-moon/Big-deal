@@ -1,6 +1,7 @@
 package com.capstone.controller;
 
 import com.capstone.dto.FranchiseInfoResponse;
+import com.capstone.dto.FranchiseResponse;
 import com.capstone.entity.Franchise;
 import com.capstone.service.FranchiseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,12 @@ public class FranchiseRestController {
         List<Franchise> list = null;
         return list;
     }
+//    @GetMapping(value="")
+//    public ResponseEntity<List<Franchise>> search(@RequestParam BigDecimal fromLa, @RequestParam BigDecimal toLa, @RequestParam BigDecimal fromLo, @RequestParam BigDecimal toLo) {
+//        return ResponseEntity.ok().body(service.findByLatitudeAndLongitude(fromLa, toLa, fromLo, toLo));
+//    }
     @GetMapping(value="")
-    public ResponseEntity<List<Franchise>> search(@RequestParam BigDecimal fromLa, @RequestParam BigDecimal toLa, @RequestParam BigDecimal fromLo, @RequestParam BigDecimal toLo) {
-        return ResponseEntity.ok().body(service.findByLatitudeAndLongitude(fromLa, toLa, fromLo, toLo));
+    public ResponseEntity<List<FranchiseResponse>> findAll(@RequestParam BigDecimal la, @RequestParam BigDecimal lo) {
+        return ResponseEntity.ok().body(service.findByCenter(la, lo));
     }
 }
