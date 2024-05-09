@@ -41,9 +41,9 @@ function loadData() {
                 // 클릭 이벤트 리스너 설정
                 kakao.maps.event.addListener(marker, 'click', function() {
                     var content = '<div style="padding:5px; white-space: nowrap;">' +
-                                  '<strong>상호명:</strong> ' + franchise.name + '<br>' +
-                                  '<strong>업종:</strong> ' + franchise.sector + '<br>' +
-                                  '<strong>주소:</strong> ' + franchise.mapAddress + '</div>';
+                                  '<strong>상호명:</strong> ' + name + '<br>' +
+                                  '<strong>업종:</strong> ' + sector + '<br>' +
+                                  '<strong>주소:</strong> ' + map_address + '</div>';
                     infowindow.setContent(content);
                     infowindow.open(map, marker);
                 });
