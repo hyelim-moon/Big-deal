@@ -13,6 +13,9 @@ public class FranchiseResponse {
     private final Boolean paper;
     private final Boolean mobile;
     private final Boolean card;
+
+    private final String name;
+    private final String mapAddress;
     public FranchiseResponse(Franchise franchise) {
         this.uuid = franchise.getUuid();
         this.latitude = franchise.getLatitude();
@@ -20,5 +23,9 @@ public class FranchiseResponse {
         this.paper = franchise.getPaper();
         this.mobile = franchise.getMobile();
         this.card = franchise.getCard();
+
+        this.name = franchise.getName();
+        this.mapAddress = franchise.getMapAddress();
+
     }
 }
