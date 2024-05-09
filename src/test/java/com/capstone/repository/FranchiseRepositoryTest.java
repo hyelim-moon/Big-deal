@@ -18,28 +18,10 @@ import java.util.List;
 public class FranchiseRepositoryTest {
     @Autowired
     private FranchiseRepository repository;
-    @BeforeEach
-    public void dataInit() {
-        repository.deleteAll();
-        Franchise[] franchises = {
-                new Franchise(2230441596L,967290149L,9602,"기타서비스","구리시",new BigDecimal("37.64373254"),new BigDecimal("127.1415573"),false,false,false,"","펄스코(PULSECO)",11906,"경기도 구리시 동구릉로 520-7","경기도 구리시 사노동 452-12번지",1,""),
-                new Franchise(6032022252L,910202325L,2310,"식음료(기타)","구리시",new BigDecimal("37.5917687"),new BigDecimal("127.150121"),false,false,false,"","안녕마카롱",11945,"경기도 구리시 벌말로 172","경기도 구리시 토평동 996번지 1층",1,""),
-                new Franchise(3921701304L,903135979L,2301,"일반음식점","구리시",new BigDecimal("37.59726461"),new BigDecimal("127.140353"),false,false,false,"","형아네순대국",11933,"경기도 구리시 안골로 82-1","경기도 구리시 수택동 431-10번지",1,""),
-                new Franchise(1321972763L,975263807L,8112,"기타상품판매점","구리시",new BigDecimal("37.59609497"),new BigDecimal("127.1410497"),false,false,false,"","오벨전자담배(수택점)",11933,"경기도 구리시 원수택로 45-1","경기도 구리시 수택동 436-22번지 1층 이레컴퓨터",1,""),
-                new Franchise(1329270244L,989627880L,2310,"식음료(기타)","구리시",new BigDecimal("37.59872584"),new BigDecimal("127.1406972"),false,false,false,"","소망식품",11928,"경기도 구리시 안골로97번길 33-7","경기도 구리시 수택동 419-3번지 1층",1,""),
-                new Franchise(6231001155L,995800711L,1106,"일반의류","구리시",new BigDecimal("37.59262791"),new BigDecimal("127.139118"),false,false,false,"","원더우먼",11933,"경기도 구리시 원수택로 1","경기도 구리시 수택동 755-8번지",1,""),
-                new Franchise(1513801334L,916539878L,2105,"기타식음료품","구리시",new BigDecimal("37.59072032"),new BigDecimal("127.1343245"),false,false,false,"","달달구리 덕현점",11938,"경기도 구리시 장자대로37번길 61","경기도 구리시 교문동 808번지 덕현아파트 1층 115호 일부",1,""),
-                new Franchise(3126400297L,990700189L,2301,"일반음식점","군포시",new BigDecimal("37.35096998"),new BigDecimal("126.9434422"),false,false,false,"","옛날칼국수",15859,"경기도 군포시 당동로 10","경기도 군포시 당동 771-3번지 1층",1,""),
-                new Franchise(2645400515L,912731289L,1602,"미용실(두발전문)","군포시",new BigDecimal("37.33145704"),new BigDecimal("126.9157951"),false,false,false,"","이솔헤어",15886,"경기도 군포시 대야2로143번길 25-1","경기도 군포시 대야미동 636-3번지 센트럴아이파크 상가 1층 110호",1,""),
-                new Franchise(4146500095L,988296109L,2301,"일반음식점","구리시",new BigDecimal("37.58471573"),new BigDecimal("127.136721"),false,false,false,"","장자못궁중삼계탕",11959,"경기도 구리시 장자호수길 62-4","경기도 구리시 교문동 543-21번지 에이동. 1층",1,""),
-                new Franchise(1171426149L,969646116L,2301,"일반음식점","군포시",new BigDecimal("37.35946101"),new BigDecimal("126.9302015"),false,false,false,"","홍두깨손칼국수",15865,"경기도 군포시 광정로 70","경기도 군포시 산본동 1144-1번지 유공빌딩 1층 105호",1,"")
-        };
-        repository.saveAll(Arrays.stream(franchises).toList());
-    }
     @Test
     public void getData() {
 
-        Franchise franc = repository.findById(2230441596L).orElseThrow(IllegalArgumentException::new);
+        Franchise franc = repository.findById("0").orElseThrow(IllegalArgumentException::new);
         Assertions.assertEquals("펄스코(PULSECO)", franc.getName());
 
         List<Franchise> francList = repository.findAll(Pageable.ofSize(2).withPage(1)).toList();
@@ -79,6 +61,6 @@ public class FranchiseRepositoryTest {
     @Test
     public void nullableTest() {
         Assertions.assertThrows(JpaSystemException.class, () -> repository.save(new Franchise()));
-        Assertions.assertThrows(RuntimeException.class, () -> repository.save(new Franchise(1L, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)));
+        Assertions.assertThrows(RuntimeException.class, () -> repository.save(new Franchise("",null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)));
     }
 }

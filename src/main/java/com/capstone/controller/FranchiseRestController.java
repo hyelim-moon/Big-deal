@@ -1,12 +1,11 @@
 package com.capstone.controller;
 
+import com.capstone.dto.FranchiseInfoResponse;
 import com.capstone.entity.Franchise;
 import com.capstone.service.FranchiseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,6 +15,10 @@ import java.util.List;
 public class FranchiseRestController {
     @Autowired
     private FranchiseService service;
+    @GetMapping(value="{uuid}")
+    public ResponseEntity<FranchiseInfoResponse> findById(@PathVariable("uuid") String uuid) {
+        return ResponseEntity.ok().body(service.findById(uuid));
+    }
 
     @GetMapping(value="sector/{sector}")
     public List<Franchise> searchBySector() {
@@ -23,7 +26,7 @@ public class FranchiseRestController {
         return list;
     }
     @GetMapping(value="")
-    public List<Franchise> search(@RequestParam String fromLa, @RequestParam String toLa, @RequestParam String fromLo, @RequestParam String toLo) {
-        return service.findByLatitudeAndLongitude(new BigDecimal(fromLa), new BigDecimal(toLa), new BigDecimal(fromLo), new BigDecimal(toLo));
+    public ResponseEntity<List<Franchise>> search(@RequestParam String fromLa, @RequestParam String toLa, @RequestParam String fromLo, @RequestParam String toLo) {
+        return ResponseEntity.ok().body(service.findByLatitudeAndLongitude(new BigDecimal(fromLa), new BigDecimal(toLa), new BigDecimal(fromLo), new BigDecimal(toLo)));
     }
 }

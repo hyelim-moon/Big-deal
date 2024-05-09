@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Repository
-public interface FranchiseRepository extends JpaRepository<Franchise, Long>, JpaSpecificationExecutor<Franchise> {
+public interface FranchiseRepository extends JpaRepository<Franchise, String>, JpaSpecificationExecutor<Franchise> {
     Page<Franchise> findBySectorCodeIn(Collection<Integer> sectorCodes, Pageable pageable);
     Page<Franchise> findByCityNameContaining(String cityName, Pageable pageable);
     List<Franchise> findByLatitudeBetweenAndLongitudeBetween(BigDecimal fromLatitude, BigDecimal toLatitude, BigDecimal fromLongitude, BigDecimal toLongitude);

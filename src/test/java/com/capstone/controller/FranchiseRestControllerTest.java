@@ -39,5 +39,13 @@ public class FranchiseRestControllerTest {
                 .andExpect(jsonPath("$[0].longitude").value(new BigDecimal("127.1415573").setScale(30)));
 
     }
+    @Test
+    public void betweenSome() throws Exception {
+        String url = "/franchise?fromLa=37.64373254&toLa=37.64373254";
+
+        final ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
+        result.andExpect(status().is4xxClientError());
+
+    }
 
 }

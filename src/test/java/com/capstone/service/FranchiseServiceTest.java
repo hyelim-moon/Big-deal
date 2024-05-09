@@ -1,5 +1,7 @@
 package com.capstone.service;
 
+import com.capstone.dto.FranchiseInfoResponse;
+import com.capstone.dto.FranchiseResponse;
 import com.capstone.entity.Franchise;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +22,12 @@ public class FranchiseServiceTest {
     @DisplayName("success")
     @Test
     public void getTest() {
-        Franchise f1 = service.find(2230441596L);
+        FranchiseInfoResponse f1 = service.findById("1");
     }
     @DisplayName("exception")
     @Test
     public void errorTest() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {service.find(1L);});
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {service.findById("1L");});
     }
     @Test
     public void findBySectorCode() {
@@ -33,6 +36,17 @@ public class FranchiseServiceTest {
         Page<Franchise> page = service.findBySectorCodeIn(sectorCodeList, Pageable.ofSize(10));
         for (Franchise f : page) {
             Assertions.assertTrue(sectorCodeList.contains(f.getSectorCode()));
+        }
+    }
+    @Test
+    public void findByCenterTest() {
+        List<FranchiseResponse> list = service.findByCenter(new BigDecimal("33.450700761312206"), new BigDecimal("126.57066121198349"));
+        BigDecimal prev = list.get(0).getLatitude().subtract(new BigDecimal("33.450700761312206")).pow(2).add(list.get(0).getLongitude().subtract(new BigDecimal("126.57066121198349")).pow(2));;
+        for (int i = 1; i < list.size(); i++) {
+            FranchiseResponse f = list.get(i);
+            BigDecimal curr = f.getLatitude().subtract(new BigDecimal("33.450700761312206")).pow(2).add(f.getLongitude().subtract(new BigDecimal("126.57066121198349")).pow(2));
+            Assertions.assertTrue(curr.compareTo(prev) >= 0);
+            prev = curr;
         }
     }
 }
