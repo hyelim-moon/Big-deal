@@ -1,6 +1,5 @@
 package com.capstone.entity;
 
-import com.capstone.dto.UpdateMemberRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

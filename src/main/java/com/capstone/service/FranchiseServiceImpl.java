@@ -1,19 +1,16 @@
 package com.capstone.service;
 
-import com.capstone.dto.FranchiseInfoResponse;
-import com.capstone.dto.FranchiseResponse;
+import com.capstone.dto.franchise.FranchiseResponse;
 import com.capstone.entity.Franchise;
 import com.capstone.repository.FranchiseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
 
 @Service("franchiseServiceImpl")
 @RequiredArgsConstructor
@@ -27,8 +24,8 @@ public class FranchiseServiceImpl implements FranchiseService {
         });
     }
     @Override
-    public FranchiseInfoResponse findById(String uuid) {
-        return new FranchiseInfoResponse(repository.findById(uuid).orElseThrow(IllegalArgumentException::new));
+    public FranchiseResponse findById(String uuid) {
+        return new FranchiseResponse(repository.findById(uuid).orElseThrow(IllegalArgumentException::new));
     }
 
     @Override

@@ -1,10 +1,9 @@
 package com.capstone.service;
 
-import com.capstone.dto.AddMemberRequest;
-import com.capstone.dto.MemberInfoResponse;
-import com.capstone.dto.MemberResponse;
-import com.capstone.dto.UpdateMemberRequest;
-import com.capstone.entity.Member;
+import com.capstone.dto.member.AddMemberRequest;
+import com.capstone.dto.member.MemberInfoResponse;
+import com.capstone.dto.member.MemberResponse;
+import com.capstone.dto.member.UpdateMemberRequest;
 import com.capstone.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

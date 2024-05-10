@@ -1,4 +1,4 @@
-package com.capstone.dto;
+package com.capstone.dto.rating;
 
 import com.capstone.entity.Rating;
 
