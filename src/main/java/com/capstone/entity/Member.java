@@ -1,6 +1,5 @@
 package com.capstone.entity;
 
-import com.capstone.dto.UpdateMemberRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +27,7 @@ public class Member {
     private LocalDateTime singUpDateTime;
     @Column
     @Enumerated(EnumType.STRING)
-    private Authority authority;
+    private Role role;
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime singOutDateTime;;
     @Builder

@@ -1,6 +1,6 @@
 package com.capstone.entity;
 
-public enum Authority {
+public enum Role {
     USER, ADMIN;
     @Override
     public String toString() {
