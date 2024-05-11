@@ -1,8 +1,8 @@
 package com.capstone.service;
 
-import com.capstone.dto.AddMemberRequest;
-import com.capstone.dto.MemberInfoResponse;
-import com.capstone.dto.MemberResponse;
+import com.capstone.dto.member.AddMemberRequest;
+import com.capstone.dto.member.MemberInfoResponse;
+import com.capstone.dto.member.MemberResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

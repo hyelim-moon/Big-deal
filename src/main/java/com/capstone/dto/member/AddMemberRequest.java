@@ -1,4 +1,4 @@
-package com.capstone.dto;
+package com.capstone.dto.member;
 
 import com.capstone.entity.Member;
 import lombok.AllArgsConstructor;

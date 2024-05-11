@@ -1,6 +1,6 @@
 package com.capstone.entity;
 
-import com.capstone.dto.FranchiseResponse;
+import com.capstone.dto.franchise.UpdateFranchiseRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,5 +70,23 @@ public class Franchise {
         this.roadAddress = roadAddress;
         this.mapAddress = mapAddress;
         this.state = state;
+    }
+    public void update(UpdateFranchiseRequest request) {
+        this.registerNumber = request.getRegisterNumber();
+        this.franchiseNumber = request.getFranchiseNumber();
+        this.sectorCode = request.getSectorCode();
+        this.sector = request.getSector();
+        this.cityName = request.getCityName();
+        this.latitude = request.getLatitude();
+        this.longitude = request.getLongitude();
+        this.paper = request.getPaper();
+        this.mobile = request.getMobile();
+        this.card = request.getCard();
+        this.phoneNumber = request.getPhoneNumber();
+        this.name = request.getName();
+        this.postNumber = request.getPostNumber();
+        this.roadAddress = request.getRoadAddress();
+        this.mapAddress = request.getMapAddress();
+        this.state = request.getState();
     }
 }
