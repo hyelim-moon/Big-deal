@@ -1,9 +1,6 @@
 package com.capstone.service;
 
-import com.capstone.dto.member.AddMemberRequest;
-import com.capstone.dto.member.MemberInfoResponse;
-import com.capstone.dto.member.MemberResponse;
-import com.capstone.dto.member.UpdateMemberRequest;
+import com.capstone.dto.member.*;
 import com.capstone.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,5 +35,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void delete(String uuid) {
         repository.deleteById(uuid);
+    }
+
+    @Override
+    public String login(LoginMemberRequest request) {
+        String accessToken = null;
+        return accessToken;
     }
 }

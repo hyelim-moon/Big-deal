@@ -21,3 +21,6 @@ springdoc:
     doc-expansion: none
   paths-to-match:
     - /api/**
+jwt:
+  expiration-time: 86400000
+  secret: VGhlIERyZWFtIG9mIEZsaWdodA==
