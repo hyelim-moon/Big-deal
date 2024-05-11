@@ -1,8 +1,9 @@
-package com.capstone.service;
+package com.capstone.service.franchise;
 
 import com.capstone.dto.franchise.FranchiseResponse;
 import com.capstone.entity.Franchise;
 import com.capstone.repository.FranchiseRepository;
+import com.capstone.service.FranchiseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,8 +25,8 @@ public class FranchiseServiceImpl implements FranchiseService {
         });
     }
     @Override
-    public FranchiseResponse findById(String uuid) {
-        return new FranchiseResponse(repository.findById(uuid).orElseThrow(IllegalArgumentException::new));
+    public FranchiseResponse findById(String uuid) throws FranchiseNotFoundException {
+        return new FranchiseResponse(repository.findById(uuid).orElseThrow(FranchiseNotFoundException::new));
     }
 
     @Override
