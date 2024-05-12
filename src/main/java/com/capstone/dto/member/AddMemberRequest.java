@@ -14,7 +14,7 @@ public class AddMemberRequest {
     private String email;
     public Member toEntity() {
         return Member.builder()
-                .id(id)
+                .username(id)
                 .password(password)
                 .email(email)
                 .build();

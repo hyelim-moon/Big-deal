@@ -18,7 +18,7 @@ public class MemberResponse {
     private LocalDateTime singOutDateTime;
     public MemberResponse(Member member) {
         this.uuid = member.getUuid();
-        this.id = member.getId();
+        this.id = member.getUsername();
         this.email = member.getEmail();
         this.singUpDateTime = member.getSingUpDateTime();
         this.singOutDateTime = member.getSingOutDateTime();

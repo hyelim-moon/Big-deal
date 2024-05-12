@@ -10,17 +10,17 @@ import java.security.Key;
 
 @Slf4j
 @Component
-public class JwtUtil {
+public class JwtTokenProvider {
     private final Key key;
-    private final long accessTokenExpTime;
+    private final long tokenValidMillisecond;
 
-    public JwtUtil(
+    public JwtTokenProvider(
             @Value("${jwt.secret}") String secretKey,
-            @Value("${jwt.expiration-time}") long accessTokenExpTime
+            @Value("${jwt.expiration-time}") long tokenValidMillisecond
     ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.accessTokenExpTime = accessTokenExpTime;
+        this.tokenValidMillisecond = tokenValidMillisecond;
     }
     public String createAccessToken() {
         return null;

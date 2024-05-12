@@ -3,6 +3,7 @@ package com.capstone.service;
 import com.capstone.dto.member.*;
 import com.capstone.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,5 +42,9 @@ public class MemberServiceImpl implements MemberService {
     public String login(LoginMemberRequest request) {
         String accessToken = null;
         return accessToken;
+    }
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        return repository.findByUsername(username);
     }
 }
