@@ -1,9 +1,14 @@
 package com.capstone.service;
 
+import com.capstone.dto.JwtTokenResponse;
 import com.capstone.dto.member.*;
+import com.capstone.entity.Member;
+import com.capstone.jwt.JwtTokenProvider;
 import com.capstone.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository repository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public MemberInfoResponse findById(String uuid) {
@@ -39,9 +46,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String login(LoginMemberRequest request) {
-        String accessToken = null;
-        return accessToken;
+    public JwtTokenResponse login(LoginMemberRequest request) {
+        Member member = repository.findByUsername(request.getUsername());
+        if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
+            throw new BadCredentialsException("login fail.");
+        }
+        String accessToken = jwtTokenProvider.createToken(request.getUsername(), List.of("user"));
+        return new JwtTokenResponse("Bearer", accessToken);
     }
     @Override
     public UserDetails loadUserByUsername(String username) {

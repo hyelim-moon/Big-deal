@@ -1,5 +1,6 @@
 package com.capstone.service;
 
+import com.capstone.dto.JwtTokenResponse;
 import com.capstone.dto.member.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +14,7 @@ public interface MemberService extends UserDetailsService {
     MemberInfoResponse update(String uuid, UpdateMemberRequest request);
     void delete(String uuid);
 
-    String login(LoginMemberRequest request);
+    JwtTokenResponse login(LoginMemberRequest request);
     UserDetails loadUserByUsername(String username);
 
 }

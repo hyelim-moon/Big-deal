@@ -1,0 +1,45 @@
+package com.capstone.controller;
+
+import com.capstone.dto.member.LoginMemberRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+@SpringBootTest
+@AutoConfigureMockMvc
+public class MemberRestControllerTest {
+    @Autowired
+    protected MockMvc mockMvc;
+    @Autowired
+    private WebApplicationContext context;
+    @BeforeEach
+    public void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+    }
+    @Test
+    public void loginTest() throws Exception {
+        LoginMemberRequest request = new LoginMemberRequest("user1","1234");
+        ObjectMapper om = new ObjectMapper();
+        ResultActions result = mockMvc.perform(post("/api/v1/member/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(request)));
+        result
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.grantType", is("Bearer")))
+                .andExpect(jsonPath("$.accessToken").exists());
+    }
+}

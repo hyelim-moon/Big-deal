@@ -23,4 +23,4 @@ springdoc:
     - /api/**
 jwt:
   expiration-time: 86400000
-  secret: VGhlIERyZWFtIG9mIEZsaWdodA==
+  secret: VGhlIGdyZWF0ZXN0IGdsb3J5IGluIGxpdmluZyBsaWVzIG5vdCBpbiBuZXZlciBmYWxsaW5nLCBidXQgaW4gcmlzaW5nIGV2ZXJ5IHRpbWUgd2UgZmFsbC4=

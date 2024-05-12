@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -25,6 +26,7 @@ import java.util.List;
 public class FranchiseRestController {
     @Autowired
     private FranchiseService service;
+    //@PreAuthorize("hasRole('user')")
     @Operation(summary = "가맹점 확인", description = "가맹점의 uuid 값으로 해당 가맹점 정보만 가져옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode="200", description = "Success", content = @Content(schema = @Schema(implementation = FranchiseResponse.class))),
