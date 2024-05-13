@@ -42,4 +42,56 @@ public class MemberRestControllerTest {
                 .andExpect(jsonPath("$.grantType", is("Bearer")))
                 .andExpect(jsonPath("$.accessToken").exists());
     }
+    @Test
+    public void loginNotFoundTest() throws Exception {
+        LoginMemberRequest request = new LoginMemberRequest("user0", "1234");
+        ObjectMapper om = new ObjectMapper();
+        ResultActions result = mockMvc.perform(post("/api/v1/member/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(request)));
+        result
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+    @Test
+    public void loginUnauthorizedTest() throws Exception {
+        LoginMemberRequest request = new LoginMemberRequest("user1", "1235");
+        ObjectMapper om = new ObjectMapper();
+        ResultActions result = mockMvc.perform(post("/api/v1/member/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(request)));
+        result
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+    @Test
+    public void loginBadRequestTest() throws Exception {
+        LoginMemberRequest request = null;
+        ObjectMapper om = new ObjectMapper();
+        ResultActions result = null;
+
+        request = new LoginMemberRequest("user1", "");
+        result = mockMvc.perform(post("/api/v1/member/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(request)));
+        result
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        request = new LoginMemberRequest("user1", null);
+        result = mockMvc.perform(post("/api/v1/member/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(request)));
+        result
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        request = new LoginMemberRequest("user1", "1234");
+        result = mockMvc.perform(post("/api/v1/member/auth/login")
+                .contentType(MediaType.TEXT_PLAIN)
+                .content(om.writeValueAsString(request)));
+        result
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
 }
