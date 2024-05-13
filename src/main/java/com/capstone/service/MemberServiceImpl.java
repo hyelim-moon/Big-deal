@@ -3,11 +3,12 @@ package com.capstone.service;
 import com.capstone.dto.JwtTokenResponse;
 import com.capstone.dto.member.*;
 import com.capstone.entity.Member;
-import com.capstone.exception.MemberNotFoundException;
-import com.capstone.exception.MemberUsernameDuplicateException;
+import com.capstone.exception.*;
 import com.capstone.jwt.JwtTokenProvider;
 import com.capstone.repository.MemberRepository;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,35 +34,67 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberResponse save(AddMemberRequest request) throws NullPointerException, MemberUsernameDuplicateException {
-        Member member = repository.findByUsername(request.getUsername());
-        if (member != null) {
+    public MemberResponse insert(AddMemberRequest request) throws MemberUsernameDuplicateException, MemberEmailDuplicateException {
+        try {
+            if (repository.existsByUsername(request.getUsername())) {
+                throw new MemberUsernameDuplicateException();
+            }
+            if (repository.existsByEmail(request.getEmail())) {
+                throw new MemberEmailDuplicateException();
+            }
+            if (request.getUsername().isEmpty() || request.getPassword().isEmpty() || request.getEmail().isEmpty()) {
+                throw new MemberBadRequestException();
+            }
+            return new MemberResponse(repository.save(request.toEntity(passwordEncoder)));
+        } catch (NullPointerException nullPointerException) {
+            if (request == null) {
+                System.err.println("request parameter is null.");
+            } else {
+                if (request.getUsername() == null) {
+                    System.err.println("username member field is null.");
+                }
+                if (request.getPassword() == null) {
+                    System.err.println("password member field is null.");
+                }
+                if (request.getEmail() == null) {
+                    System.err.println("email member field is null.");
+                }
+            }
+            if (passwordEncoder == null) {
+                System.err.println("password encoder bean is null.");
+            }
+            throw new RuntimeException("NullPointerException",nullPointerException);
+        }
+    }
+
+    @Override
+    public MemberResponse update(UpdateMemberRequest request) throws  MemberUsernameDuplicateException, MemberNotFoundException{
+        if (repository.findByUsername(request.getUsername()) != null) {
             throw new MemberUsernameDuplicateException();
         }
-        if (request.getUsername() == null || request.getPassword() == null || request.getEmail() == null) {
-            throw new BadCredentialsException("require data missing.");
+        return new MemberResponse(repository.findById(request.getUuid()).orElseThrow(MemberNotFoundException::new).update(request.getUsername(), request.getPassword(), request.getEmail()));
+    }
+
+    @Override
+    public void delete(String uuid) throws MemberNotFoundException{
+        try {
+            repository.deleteById(uuid);
+        } catch (EmptyResultDataAccessException e) {
+            throw new MemberNotFoundException(e);
         }
-        return new MemberResponse(repository.save(request.toEntity()));
     }
 
     @Override
-    public MemberResponse update(String uuid, UpdateMemberRequest request) {
-        return new MemberResponse(repository.findById(uuid).orElseThrow(IllegalArgumentException::new).update(request.getId(), request.getPassword(), request.getEmail()));
-    }
-
-    @Override
-    public void delete(String uuid) {
-        repository.deleteById(uuid);
-    }
-
-    @Override
-    public JwtTokenResponse login(LoginMemberRequest request) throws MemberNotFoundException, BadCredentialsException{
+    public JwtTokenResponse login(LoginMemberRequest request) throws MemberBadRequestException, MemberNotFoundException, MemberPasswordNotEqualsException {
         Member member = repository.findByUsername(request.getUsername());
-        if (member == null) {
+        if (request.getUsername().isEmpty() || request.getPassword().isEmpty()) {
+            throw new MemberBadRequestException();
+        }
+        if (!repository.existsByUsername(request.getUsername())) {
             throw new MemberNotFoundException();
         }
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
-            throw new BadCredentialsException("login fail.");
+            throw new MemberPasswordNotEqualsException();
         }
         String accessToken = jwtTokenProvider.createToken(request.getUsername(), List.of("user"));
         return new JwtTokenResponse("Bearer", accessToken);

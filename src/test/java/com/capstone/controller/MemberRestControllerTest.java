@@ -78,7 +78,7 @@ public class MemberRestControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        request = new LoginMemberRequest("user1", null);
+        request = new LoginMemberRequest("", "1234");
         result = mockMvc.perform(post("/api/v1/member/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(request)));
@@ -91,7 +91,7 @@ public class MemberRestControllerTest {
                 .contentType(MediaType.TEXT_PLAIN)
                 .content(om.writeValueAsString(request)));
         result
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isUnsupportedMediaType())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 }

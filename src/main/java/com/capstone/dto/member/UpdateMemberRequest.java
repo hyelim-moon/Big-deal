@@ -1,6 +1,5 @@
 package com.capstone.dto.member;
 
-import com.capstone.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateMemberRequest {
-    private String id;
+    private String uuid;
+    private String username;
     private String password;
     private String email;
 }

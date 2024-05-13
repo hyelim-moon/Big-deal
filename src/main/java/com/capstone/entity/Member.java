@@ -50,9 +50,9 @@ public class Member implements UserDetails {
         this.email = email;
     }
     public Member update(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
+        this.username = username != null ? username : this.username;
+        this.password = password != null ? password : this.password;
+        this.email = email != null ? email : this.email;
         return this;
     }
 
