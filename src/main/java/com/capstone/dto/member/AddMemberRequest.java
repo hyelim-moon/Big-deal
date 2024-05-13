@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class AddMemberRequest {
-    private String id;
+    private String username;
     private String password;
     private String email;
     public Member toEntity() {
         return Member.builder()
-                .username(id)
+                .username(username)
                 .password(password)
                 .email(email)
                 .build();

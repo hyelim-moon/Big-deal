@@ -8,10 +8,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.List;
 
 public interface MemberService extends UserDetailsService {
-    MemberInfoResponse findById(String uuid);
+    MemberResponse findById(String uuid);
     List<MemberResponse> findAll();
-    MemberInfoResponse save(AddMemberRequest request);
-    MemberInfoResponse update(String uuid, UpdateMemberRequest request);
+    MemberResponse save(AddMemberRequest request);
+    MemberResponse update(String uuid, UpdateMemberRequest request);
     void delete(String uuid);
 
     JwtTokenResponse login(LoginMemberRequest request);

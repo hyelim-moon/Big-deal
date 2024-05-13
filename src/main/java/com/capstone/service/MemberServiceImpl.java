@@ -3,6 +3,8 @@ package com.capstone.service;
 import com.capstone.dto.JwtTokenResponse;
 import com.capstone.dto.member.*;
 import com.capstone.entity.Member;
+import com.capstone.exception.MemberNotFoundException;
+import com.capstone.exception.MemberUsernameDuplicateException;
 import com.capstone.jwt.JwtTokenProvider;
 import com.capstone.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +23,8 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public MemberInfoResponse findById(String uuid) {
-        return new MemberInfoResponse(repository.findById(uuid).orElseThrow(IllegalArgumentException::new));
+    public MemberResponse findById(String uuid) throws MemberNotFoundException {
+        return new MemberResponse(repository.findById(uuid).orElseThrow(MemberNotFoundException::new));
     }
 
     @Override
@@ -31,13 +33,20 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberInfoResponse save(AddMemberRequest request) {
-        return new MemberInfoResponse(repository.save(request.toEntity()));
+    public MemberResponse save(AddMemberRequest request) throws NullPointerException, MemberUsernameDuplicateException {
+        Member member = repository.findByUsername(request.getUsername());
+        if (member != null) {
+            throw new MemberUsernameDuplicateException();
+        }
+        if (request.getUsername() == null || request.getPassword() == null || request.getEmail() == null) {
+            throw new BadCredentialsException("require data missing.");
+        }
+        return new MemberResponse(repository.save(request.toEntity()));
     }
 
     @Override
-    public MemberInfoResponse update(String uuid, UpdateMemberRequest request) {
-        return new MemberInfoResponse(repository.findById(uuid).orElseThrow(IllegalArgumentException::new).update(request.getId(), request.getPassword(), request.getEmail()));
+    public MemberResponse update(String uuid, UpdateMemberRequest request) {
+        return new MemberResponse(repository.findById(uuid).orElseThrow(IllegalArgumentException::new).update(request.getId(), request.getPassword(), request.getEmail()));
     }
 
     @Override
@@ -46,8 +55,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public JwtTokenResponse login(LoginMemberRequest request) {
+    public JwtTokenResponse login(LoginMemberRequest request) throws MemberNotFoundException, BadCredentialsException{
         Member member = repository.findByUsername(request.getUsername());
+        if (member == null) {
+            throw new MemberNotFoundException();
+        }
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new BadCredentialsException("login fail.");
         }

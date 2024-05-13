@@ -26,7 +26,7 @@ public class MemberRestController {
         return ResponseEntity.ok().body(service.login(request));
     }
     @GetMapping("{uuid}")
-    public ResponseEntity<MemberInfoResponse> findById(@PathVariable String uuid) {
+    public ResponseEntity<MemberResponse> findById(@PathVariable String uuid) {
         return ResponseEntity.ok().body(service.findById(uuid));
     }
 }

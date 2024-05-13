@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 @Getter
 public class MemberResponse {
     private String uuid;
-    private String id;
+    private String username;
     private String email;
     private LocalDateTime singUpDateTime;
     private LocalDateTime singOutDateTime;
     public MemberResponse(Member member) {
         this.uuid = member.getUuid();
-        this.id = member.getUsername();
+        this.username = member.getUsername();
         this.email = member.getEmail();
         this.singUpDateTime = member.getSingUpDateTime();
         this.singOutDateTime = member.getSingOutDateTime();
