@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+
+import java.util.List;
 
 
 @Transactional
@@ -36,6 +39,11 @@ public class MemberServiceTest {
     @Test
     public void findByIdNegativeTest() {
         Assertions.assertThrows(MemberNotFoundException.class, ()->service.findById("this is not exist uuid"));
+    }
+    @Test
+    public void findAllTest() {
+        List<MemberResponse> list = service.findAll();
+        Assertions.assertFalse(list.isEmpty());
     }
     @Test
     public void insertTest() {
@@ -101,6 +109,12 @@ public class MemberServiceTest {
     @Test
     public void withdrawalNotFoundTest() {
         Assertions.assertThrows(MemberNotFoundException.class, ()->service.withdrawal("not exist"));
+    }
+    @Test
+    public void withdrawalRejectLoginTest() {
+        MemberResponse response = service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
+        service.withdrawal(response.getUuid());
+        Assertions.assertThrows(MemberInvalidateLoginException.class,()->service.login(new LoginMemberRequest("id1", "password1")));
     }
     @Test
     public void loginTest() {

@@ -38,9 +38,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                     }
                 } catch (MemberNotFoundException e) {
+                    response.setStatus(403);
                     filterChain.doFilter(request, response);
                 }
+            } else {
+                response.setStatus(401);
             }
+        } else {
+            response.setStatus(401);
         }
         filterChain.doFilter(request, response);
     }

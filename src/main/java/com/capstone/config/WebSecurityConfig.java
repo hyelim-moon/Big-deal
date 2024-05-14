@@ -34,7 +34,7 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.GET,"/api/v1/member").authenticated()
                             .requestMatchers(HttpMethod.PUT,"/api/v1/member").authenticated()
                             .requestMatchers(HttpMethod.DELETE,"/api/v1/member").authenticated()
-                            //.requestMatchers(HttpMethod.POST,"/api/v1/member").permitAll()
+                            .requestMatchers(HttpMethod.POST,"/api/v1/member").permitAll()
                             .requestMatchers(HttpMethod.GET,"/api/v1/member/**").permitAll()
                             .requestMatchers("/api/v1/franchise/**").permitAll()
                             .anyRequest().permitAll()

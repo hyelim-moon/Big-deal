@@ -30,6 +30,10 @@ public class MemberRestControllerAdvice {
     public ResponseEntity<ErrorCodeResponse> memberBadRequest(MemberBadRequestException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorCodeResponse.of(e.getMessage()));
     }
+    @ExceptionHandler(value = MemberInvalidateLoginException.class)
+    public ResponseEntity<ErrorCodeResponse> memberInvalidateLogin(MemberInvalidateLoginException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorCodeResponse.of("unauthorized"));
+    }
     @ExceptionHandler(value = BadCredentialsException.class)
     public ResponseEntity<ErrorCodeResponse> badCredentials() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorCodeResponse.of("bad request or server error."));

@@ -37,14 +37,14 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberResponse insert(AddMemberRequest request) throws MemberUsernameDuplicateException, MemberEmailDuplicateException {
         try {
+            if (request.getUsername().isEmpty() || request.getPassword().isEmpty() || request.getEmail().isEmpty()) {
+                throw new MemberBadRequestException();
+            }
             if (repository.existsByUsername(request.getUsername())) {
                 throw new MemberUsernameDuplicateException();
             }
             if (repository.existsByEmail(request.getEmail())) {
                 throw new MemberEmailDuplicateException();
-            }
-            if (request.getUsername().isEmpty() || request.getPassword().isEmpty() || request.getEmail().isEmpty()) {
-                throw new MemberBadRequestException();
             }
             return new MemberResponse(repository.save(request.toEntity(passwordEncoder)));
         } catch (NullPointerException nullPointerException) {
@@ -102,6 +102,9 @@ public class MemberServiceImpl implements MemberService {
         }
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new MemberPasswordNotEqualsException();
+        }
+        if (member.getSingOutDateTime() != null) {
+            throw new MemberInvalidateLoginException();
         }
         String accessToken = jwtTokenProvider.createToken(member.getUuid(), List.of("user"));
         return new JwtTokenResponse("Bearer", accessToken);

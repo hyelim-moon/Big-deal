@@ -5,10 +5,13 @@ import com.capstone.dto.member.*;
 import com.capstone.jwt.JwtTokenProvider;
 import com.capstone.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RequestMapping("/api/v1/member")
@@ -31,7 +34,7 @@ public class MemberRestController {
     }
     @PostMapping("")
     public ResponseEntity<MemberResponse> signUp(@RequestBody AddMemberRequest request) {
-        return ResponseEntity.ok().body(service.insert(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.insert(request));
     }
     @PutMapping("")
     public ResponseEntity<MemberResponse> update(@RequestBody UpdateMemberRequest request, @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authorization) {

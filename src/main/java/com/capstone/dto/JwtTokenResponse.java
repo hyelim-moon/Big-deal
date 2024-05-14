@@ -1,12 +1,10 @@
 package com.capstone.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Builder
-@Data
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class JwtTokenResponse {
     private String grantType;
     private String accessToken;
