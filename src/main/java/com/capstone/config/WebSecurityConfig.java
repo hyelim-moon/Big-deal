@@ -5,6 +5,7 @@ import com.capstone.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @RequiredArgsConstructor
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @Configuration
 public class WebSecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
@@ -31,10 +31,12 @@ public class WebSecurityConfig {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorizeRequest) -> {
                     authorizeRequest
-                            /*
-                            .requestMatchers("/api/v1/member/{uuid}").authorization()
-                            */
-                            .requestMatchers("/api/**").permitAll()
+                            .requestMatchers(HttpMethod.GET,"/api/v1/member").authenticated()
+                            .requestMatchers(HttpMethod.PUT,"/api/v1/member").authenticated()
+                            .requestMatchers(HttpMethod.DELETE,"/api/v1/member").authenticated()
+                            //.requestMatchers(HttpMethod.POST,"/api/v1/member").permitAll()
+                            .requestMatchers(HttpMethod.GET,"/api/v1/member/**").permitAll()
+                            .requestMatchers("/api/v1/franchise/**").permitAll()
                             .anyRequest().permitAll()
                             ;
                 });

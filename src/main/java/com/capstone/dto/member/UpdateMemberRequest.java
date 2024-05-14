@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateMemberRequest {
-    private String uuid;
     private String username;
     private String password;
     private String email;

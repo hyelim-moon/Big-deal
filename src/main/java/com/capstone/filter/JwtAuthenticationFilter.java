@@ -1,5 +1,6 @@
 package com.capstone.filter;
 
+import com.capstone.exception.MemberNotFoundException;
 import com.capstone.jwt.JwtTokenProvider;
 import com.capstone.service.MemberService;
 import jakarta.servlet.FilterChain;
@@ -30,10 +31,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = authorizationHeader.substring(7);
             if (jwtTokenProvider.validateToken(token)) {
                 String username = jwtTokenProvider.getUsername(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                if (userDetails != null) {
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                try {
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                    if (userDetails != null) {
+                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                    }
+                } catch (MemberNotFoundException e) {
+                    filterChain.doFilter(request, response);
                 }
             }
         }

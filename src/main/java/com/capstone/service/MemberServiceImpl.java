@@ -6,6 +6,7 @@ import com.capstone.entity.Member;
 import com.capstone.exception.*;
 import com.capstone.jwt.JwtTokenProvider;
 import com.capstone.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -68,11 +69,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberResponse update(UpdateMemberRequest request) throws  MemberUsernameDuplicateException, MemberNotFoundException{
-        if (repository.findByUsername(request.getUsername()) != null) {
+    public MemberResponse update(String uuid, UpdateMemberRequest request) throws  MemberUsernameDuplicateException, MemberNotFoundException{
+        if (repository.existsByUsername(request.getUsername())) {
             throw new MemberUsernameDuplicateException();
         }
-        return new MemberResponse(repository.findById(request.getUuid()).orElseThrow(MemberNotFoundException::new).update(request.getUsername(), request.getPassword(), request.getEmail()));
+        return new MemberResponse(repository.findById(uuid).orElseThrow(MemberNotFoundException::new).update(request.getUsername(), request.getPassword(), request.getEmail()));
     }
 
     @Override
@@ -83,9 +84,11 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberNotFoundException(e);
         }
     }
+    @Transactional
     @Override
-    public void withdrawal(String uuid) {
+    public Boolean withdrawal(String uuid) {
         repository.findById(uuid).orElseThrow(MemberNotFoundException::new).withdrawal();
+        return true;
     }
 
     @Override
@@ -100,11 +103,11 @@ public class MemberServiceImpl implements MemberService {
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new MemberPasswordNotEqualsException();
         }
-        String accessToken = jwtTokenProvider.createToken(request.getUsername(), List.of("user"));
+        String accessToken = jwtTokenProvider.createToken(member.getUuid(), List.of("user"));
         return new JwtTokenResponse("Bearer", accessToken);
     }
     @Override
     public UserDetails loadUserByUsername(String username) {
-        return repository.findByUsername(username);
+        return repository.findById(username).orElseThrow(MemberNotFoundException::new);
     }
 }

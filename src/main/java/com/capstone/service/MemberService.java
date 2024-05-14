@@ -10,9 +10,9 @@ public interface MemberService extends UserDetailsService {
     MemberResponse findById(String uuid);
     List<MemberResponse> findAll();
     MemberResponse insert(AddMemberRequest request);
-    MemberResponse update(UpdateMemberRequest request);
+    MemberResponse update(String uuid, UpdateMemberRequest request);
     void delete(String uuid);
-    void withdrawal(String uuid);
+    Boolean withdrawal(String uuid);
 
     JwtTokenResponse login(LoginMemberRequest request);
 

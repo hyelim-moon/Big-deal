@@ -65,8 +65,8 @@ public class MemberServiceTest {
     @Test
     public void updateTest() {
         MemberResponse saveBefore = service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
-        UpdateMemberRequest request = new UpdateMemberRequest(saveBefore.getUuid(), null, "password1","member2@email.com");
-        MemberResponse response = service.update(request);
+        UpdateMemberRequest request = new UpdateMemberRequest(null, "password1","member2@email.com");
+        MemberResponse response = service.update(saveBefore.getUuid(), request);
         MemberResponse saveAfter = service.findById(saveBefore.getUuid());
         Assertions.assertEquals(saveBefore.getUsername(), response.getUsername());
         Assertions.assertEquals(saveAfter.getEmail(), response.getEmail());
@@ -74,13 +74,13 @@ public class MemberServiceTest {
     }
     @Test
     public void updateNotFoundTest() {
-        Assertions.assertThrows(MemberNotFoundException.class ,()->service.update(new UpdateMemberRequest("user0", "username1", "password2", "member3@email.com")));
+        Assertions.assertThrows(MemberNotFoundException.class ,()->service.update("user0", new UpdateMemberRequest("username1", "password2", "member3@email.com")));
     }
     @Test
     public void updateDuplicateTest() {
         MemberResponse member1Response = service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
         MemberResponse member2Response = service.insert(new AddMemberRequest("id2", "password2", "member2@email.com"));
-        Assertions.assertThrows(MemberUsernameDuplicateException.class, ()->service.update(new UpdateMemberRequest(member1Response.getUuid(), member2Response.getUsername(), "password", member2Response.getEmail())));
+        Assertions.assertThrows(MemberUsernameDuplicateException.class, ()->service.update(member1Response.getUuid(), new UpdateMemberRequest(member2Response.getUsername(), "password", member2Response.getEmail())));
     }
     @Test
     public void deleteTest() {
@@ -104,10 +104,10 @@ public class MemberServiceTest {
     }
     @Test
     public void loginTest() {
-        service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
+        MemberResponse response = service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
         LoginMemberRequest request = new LoginMemberRequest("id1", "password1");
         JwtTokenResponse token = service.login(request);
-        Assertions.assertEquals("id1", jwtTokenProvider.getUsername(token.getAccessToken()));
+        Assertions.assertEquals(response.getUuid(), jwtTokenProvider.getUsername(token.getAccessToken()));
     }
     @Test
     public void loginBadRequest() {
