@@ -63,7 +63,7 @@ public class MemberServiceImpl implements MemberService {
             if (passwordEncoder == null) {
                 System.err.println("password encoder bean is null.");
             }
-            throw new RuntimeException("NullPointerException",nullPointerException);
+            throw nullPointerException;
         }
     }
 
@@ -82,6 +82,10 @@ public class MemberServiceImpl implements MemberService {
         } catch (EmptyResultDataAccessException e) {
             throw new MemberNotFoundException(e);
         }
+    }
+    @Override
+    public void withdrawal(String uuid) {
+        repository.findById(uuid).orElseThrow(MemberNotFoundException::new).withdrawal();
     }
 
     @Override

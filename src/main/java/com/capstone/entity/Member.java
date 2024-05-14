@@ -55,6 +55,10 @@ public class Member implements UserDetails {
         this.email = email != null ? email : this.email;
         return this;
     }
+    public Member withdrawal() {
+        this.singOutDateTime = LocalDateTime.now();
+        return this;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

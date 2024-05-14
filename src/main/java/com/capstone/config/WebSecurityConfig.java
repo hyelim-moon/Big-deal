@@ -31,6 +31,9 @@ public class WebSecurityConfig {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorizeRequest) -> {
                     authorizeRequest
+                            /*
+                            .requestMatchers("/api/v1/member/{uuid}").authorization()
+                            */
                             .requestMatchers("/api/**").permitAll()
                             .anyRequest().permitAll()
                             ;

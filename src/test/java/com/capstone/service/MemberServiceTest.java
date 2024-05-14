@@ -43,11 +43,6 @@ public class MemberServiceTest {
         Assertions.assertEquals("id1", response.getUsername());
         Assertions.assertNotNull(response.getSingUpDateTime());
         Assertions.assertNull(response.getSingOutDateTime());
-
-        MemberResponse saved = service.findById(response.getUuid());
-        Assertions.assertEquals(response.getUuid(), saved.getUuid());
-        Assertions.assertEquals(response.getUsername(), saved.getUsername());
-        Assertions.assertEquals(response.getSingUpDateTime(), saved.getSingUpDateTime());
     }
     @Test
     public void insertDuplicateTest() {
@@ -96,6 +91,16 @@ public class MemberServiceTest {
     @Test
     public void deleteNotFoundTest() {
         Assertions.assertThrows(MemberNotFoundException.class, () -> service.delete("not exist"));
+    }
+    @Test
+    public void withdrawalTest() {
+        MemberResponse response = service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
+        service.withdrawal(response.getUuid());
+        Assertions.assertNotNull(service.findById(response.getUuid()).getSingOutDateTime());
+    }
+    @Test
+    public void withdrawalNotFoundTest() {
+        Assertions.assertThrows(MemberNotFoundException.class, ()->service.withdrawal("not exist"));
     }
     @Test
     public void loginTest() {

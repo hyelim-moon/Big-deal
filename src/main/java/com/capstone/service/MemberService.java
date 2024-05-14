@@ -12,6 +12,7 @@ public interface MemberService extends UserDetailsService {
     MemberResponse insert(AddMemberRequest request);
     MemberResponse update(UpdateMemberRequest request);
     void delete(String uuid);
+    void withdrawal(String uuid);
 
     JwtTokenResponse login(LoginMemberRequest request);
 
