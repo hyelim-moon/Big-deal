@@ -7,11 +7,10 @@ import com.capstone.exception.*;
 import com.capstone.jwt.JwtTokenProvider;
 import com.capstone.repository.MemberRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ import java.util.List;
 
 @Service("memberServiceImpl")
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+public class MemberServiceImpl implements MemberService, UserDetailsService {
     private final MemberRepository repository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
@@ -35,7 +34,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberResponse insert(AddMemberRequest request) throws MemberUsernameDuplicateException, MemberEmailDuplicateException {
+    public MemberResponse insert(AddMemberRequest request) throws MemberUsernameDuplicateException, MemberEmailDuplicateException, MemberBadRequestException {
         try {
             if (request.getUsername().isEmpty() || request.getPassword().isEmpty() || request.getEmail().isEmpty()) {
                 throw new MemberBadRequestException();
@@ -52,13 +51,13 @@ public class MemberServiceImpl implements MemberService {
                 System.err.println("request parameter is null.");
             } else {
                 if (request.getUsername() == null) {
-                    System.err.println("username member field is null.");
+                    throw new MemberBadRequestException("username member field is null.");
                 }
                 if (request.getPassword() == null) {
-                    System.err.println("password member field is null.");
+                    throw new MemberBadRequestException("password member field is null.");
                 }
                 if (request.getEmail() == null) {
-                    System.err.println("email member field is null.");
+                    throw new MemberBadRequestException("email member field is null.");
                 }
             }
             if (passwordEncoder == null) {
@@ -103,7 +102,7 @@ public class MemberServiceImpl implements MemberService {
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new MemberPasswordNotEqualsException();
         }
-        if (member.getSingOutDateTime() != null) {
+        if (member.getWithdrawalDateTime() != null) {
             throw new MemberInvalidateLoginException();
         }
         String accessToken = jwtTokenProvider.createToken(member.getUuid(), List.of("user"));

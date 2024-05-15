@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface MemberService extends UserDetailsService {
+public interface MemberService {
     MemberResponse findById(String uuid);
     List<MemberResponse> findAll();
     MemberResponse insert(AddMemberRequest request);

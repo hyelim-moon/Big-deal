@@ -22,6 +22,7 @@ import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalField;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -63,5 +64,11 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             return false;
         }
+    }
+    public String getTokenAtHeader(String header) {
+        return Arrays.stream(header.split(" ")).toList().get(1);
+    }
+    public String getGrantTypeAtHeader(String header) {
+        return Arrays.stream(header.split(" ")).toList().get(0);
     }
 }

@@ -1,5 +1,6 @@
 package com.capstone.entity;
 
+import com.capstone.exception.MemberBadRequestException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,7 +43,7 @@ public class Member implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime singOutDateTime;
+    private LocalDateTime withdrawalDateTime;
     @Builder
     public Member(String username, String password, String email) {
         this.username = username;
@@ -56,7 +57,10 @@ public class Member implements UserDetails {
         return this;
     }
     public Member withdrawal() {
-        this.singOutDateTime = LocalDateTime.now();
+        if (this.withdrawalDateTime != null) {
+            throw new MemberBadRequestException();
+        }
+        this.withdrawalDateTime = LocalDateTime.now();
         return this;
     }
 

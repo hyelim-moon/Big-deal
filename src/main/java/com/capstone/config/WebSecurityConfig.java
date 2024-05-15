@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -39,7 +40,9 @@ public class WebSecurityConfig {
                             .requestMatchers("/api/v1/franchise/**").permitAll()
                             .anyRequest().permitAll()
                             ;
-                });
+                })
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint);
         return http.build();
     }
 }

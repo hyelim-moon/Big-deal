@@ -10,11 +10,11 @@ public class MemberInfoResponse {
     private final String id;
     private final String email;
     private final LocalDateTime singUpDateTime;
-    private final LocalDateTime singOutDateTime;
+    private final LocalDateTime withdrawalDateTime;
     public MemberInfoResponse(Member member) {
         this.id = member.getUsername();
         this.email = member.getEmail();
         this.singUpDateTime = member.getSingUpDateTime();
-        this.singOutDateTime = member.getSingOutDateTime();
+        this.withdrawalDateTime = member.getWithdrawalDateTime();
     }
 }

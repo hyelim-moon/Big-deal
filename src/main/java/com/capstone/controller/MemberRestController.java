@@ -38,12 +38,12 @@ public class MemberRestController {
     }
     @PutMapping("")
     public ResponseEntity<MemberResponse> update(@RequestBody UpdateMemberRequest request, @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authorization) {
-        String token = authorization.substring(7);
+        String token = jwtTokenProvider.getTokenAtHeader(authorization);
         return ResponseEntity.ok().body(service.update(jwtTokenProvider.getUsername(token), request));
     }
     @DeleteMapping("")
     public ResponseEntity<Boolean> withdrawal(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authorization) {
-        String token = authorization.substring(7);
+        String token = jwtTokenProvider.getTokenAtHeader(authorization);
         return ResponseEntity.ok().body(service.withdrawal(jwtTokenProvider.getUsername(token)));
     }
 }

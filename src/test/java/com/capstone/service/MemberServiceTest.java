@@ -12,9 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 
 import java.util.List;
 
@@ -50,7 +48,7 @@ public class MemberServiceTest {
         MemberResponse response = service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
         Assertions.assertEquals("id1", response.getUsername());
         Assertions.assertNotNull(response.getSingUpDateTime());
-        Assertions.assertNull(response.getSingOutDateTime());
+        Assertions.assertNull(response.getWithdrawalDateTime());
     }
     @Test
     public void insertDuplicateTest() {
@@ -104,7 +102,7 @@ public class MemberServiceTest {
     public void withdrawalTest() {
         MemberResponse response = service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
         service.withdrawal(response.getUuid());
-        Assertions.assertNotNull(service.findById(response.getUuid()).getSingOutDateTime());
+        Assertions.assertNotNull(service.findById(response.getUuid()).getWithdrawalDateTime());
     }
     @Test
     public void withdrawalNotFoundTest() {
@@ -115,6 +113,12 @@ public class MemberServiceTest {
         MemberResponse response = service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
         service.withdrawal(response.getUuid());
         Assertions.assertThrows(MemberInvalidateLoginException.class,()->service.login(new LoginMemberRequest("id1", "password1")));
+    }
+    @Test
+    public void withdrawalTwiceTest() {
+        MemberResponse response = service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
+        service.withdrawal(response.getUuid());
+        Assertions.assertThrows(MemberBadRequestException.class, ()->service.withdrawal(response.getUuid()));
     }
     @Test
     public void loginTest() {

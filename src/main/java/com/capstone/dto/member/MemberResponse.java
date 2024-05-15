@@ -15,12 +15,12 @@ public class MemberResponse {
     private String username;
     private String email;
     private LocalDateTime singUpDateTime;
-    private LocalDateTime singOutDateTime;
+    private LocalDateTime withdrawalDateTime;
     public MemberResponse(Member member) {
         this.uuid = member.getUuid();
         this.username = member.getUsername();
         this.email = member.getEmail();
         this.singUpDateTime = member.getSingUpDateTime();
-        this.singOutDateTime = member.getSingOutDateTime();
+        this.withdrawalDateTime = member.getWithdrawalDateTime();
     }
 }
