@@ -1,14 +1,14 @@
 package com.capstone.service;
 
-import com.capstone.dto.AddRatingRequest;
-import com.capstone.dto.RatingInfoResponse;
+import com.capstone.dto.rating.AddRatingRequest;
+import com.capstone.dto.rating.RatingResponse;
 
 import java.util.List;
 
 public interface RatingService {
-    RatingInfoResponse findById(String uuid);
-    RatingInfoResponse findByMemberUuid(String MemberUuid);
-    RatingInfoResponse findByFranchiseUuid(String FranchiseUuid);
-    List<RatingInfoResponse> findAll();
+    RatingResponse findById(String uuid);
+    RatingResponse findByMemberUuid(String MemberUuid);
+    RatingResponse findByFranchiseUuid(String FranchiseUuid);
+    List<RatingResponse> findAll();
     AddRatingRequest save(AddRatingRequest request);
 }

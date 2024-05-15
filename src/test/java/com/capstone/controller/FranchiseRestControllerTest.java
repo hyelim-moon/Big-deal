@@ -15,6 +15,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.math.BigDecimal;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @SpringBootTest
@@ -29,26 +30,39 @@ public class FranchiseRestControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
     @Test
-    public void between() throws Exception {
-        String url = "/api/franchise?fromLa=37.64373254&toLa=37.64373254&fromLo=127.1415573&toLo=127.1415573";
+    public void uuidNegative() throws Exception {
+        String url = "/api/v1/franchise/1L";
+        final ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
+        result
+                .andExpect(status().isNotFound());
+    }
+    @Test
+    public void center() throws Exception {
+        String url = "/api/v1/franchise?la=37.64373254&lo=127.1415573";
 
         final ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
         result
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].latitude").value(new BigDecimal("37.64373254").setScale(30)))
-                .andExpect(jsonPath("$[0].longitude").value(new BigDecimal("127.1415573").setScale(30)));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray());
 
     }
     @Test
-    public void betweenNegative() throws Exception {
-        String url = "/api/franchise?fromLa=37.64373254&toLa=37.64373254";
+    public void centerNegative() throws Exception {
+        String url = "/api/v1/franchise?la=37.64373254";
 
         final ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
         result.andExpect(status().is4xxClientError());
 
-        url = "/api/franchise?fromLa=three&toLa=two&fromLo=one&toLo=fire";
+        url = "/api/v1/franchise?la=&lo=";
+        final ResultActions emptyResult = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
+        emptyResult.andExpect(status().isBadRequest());
+        url = "/api/v1/franchise?la=hi&lo=hello";
         final ResultActions charResult = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
-        charResult.andExpect(status().is4xxClientError());
+        charResult.andExpect(status().isBadRequest());
+        url = "/api/v1/franchise";
+        final ResultActions invalidateUrlResult = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
+        invalidateUrlResult.andExpect(status().isBadRequest());
     }
 
 }
