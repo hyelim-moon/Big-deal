@@ -23,7 +23,7 @@ function loadData() {
     var la = 37.5518911; // 예시 위도
     var lo = 126.9917937; // 예시 경도
 
-    var url = `/api/franchise?la=${la}&lo=${lo}`;  // URL 수정
+    var url = `/api/v1/franchise?la=${la}&lo=${lo}`;  // URL 수정
 
     fetch(url)
         .then(response => response.json())

@@ -12,3 +12,43 @@
         .modal-footer .btn {
             width: 100px; /* 버튼의 너비 조정 */
         }
+
+.sidebar {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #dffee0;
+    padding-top: 20px;
+    border-right: 1px solid #e0e0e0;
+}
+
+.sidebar a {
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #333;
+    display: block;
+}
+
+.sidebar a:hover {
+    background-color: #c3ffc5;
+    color: #000;
+}
+
+.content {
+    margin-left: 220px;
+    padding: 20px;
+}
+
+.card-container {
+    border: 1px solid #28a745;
+    border-radius: 50px;
+    padding: 30px;
+    text-align: center;
+}
+
+.card-container button {
+    margin-bottom: 20px;
+}

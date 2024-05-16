@@ -27,7 +27,11 @@ header img {
     position: relative;
 }
 
-.join-section .mb-3.d-flex.align-items-center .btn-primary {
-    position: absolute;
-    right: 0;
+.join-section .mb-3.d-flex.align-items-center input {
+    flex: 1;
+}
+
+.join-section .mb-3.d-flex.align-items-center .btn {
+    flex: 0 0 auto;
+    margin-left: 10px;
 }
