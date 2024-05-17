@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원 가입</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/joinpage.css">
+    <link rel="stylesheet" href="../css/joinPage.css">
 </head>
 <body>
 <header>
     <div class="container">
         <!-- 로고 클릭 시 mappage로 이동 -->
-        <a href="mappage.html">
+        <a href="mapPage.html">
             <img src="../img/MainLogo.png" alt="지역화폐 로고" width="150" height="150">
         </a>
     </div>
@@ -29,7 +29,7 @@
         <form id="user-form">
             <div class="mb-3 d-flex align-items-center">
                 <input type="text" class="form-control" id="username" name="username" placeholder="아이디" required>
-                <button type="button" class="btn btn-primary ms-2">중복확인</button>
+                <button type="button" class="btn btn-primary ms-2" id="check-username">중복확인</button>
             </div>
             <div class="mb-3">
                 <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" required>
@@ -53,7 +53,7 @@
             </div>
             <div class="mb-3 d-flex align-items-center">
                 <input type="text" class="form-control" id="business-username" name="business-username" placeholder="아이디" required>
-                <button type="button" class="btn btn-primary ms-2">중복확인</button>
+                <button type="button" class="btn btn-primary ms-2" id="check-business-username">중복확인</button>
             </div>
             <div class="mb-3">
                 <input type="password" class="form-control" id="business-password" name="business-password" placeholder="비밀번호" required>
@@ -74,6 +74,6 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js"></script>
-<script src="../js/joinpage.js"></script>
+<script src="../js/joinPage.js"></script>
 </body>
 </html>

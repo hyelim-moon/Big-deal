@@ -202,3 +202,21 @@ function removeAllChildNods(el) {
 }
 
 window.onload = loadData; // 페이지 로드 시 데이터 로드 함수 호출
+
+
+// 마이페이지 버튼 클릭 시 로그인 여부 확인
+document.addEventListener('DOMContentLoaded', function() {
+    const myPageButton = document.getElementById('mypage-button');
+
+    if (myPageButton) {
+        myPageButton.addEventListener('click', function() {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                alert('로그인이 필요합니다.');
+                window.location.href = 'loginPage.html';
+            } else {
+                window.location.href = 'myPage.html';
+            }
+        });
+    }
+});

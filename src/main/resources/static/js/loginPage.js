@@ -26,10 +26,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 console.log('로그인 성공:', data.accessToken);
                 alert('로그인 성공');
-                /*
-                // 로그인 성공 후, 사용자가 인증된 상태로 접근할 수 있는 페이지로 리디렉션
-                window.location.href = 'protectedpage.html'; // 실제 보호된 페이지로 변경 필요
-                */
+
+                // 로그인 성공 시 로컬 스토리지에 아이디 저장
+                localStorage.setItem('username', loginData.username);
+                localStorage.setItem('accessToken', data.accessToken);
+
+                // 로그인 성공 후, successPage로 리디렉션
+                window.location.href = 'successPage.html'; // 실제 보호된 페이지로 변경 필요
+
             } catch (error) {
                 console.error('로그인 실패:', error);
                 alert('로그인 실패');
