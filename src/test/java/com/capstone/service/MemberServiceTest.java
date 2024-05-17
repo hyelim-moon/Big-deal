@@ -115,6 +115,17 @@ public class MemberServiceTest {
         Assertions.assertThrows(MemberInvalidateLoginException.class,()->service.login(new LoginMemberRequest("id1", "password1")));
     }
     @Test
+    public void withdrawalRejectUpdateTest() {
+        MemberResponse response = service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
+        service.withdrawal(response.getUuid());
+        Assertions.assertThrows(MemberInvalidateUpdateException.class, ()->service.update(response.getUuid(), new UpdateMemberRequest(null, "password2", null)));
+    }
+    @Test
+    public void usernameDuplicationExceptTest() {
+        MemberResponse response = service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
+        Assertions.assertDoesNotThrow(()->service.update(response.getUuid() ,new UpdateMemberRequest(response.getUsername(), "password1", response.getEmail())));
+    }
+    @Test
     public void withdrawalTwiceTest() {
         MemberResponse response = service.insert(new AddMemberRequest("id1", "password1", "member1@email.com"));
         service.withdrawal(response.getUuid());
