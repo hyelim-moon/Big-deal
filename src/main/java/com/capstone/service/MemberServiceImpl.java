@@ -69,10 +69,14 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     public MemberResponse update(String uuid, UpdateMemberRequest request) throws  MemberUsernameDuplicateException, MemberNotFoundException{
-        if (repository.existsByUsername(request.getUsername())) {
+        Member member = repository.findById(uuid).orElseThrow(MemberNotFoundException::new);
+        if (repository.existsByUsername(request.getUsername()) && !member.getUsername().equals(request.getUsername())) {
             throw new MemberUsernameDuplicateException();
         }
-        return new MemberResponse(repository.findById(uuid).orElseThrow(MemberNotFoundException::new).update(request.getUsername(), request.getPassword(), request.getEmail()));
+        if (member.getWithdrawalDateTime() != null) {
+            throw new MemberInvalidateUpdateException();
+        }
+        return new MemberResponse(member.update(request.getUsername(), request.getPassword(), request.getEmail()));
     }
 
     @Override
