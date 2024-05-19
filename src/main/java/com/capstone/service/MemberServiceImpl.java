@@ -4,7 +4,8 @@ import com.capstone.dto.JwtTokenResponse;
 import com.capstone.dto.member.*;
 import com.capstone.entity.Member;
 import com.capstone.exception.*;
-import com.capstone.jwt.JwtTokenProvider;
+import com.capstone.provider.JwtTokenProvider;
+import com.capstone.provider.PinNumberProvider;
 import com.capstone.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.List;
-import java.util.Random;
 
 @Service("memberServiceImpl")
 @RequiredArgsConstructor
@@ -28,8 +26,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
-    private final RedisService redisService;
-    private static final String AUTH_CODE_PREFIX = "AuthCode ";
+    private final EmailCodeService emailCodeService;
+    private final PinNumberProvider pinNumberProvider;
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
 
@@ -54,6 +52,9 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             }
             if (repository.existsByEmail(request.getEmail())) {
                 throw new MemberEmailDuplicateException();
+            }
+            if (emailCodeService.getValues(request.getEmail()) == null || !emailCodeService.getValues(request.getEmail()).equals(request.getCode())) {
+                throw new EmailInvalidateCodeException();
             }
             return new MemberResponse(repository.save(request.toEntity(passwordEncoder)));
         } catch (NullPointerException nullPointerException) {
@@ -105,15 +106,13 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
     @Override
     public void sendCodeToEmail(String email) {
+        if (repository.existsByEmail(email)) {
+            throw new MemberEmailDuplicateException();
+        }
         String title = "이메일 인증 번호";
-        String authCode = createCode();
+        String authCode = pinNumberProvider.createCode();
         mailService.sendEmail(email, title, authCode);
-        redisService.setValues(AUTH_CODE_PREFIX + email, authCode, Duration.ofMillis(this.authCodeExpirationMillis));
-    }
-    @Override
-    public Boolean verifiedCode(String email, String authCode) {
-        String redisAuthCode = redisService.getValues(AUTH_CODE_PREFIX + email);
-        return redisAuthCode != null && redisAuthCode.equals(authCode);
+        emailCodeService.setValues(email, authCode, Duration.ofMillis(this.authCodeExpirationMillis));
     }
 
     @Override
@@ -136,19 +135,6 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
     @Override
     public UserDetails loadUserByUsername(String username) {
-        return repository.findById(username).orElseThrow(MemberNotFoundException::new);
-    }
-    private String createCode() {
-        int lenth = 6;
-        try {
-            Random random = SecureRandom.getInstanceStrong();
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < lenth; i++) {
-                builder.append(random.nextInt(10));
-            }
-            return builder.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("no such algorithm", e);
-        }
+        return repository.findById(username).orElse(null);
     }
 }

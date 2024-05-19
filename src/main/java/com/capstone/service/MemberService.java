@@ -14,7 +14,6 @@ public interface MemberService {
     void delete(String uuid);
     Boolean withdrawal(String uuid);
     void sendCodeToEmail(String email);
-    Boolean verifiedCode(String email, String authCode);
 
     JwtTokenResponse login(LoginMemberRequest request);
 

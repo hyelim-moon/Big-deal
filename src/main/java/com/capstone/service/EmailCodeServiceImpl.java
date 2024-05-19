@@ -2,13 +2,20 @@ package com.capstone.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Stream;
 
-@Service
+@Service("emailCodeServiceImpl")
 @RequiredArgsConstructor
-public class RedisServiceImpl implements RedisService {
+public class EmailCodeServiceImpl implements EmailCodeService {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Override

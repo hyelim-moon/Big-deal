@@ -2,16 +2,13 @@ package com.capstone.controller;
 
 import com.capstone.dto.JwtTokenResponse;
 import com.capstone.dto.member.*;
-import com.capstone.jwt.JwtTokenProvider;
+import com.capstone.provider.JwtTokenProvider;
 import com.capstone.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RequestMapping("/api/v1/member")
@@ -36,13 +33,18 @@ public class MemberRestController {
     public ResponseEntity<MemberResponse> signUp(@RequestBody AddMemberRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.insert(request));
     }
+    @PostMapping("auth/email")
+    public ResponseEntity<Object> sendEmail(@RequestBody SendToEmailMemberRequest request) {
+        service.sendCodeToEmail(request.getEmail());
+        return ResponseEntity.ok().build();
+    }
     @PutMapping("")
-    public ResponseEntity<MemberResponse> update(@RequestBody UpdateMemberRequest request, @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authorization) {
+    public ResponseEntity<MemberResponse> update(@RequestBody UpdateMemberRequest request, @RequestHeader(value = "Authorization", required = true, defaultValue = "") String authorization) {
         String token = jwtTokenProvider.getTokenAtHeader(authorization);
         return ResponseEntity.ok().body(service.update(jwtTokenProvider.getUsername(token), request));
     }
     @DeleteMapping("")
-    public ResponseEntity<Boolean> withdrawal(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authorization) {
+    public ResponseEntity<Boolean> withdrawal(@RequestHeader(value = "Authorization", required = true, defaultValue = "") String authorization) {
         String token = jwtTokenProvider.getTokenAtHeader(authorization);
         return ResponseEntity.ok().body(service.withdrawal(jwtTokenProvider.getUsername(token)));
     }

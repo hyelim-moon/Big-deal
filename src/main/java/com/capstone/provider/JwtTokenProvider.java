@@ -1,4 +1,4 @@
-package com.capstone.jwt;
+package com.capstone.provider;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -7,22 +7,15 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.time.LocalDateTime;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalField;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -53,6 +46,10 @@ public class JwtTokenProvider {
     public String getUsername(String token) {
         String info = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getSubject();
         return info;
+    }
+    public Collection<? extends GrantedAuthority> getAuthentication(String token) {
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return Arrays.stream(claims.get("roles").toString().replaceAll("[\\[\\]]", "").split(",")).map(SimpleGrantedAuthority::new).toList();
     }
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("Authorization");
