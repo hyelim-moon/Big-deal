@@ -63,8 +63,6 @@ function loadData() {
         });
 }
 
-
-
 // 키워드 검색을 요청하는 함수
 function searchPlaces() {
     var keyword = document.getElementById('keyword').value;
@@ -220,3 +218,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+            const currentLocationButton = document.getElementById('current-location-button');
+
+            if (currentLocationButton) {
+                currentLocationButton.addEventListener('click', function() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(position) {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+                            const locPosition = new kakao.maps.LatLng(lat, lon);
+
+                            map.setCenter(locPosition);
+                            map.setLevel(3);
+
+                            const marker = new kakao.maps.Marker({
+                                position: locPosition,
+                                map: map
+                            });
+
+                             const infowindowContent = document.createElement('div');
+                            infowindowContent.innerHTML = '현재 위치';
+                            infowindowContent.style.padding = '5px';  // 패딩 설정
+                            infowindowContent.style.whiteSpace = 'nowrap';  // 줄바꿈 방지
+                            infowindow.setContent(infowindowContent);
+
+                            // 마커를 클릭하면 인포윈도우를 표시합니다
+                            kakao.maps.event.addListener(marker, 'click', function() {
+                                infowindow.open(map, marker);
+                            });
+
+                            // 지도 클릭 시 인포윈도우 닫기
+                            kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+                                infowindow.close();
+                            });
+
+                        }, function(err) {
+                            alert('현재 위치를 찾을 수 없습니다.');
+                        });
+                    } else {
+                        alert('Geolocation을 사용할 수 없습니다.');
+                    }
+                });
+            }
+        });
