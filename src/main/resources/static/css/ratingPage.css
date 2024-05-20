@@ -1,0 +1,48 @@
+.modal-dialog {
+  max-width: 90%; /* 모달의 최대 폭을 90%로 설정하여 화면에 크게 보이도록 합니다. */
+}
+
+.modal-content {
+  border-radius: 0; /* 필요에 따라 모달의 모서리를 둥글게 할 수 있습니다. */
+}
+
+.sidebar {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #dffee0;
+    padding-top: 20px;
+    border-right: 1px solid #e0e0e0;
+}
+
+.sidebar a {
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #333;
+    display: block;
+}
+
+.sidebar a:hover {
+    background-color: #c3ffc5;
+    color: #000;
+}
+
+.content {
+    margin-left: 220px;
+    padding: 20px;
+}
+
+.card-container {
+    border: 1px solid #28a745;
+    border-radius: 50px;
+    padding: 30px;
+    text-align: center;
+}
+
+.card-container button {
+    margin-bottom: 20px;
+}
+

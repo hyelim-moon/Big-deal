@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그아웃</title>
+</head>
+<body>
+<script>
+    // 로그아웃 처리
+    localStorage.removeItem('username');
+    localStorage.removeItem('accessToken');
+    alert('로그아웃 성공');
+
+    // 로그아웃 후 mapPage로 리디렉션
+    window.location.href = 'mapPage.html';
+</script>
+</body>
+</html>

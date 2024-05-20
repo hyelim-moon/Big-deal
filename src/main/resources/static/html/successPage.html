@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 성공</title>
+    <link rel="stylesheet" href="../css/successPage.css">
+</head>
+<body>
+<header>
+    <img src="../img/MainLogo.png" alt="지역화폐 로고" width="150" height="150">
+    <nav>
+        <ul class="user-action">
+            <li><span id="user-id"></span></li>
+            <li><a href="logoutPage.html"><button>로그아웃</button></a></li>
+            <a href="myPage.html">
+                <li><button>마이페이지</button></li>
+            </a>
+        </ul>
+    </nav>
+</header>
+<div class="search-section">
+    <select name="region" id="region">
+        <option value="region1">지역 선택</option>
+        <option value="region2">수원시</option>
+    </select>
+    <select name="sectors" id="sectors">
+        <option value="sectors1">업종 선택</option>
+        <option value="sectors2">음식점</option>
+    </select>
+    <select name="moneytype" id="moneytype">
+        <option value="moneytype1">지역화폐 종류</option>
+        <option value="moneytype2">지류형</option>
+    </select>
+    <form onsubmit="searchPlaces(); return false;">
+        <input type="text" id="keyword" name="search" placeholder="원하는 가맹점을 검색해보세요.">
+        <button type="submit">검색</button>
+    </form>
+</div>
+
+<div class="map-container">
+    <div id="map" style="width: 100%; height: 100%;"></div>
+    <div id="menu_wrap">
+        <ul id="placesList"></ul>
+        <div id="pagination"></div>
+    </div>
+</div>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b43e302547d37e9c52e6fc0644fae888&libraries=services,clusterer"></script>
+<script src="../js/mapPage.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 로컬 스토리지에서 아이디 가져오기
+        const username = localStorage.getItem('username');
+        if (username) {
+            document.getElementById('user-id').innerText = username;
+        } else {
+            document.getElementById('user-id').innerText = '사용자';
+        }
+    });
+</script>
+</body>
+</html>
