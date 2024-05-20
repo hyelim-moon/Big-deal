@@ -39,13 +39,15 @@ function loadData() {
                 // 클로저를 이용하여 각 마커의 이벤트 리스너에 franchise 데이터를 고정
                 kakao.maps.event.addListener(marker, 'click', (function(franchise) {
                     return function() {
-                        var content = '<div style="padding:5px; white-space: nowrap;">' +
+                        var content = '<div style="padding:20px; border: 5px solid #4CAF50; white-space: nowrap;">' +
                                       '<strong>상호명:</strong> ' + franchise.name + '<br>' +
                                       /*'<strong>업종:</strong> ' + franchise.sector + '<br>' +*/
                                       '<strong>주소:</strong> ' + franchise.mapAddress + '<br>' +
                                       '<strong>카드:</strong> ' + franchise.card + '<br>' +
                                       '<strong>지류:</strong> ' + franchise.paper + '<br>' +
-                                      '<strong>모바일:</strong> ' + franchise.mobile + '</div>';
+                                      '<strong>모바일:</strong> ' + franchise.mobile + '</div>' +
+                                      '<button style="width: 100%; height: 40px;" onclick="writeReview(\'' + franchise.name + '\')">리뷰 쓰기</button>' +
+                                      '</div>';
                         infowindow.setContent(content);
                         infowindow.open(map, marker);
                     };
