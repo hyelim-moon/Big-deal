@@ -1,0 +1,18 @@
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+.star-rating label {
+    font-size: 25px;
+    cursor: pointer;
+    color: #ccc;
+    margin-right: 12px; /* 별점 버튼 사이의 간격 조절 */
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input[type="radio"]:checked ~ label {
+    color: orange;
+}
+
+
