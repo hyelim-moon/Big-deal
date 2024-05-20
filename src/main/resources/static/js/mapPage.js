@@ -39,7 +39,7 @@ function loadData() {
                 // 클로저를 이용하여 각 마커의 이벤트 리스너에 franchise 데이터를 고정
                 kakao.maps.event.addListener(marker, 'click', (function(franchise) {
                     return function() {
-                        var content = '<div style="padding:20px; border: 5px solid #4CAF50; white-space: nowrap;">' +
+                        var content = '<div style="padding:20px; border: 5px solid #9d9d9d; white-space: nowrap;">' +
                                       '<strong>상호명:</strong> ' + franchise.name + '<br>' +
                                       /*'<strong>업종:</strong> ' + franchise.sector + '<br>' +*/
                                       '<strong>주소:</strong> ' + franchise.mapAddress + '<br>' +
@@ -63,6 +63,10 @@ function loadData() {
             console.error('Error loading the franchise data:', err);
             alert('데이터를 불러오는 중 오류가 발생했습니다.');
         });
+        // 지도 클릭 시 인포윈도우 닫기
+            kakao.maps.event.addListener(map, 'click', function() {
+                infowindow.close();
+            });
 }
 
 // 키워드 검색을 요청하는 함수
