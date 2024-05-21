@@ -29,7 +29,7 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
     }
-    @Profile("dev")
+    @Profile("redis-test")
     @Bean
     public RedisServer redisServer() {
         return RedisServer.builder()

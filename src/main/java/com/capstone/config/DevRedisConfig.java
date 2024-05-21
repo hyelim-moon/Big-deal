@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import redis.embedded.RedisServer;
 
-@Profile("dev")
+@Profile("redis-test")
 @Configuration
 public class DevRedisConfig {
     @Value("${spring.redis.port}")

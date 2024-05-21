@@ -1,6 +1,11 @@
 package com.capstone.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import com.capstone.entity.EmailCode;
+import org.springframework.context.annotation.Profile;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface EmailCodeRepository extends CrudRepository<String, String> {
+@Profile("dev")
+@Repository
+public interface EmailCodeRepository extends JpaRepository<EmailCode, String> {
 }

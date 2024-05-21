@@ -1,6 +1,7 @@
 package com.capstone.service;
 
 import com.capstone.dto.JwtTokenResponse;
+import com.capstone.dto.SetEmailCode;
 import com.capstone.dto.member.*;
 import com.capstone.entity.Member;
 import com.capstone.exception.*;
@@ -112,7 +113,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         String title = "이메일 인증 번호";
         String authCode = pinNumberProvider.createCode();
         mailService.sendEmail(email, title, authCode);
-        emailCodeService.setValues(email, authCode, Duration.ofMillis(this.authCodeExpirationMillis));
+        emailCodeService.setValues(SetEmailCode.builder()
+                .email(email)
+                .code(authCode)
+                .time(Duration.ofMillis(this.authCodeExpirationMillis))
+                .build());
     }
 
     @Override

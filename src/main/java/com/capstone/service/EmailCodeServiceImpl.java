@@ -1,5 +1,6 @@
 package com.capstone.service;
 
+import com.capstone.dto.SetEmailCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,8 +20,8 @@ public class EmailCodeServiceImpl implements EmailCodeService {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public void setValues(String k, String v, Duration t) {
-        redisTemplate.opsForValue().set(k, v, t);
+    public void setValues(SetEmailCode setEmailCode) {
+        redisTemplate.opsForValue().set(setEmailCode.getEmail(), setEmailCode.getCode(), setEmailCode.getTime());
     }
     @Override
     public String getValues(String k) {
