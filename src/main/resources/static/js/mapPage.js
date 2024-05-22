@@ -18,40 +18,44 @@ var clusterer = new kakao.maps.MarkerClusterer({
 // 장소 검색 객체를 생성합니다
 var ps = new kakao.maps.services.Places();
 
-// 지정된 위경도에 위치하는 가맹점들의 위치를 가져와 마커를 생성하고 인포윈도우 표시
-function loadData() {
-    var la = 37.5518911; // 예시 위도
-    var lo = 126.9917937; // 예시 경도
+var currentFranchiseName = '';  // 전역 변수로 가맹점 이름 저장
 
-    var url = `/api/v1/franchise?la=${la}&lo=${lo}`;  // URL 수정
+function showReviewModal(franchiseName) {
+    currentFranchiseName = franchiseName;  // 전역 변수 업데이트
+    document.getElementById('reviewModalLabel').innerHTML = '평점 등록 - ' + franchiseName;
+    document.getElementById('reviewText').placeholder = franchiseName + '에 대한 리뷰를 입력해주세요...';
+    var reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'));
+    reviewModal.show();
+}
+
+// 기존의 loadData 함수 내에서 마커 이벤트 리스너 수정
+function loadData() {
+    var la = 37.5518911;
+    var lo = 126.9917937;
+
+    var url = `/api/v1/franchise?la=${la}&lo=${lo}`;
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
-        console.log("Franchise data:", data);
-
             var localMarkers = data.map(function (franchise) {
                 var markerPosition = new kakao.maps.LatLng(franchise.latitude, franchise.longitude);
                 var marker = new kakao.maps.Marker({
                     position: markerPosition
                 });
 
-                // 클로저를 이용하여 각 마커의 이벤트 리스너에 franchise 데이터를 고정
-                kakao.maps.event.addListener(marker, 'click', (function(franchise) {
-                    return function() {
-                        var content = '<div style="padding:20px; border: 5px solid #9d9d9d; white-space: nowrap;">' +
-                                      '<strong>상호명:</strong> ' + franchise.name + '<br>' +
-                                      /*'<strong>업종:</strong> ' + franchise.sector + '<br>' +*/
-                                      '<strong>주소:</strong> ' + franchise.mapAddress + '<br>' +
-                                      '<strong>카드:</strong> ' + franchise.card + '<br>' +
-                                      '<strong>지류:</strong> ' + franchise.paper + '<br>' +
-                                      '<strong>모바일:</strong> ' + franchise.mobile + '</div>' +
-                                      '<button style="width: 100%; height: 40px;" onclick="writeReview(\'' + franchise.name + '\')">리뷰 쓰기</button>' +
-                                      '</div>';
-                        infowindow.setContent(content);
-                        infowindow.open(map, marker);
-                    };
-                })(franchise));
+                kakao.maps.event.addListener(marker, 'click', function() {
+                    var content = '<div style="padding:20px; border: 5px solid #9d9d9d; white-space: nowrap;">' +
+                                  '<strong>상호명:</strong> ' + franchise.name + '<br>' +
+                                  '<strong>주소:</strong> ' + franchise.mapAddress + '<br>' +
+                                  '<strong>카드:</strong> ' + franchise.card + '<br>' +
+                                  '<strong>지류:</strong> ' + franchise.paper + '<br>' +
+                                  '<strong>모바일:</strong> ' + franchise.mobile + '<br>' +
+                                  '<button style="width: 100%; height: 40px;" onclick="showReviewModal(\'' + franchise.name + '\')">리뷰 쓰기</button>' +
+                                  '</div>';
+                    infowindow.setContent(content);
+                    infowindow.open(map, marker);
+                });
 
                 return marker;
             });
@@ -68,6 +72,60 @@ function loadData() {
                 infowindow.close();
             });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const ratingInput = document.querySelector('.rating input[type="range"]');
+    const ratingStar = document.querySelector('.rating_star');
+    const reviewTextElement = document.getElementById('reviewText');
+    const imageUploadElement = document.getElementById('imageUpload');
+    const submitButton = document.getElementById('submitReviewButton');
+
+    // 별점 입력 시 별의 시각적 표현 업데이트
+    ratingInput.addEventListener('input', function() {
+        ratingStar.style.width = `${this.value * 10}%`;
+    });
+
+    // 리뷰 등록 버튼 클릭 이벤트
+    submitButton.addEventListener('click', function() {
+        // 평점을 0-10 범위에서 0.5-5 범위로 조정
+        const rating = ratingInput.value / 2;
+        const reviewText = reviewTextElement.value;
+        const files = imageUploadElement.files;
+        const fileName = files.length > 0 ? files[0].name : "No file uploaded";
+
+        // 콘솔에 정보 출력
+        console.log("상호명: " + currentFranchiseName); // 현재 선택된 가맹점 이름
+        console.log("별점: " + rating + "점"); // 계산된 별점
+        console.log("리뷰 내용: " + reviewText); // 입력된 리뷰 내용
+        console.log("업로드한 파일: " + fileName); // 업로드된 파일의 이름
+
+/*
+        // AJAX 요청을 통해 서버에 데이터 전송
+        if (window.XMLHttpRequest) { // modern browsers
+            var xhr = new XMLHttpRequest();
+        } else { // for older IE versions
+            var xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        xhr.open("POST", "/api/reviews", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function() {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                // 요청 처리 성공 시
+                console.log("Response:", this.responseText);
+            }
+        };
+        xhr.send(JSON.stringify({
+            franchiseName: currentFranchiseName,
+            rating: rating,
+            reviewText: reviewText,
+            fileName: fileName
+        }));
+*/
+    });
+});
+
+
 
 // 키워드 검색을 요청하는 함수
 function searchPlaces() {
