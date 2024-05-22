@@ -1,18 +1,24 @@
+/* 별점 입력을 위한 CSS 코드 */
+
+/* 라디오 버튼을 숨깁니다. */
 .star-rating input[type="radio"] {
     display: none;
 }
 
+/* 별점 아이콘의 스타일을 설정합니다. */
 .star-rating label {
-    font-size: 25px;
-    cursor: pointer;
-    color: #ccc;
-    margin-right: 12px; /* 별점 버튼 사이의 간격 조절 */
+    font-size: 25px; /* 별점 아이콘의 크기를 지정합니다. */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경하여 사용자에게 클릭 가능함을 알립니다. */
+    color: #ccc; /* 별점 아이콘의 색상을 회색으로 지정합니다. */
+    margin-right: 12px; /* 별점 버튼 사이의 간격을 조절합니다. */
 }
 
+/* 별점 아이콘에 마우스 호버 시 색상을 오렌지로 변경합니다. */
 .star-rating label:hover,
-.star-rating label:hover ~ label,
-.star-rating input[type="radio"]:checked ~ label {
-    color: orange;
+.star-rating label:hover ~ label {
+    color: orange; /* 호버된 별 아이콘과 그 이후의 모든 별 아이콘의 색상을 오렌지로 변경합니다. */
 }
 
-
+/* 별점 클릭 시 클릭된 별부터 왼쪽으로 색상을 오렌지로 변경합니다. */
+.star-rating input[type="radio"]:checked ~ label {
+    color: orange; /* 클릭된 별 아이콘의 색상을 오렌지로 변경합니다. */
