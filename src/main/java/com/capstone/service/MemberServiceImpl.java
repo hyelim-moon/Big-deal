@@ -26,7 +26,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private final MemberRepository repository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
-    private final MailService mailService;
+    private final EmailService emailService;
     private final EmailCodeService emailCodeService;
     private final PinNumberProvider pinNumberProvider;
     @Value("${spring.mail.auth-code-expiration-millis}")
@@ -112,7 +112,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         }
         String title = "이메일 인증 번호";
         String authCode = pinNumberProvider.createCode();
-        mailService.sendEmail(email, title, authCode);
+        emailService.sendEmail(email, title, authCode);
         emailCodeService.setValues(SetEmailCode.builder()
                 .email(email)
                 .code(authCode)

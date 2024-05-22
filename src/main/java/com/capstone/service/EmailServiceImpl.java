@@ -1,8 +1,6 @@
 package com.capstone.service;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MailServiceImpl implements MailService{
+public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
     public void sendEmail(String email, String title, String text) {
         SimpleMailMessage emailForm = createEmailForm(email, title, text);
