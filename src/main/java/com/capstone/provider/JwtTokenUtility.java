@@ -8,7 +8,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -20,10 +19,10 @@ import java.util.Date;
 import java.util.List;
 
 @Component("jwtTokenProvider")
-public class JwtTokenProvider {
+public class JwtTokenUtility {
     private final Key key;
     private final long tokenValidMillisecond;
-    public JwtTokenProvider(
+    public JwtTokenUtility(
             @Value("${jwt.secret}") String secretKey,
             @Value("${jwt.expiration-time}") long tokenValidMillisecond
             ) {
@@ -49,7 +48,7 @@ public class JwtTokenProvider {
     }
     public Collection<? extends GrantedAuthority> getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        return Arrays.stream(claims.get("roles").toString().replaceAll("[\\[\\]]", "").split(",")).map(SimpleGrantedAuthority::new).toList();
+        return Arrays.stream(claims.get("roles").toString().replaceAll("[\\[\\] ]", "").split(",")).map(SimpleGrantedAuthority::new).toList();
     }
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("Authorization");

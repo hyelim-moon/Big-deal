@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface MemberService {
+public interface MemberService extends UserDetailsService {
     MemberResponse findById(String uuid);
     List<MemberResponse> findAll();
     MemberResponse insert(AddMemberRequest request);
@@ -14,6 +14,7 @@ public interface MemberService {
     void delete(String uuid);
     Boolean withdrawal(String uuid);
     void sendCodeToEmail(String email);
+    JwtTokenResponse verifiedEmail(VerifiedMemberRequest request);
 
     JwtTokenResponse login(LoginMemberRequest request);
 

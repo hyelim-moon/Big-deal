@@ -6,6 +6,9 @@ import com.capstone.repository.EmailCodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -29,5 +32,10 @@ public class EmailCodeServiceDBImpl implements EmailCodeService {
         } catch (NoSuchElementException e) {
             return null;
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return emailCodeRepository.findById(username).orElseThrow(()-> new UsernameNotFoundException("member not found")).details();
     }
 }

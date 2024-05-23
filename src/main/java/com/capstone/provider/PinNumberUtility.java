@@ -7,7 +7,7 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 @Component
-public class PinNumberProvider {
+public class PinNumberUtility {
     public String createCode() {
         int length = 6;
         try {

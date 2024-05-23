@@ -1,11 +1,14 @@
 package com.capstone.service;
 
+import com.capstone.dto.EmailCodeDetails;
 import com.capstone.dto.SetEmailCode;
+import com.capstone.entity.EmailCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -26,5 +29,13 @@ public class EmailCodeServiceImpl implements EmailCodeService {
     @Override
     public String getValues(String k) {
         return (String) redisTemplate.opsForValue().get(k);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        if (redisTemplate.opsForValue().get(username) == null) {
+            throw new UsernameNotFoundException("member not found");
+        }
+        return new EmailCodeDetails(username, redisTemplate.opsForValue().get(username), Duration.ofMillis(redisTemplate.getExpire(username)));
     }
 }

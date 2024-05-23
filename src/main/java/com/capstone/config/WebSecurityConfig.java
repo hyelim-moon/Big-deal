@@ -1,41 +1,50 @@
 package com.capstone.config;
 
 import com.capstone.filter.JwtAuthenticationFilter;
-import com.capstone.provider.JwtTokenProvider;
+import com.capstone.provider.JwtTokenUtility;
+import com.capstone.provider.MemberAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Qualifier("memberServiceImpl")
 @EnableWebSecurity
 @Configuration
 public class WebSecurityConfig {
-    private final JwtTokenProvider jwtTokenProvider;
-    private final UserDetailsService userDetailsService;
+    private final JwtTokenUtility jwtTokenUtility;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http
                 .formLogin().disable()
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtility, authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorizeRequest) -> {
                     authorizeRequest
-                            .requestMatchers(HttpMethod.GET,"/api/v1/member").authenticated()
-                            .requestMatchers(HttpMethod.PUT,"/api/v1/member").authenticated()
-                            .requestMatchers(HttpMethod.DELETE,"/api/v1/member").authenticated()
+                            .requestMatchers(HttpMethod.GET,"/api/v1/member").hasAuthority("ROLE_USER")
+                            .requestMatchers(HttpMethod.PUT,"/api/v1/member").hasAuthority("ROLE_USER")
+                            .requestMatchers(HttpMethod.DELETE,"/api/v1/member").hasAuthority("ROLE_USER")
+                            .requestMatchers(HttpMethod.POST, "/api/v1/member").hasAuthority("ROLE_NEW")
                             .requestMatchers(HttpMethod.POST, "/api/v1/member").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/member/auth/email").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/member/auth/code").permitAll()
@@ -46,5 +55,16 @@ public class WebSecurityConfig {
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint);
         return http.build();
+    }
+    @Bean
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder, MemberAuthenticationProvider memberAuthenticationProvider) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(List.of(memberAuthenticationProvider, authenticationProvider));
+    }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

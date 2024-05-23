@@ -43,7 +43,7 @@ public class MemberRestControllerAdvice {
     @ExceptionHandler(value = BadCredentialsException.class)
     public ResponseEntity<ErrorCodeResponse> badCredentials(BadCredentialsException e) {
         e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorCodeResponse.of("bad request or server error."));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorCodeResponse.of("bad request or server error."));
     }
     @ExceptionHandler(value = EmailInvalidateCodeException.class)
     public ResponseEntity<ErrorCodeResponse> emailInvalidateCode(EmailInvalidateCodeException e) {

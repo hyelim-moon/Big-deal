@@ -1,20 +1,15 @@
 package com.capstone.service;
 
 import com.capstone.dto.JwtTokenResponse;
-import com.capstone.dto.member.AddMemberRequest;
-import com.capstone.dto.member.LoginMemberRequest;
-import com.capstone.dto.member.MemberResponse;
-import com.capstone.dto.member.UpdateMemberRequest;
+import com.capstone.dto.member.*;
 import com.capstone.exception.*;
-import com.capstone.provider.JwtTokenProvider;
-import com.capstone.provider.PinNumberProvider;
+import com.capstone.provider.JwtTokenUtility;
+import com.capstone.provider.PinNumberUtility;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,9 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 
 @Transactional
 @SpringBootTest
@@ -37,19 +30,19 @@ public class MemberServiceTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private JwtTokenUtility jwtTokenUtility;
     @MockBean
     private JavaMailSender javaMailSender;
     @MockBean
-    private PinNumberProvider pinNumberProvider;
+    private PinNumberUtility pinNumberUtility;
     @BeforeEach
     public void beforeEach() {
-        doReturn("123456").when(pinNumberProvider).createCode();
+        doReturn("123456").when(pinNumberUtility).createCode();
     }
 
     @Test
     public void findByIdTest() {
-        AddMemberRequest request = new AddMemberRequest("id","password","member@email.com", "123456");
+        AddMemberRequest request = new AddMemberRequest("id","password","member@email.com");
         service.sendCodeToEmail(request.getEmail());
         MemberResponse savedMember = service.insert(request);
         MemberResponse saveMember = service.findAll().stream().filter((o)->o.getUsername().equals(savedMember.getUsername())).toList().get(0);
@@ -68,20 +61,18 @@ public class MemberServiceTest {
     }
     @Test
     public void sendCodeToEmailTest() {
-        doReturn("123456").when(pinNumberProvider).createCode();
         service.sendCodeToEmail("choda1510@kyungmin.ac.kr");
-        MemberResponse saveMember = service.insert(new AddMemberRequest("id1", "password1", "choda1510@kyungmin.ac.kr", "123456"));
+        MemberResponse saveMember = service.insert(new AddMemberRequest("id1", "password1", "choda1510@kyungmin.ac.kr"));
         Assertions.assertEquals("choda1510@kyungmin.ac.kr", saveMember.getEmail());
     }
     @Test
     public void sendCodeToEmailNegativeTest() {
-        doReturn("123456").when(pinNumberProvider).createCode();
         service.sendCodeToEmail("choda1510@kyungmin.ac.kr");
-        Assertions.assertThrows(EmailInvalidateCodeException.class, ()->service.insert(new AddMemberRequest("id1", "password1", "choda1510@kyungmin.ac.kr", "123457")));
+        Assertions.assertThrows(EmailInvalidateCodeException.class, ()->service.verifiedEmail(new VerifiedMemberRequest("choda1510@kyungmin.ac.kr", "123457")));
     }
     @Test
     public void insertTest() {
-        AddMemberRequest request = new AddMemberRequest("id1", "password1", "user@email.com", "123456");
+        AddMemberRequest request = new AddMemberRequest("id1", "password1", "user@email.com");
         service.sendCodeToEmail(request.getEmail());
         MemberResponse response = service.insert(request);
         Assertions.assertEquals("id1", response.getUsername());
@@ -90,9 +81,9 @@ public class MemberServiceTest {
     }
     @Test
     public void insertDuplicateTest() {
-        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com", "123456");
-        AddMemberRequest request2 = new AddMemberRequest("id2", "password2", "member2@email.com", "123456");
-        AddMemberRequest request3 = new AddMemberRequest("id1", "password1", "member3@email.com", "123456");
+        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com");
+        AddMemberRequest request2 = new AddMemberRequest("id2", "password2", "member2@email.com");
+        AddMemberRequest request3 = new AddMemberRequest("id1", "password1", "member3@email.com");
         service.sendCodeToEmail(request1.getEmail());
         service.insert(request1);
         service.sendCodeToEmail(request2.getEmail());
@@ -102,8 +93,8 @@ public class MemberServiceTest {
     }
     @Test
     public void insertEmailDuplicateTest() {
-        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com", "123456");
-        AddMemberRequest request2 = new AddMemberRequest("id2", "password2", "member2@email.com", "123456");
+        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com");
+        AddMemberRequest request2 = new AddMemberRequest("id2", "password2", "member2@email.com");
         service.sendCodeToEmail(request1.getEmail());
         service.insert(request1);
         service.sendCodeToEmail(request2.getEmail());
@@ -113,12 +104,12 @@ public class MemberServiceTest {
     @Test
     public void insertNegativeTest() {
         Assertions.assertThrows(NullPointerException.class, ()->service.insert(null));
-        Assertions.assertThrows(RuntimeException.class, ()->service.insert(new AddMemberRequest(null, null, null, "123456")));
-        Assertions.assertThrows(RuntimeException.class, ()->service.insert(new AddMemberRequest("id1", null, null, "123456")));
+        Assertions.assertThrows(RuntimeException.class, ()->service.insert(new AddMemberRequest(null, null, null)));
+        Assertions.assertThrows(RuntimeException.class, ()->service.insert(new AddMemberRequest("id1", null, null)));
     }
     @Test
     public void updateTest() {
-        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com", "123456");
+        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com");
         service.sendCodeToEmail(request1.getEmail());
         MemberResponse saveBefore = service.insert(request1);
         UpdateMemberRequest request = new UpdateMemberRequest(null, "password1","member2@email.com");
@@ -134,8 +125,8 @@ public class MemberServiceTest {
     }
     @Test
     public void updateDuplicateTest() {
-        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com", "123456");
-        AddMemberRequest request2 = new AddMemberRequest("id2", "password2", "member2@email.com", "123456");
+        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com");
+        AddMemberRequest request2 = new AddMemberRequest("id2", "password2", "member2@email.com");
         service.sendCodeToEmail(request1.getEmail());
         MemberResponse member1Response = service.insert(request1);
         service.sendCodeToEmail(request2.getEmail());
@@ -144,7 +135,7 @@ public class MemberServiceTest {
     }
     @Test
     public void deleteTest() {
-        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com", "123456");
+        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com");
         service.sendCodeToEmail(request1.getEmail());
         MemberResponse response = service.insert(request1);
         service.delete(response.getUuid());
@@ -156,7 +147,7 @@ public class MemberServiceTest {
     }
     @Test
     public void withdrawalTest() {
-        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com", "123456");
+        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com");
         service.sendCodeToEmail(request1.getEmail());
         MemberResponse response = service.insert(request1);
         service.withdrawal(response.getUuid());
@@ -168,7 +159,7 @@ public class MemberServiceTest {
     }
     @Test
     public void withdrawalRejectLoginTest() {
-        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com", "123456");
+        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com");
         service.sendCodeToEmail(request1.getEmail());
         MemberResponse response = service.insert(request1);
         service.withdrawal(response.getUuid());
@@ -176,7 +167,7 @@ public class MemberServiceTest {
     }
     @Test
     public void withdrawalRejectUpdateTest() {
-        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com", "123456");
+        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com");
         service.sendCodeToEmail(request1.getEmail());
         MemberResponse response = service.insert(request1);
         service.withdrawal(response.getUuid());
@@ -184,14 +175,14 @@ public class MemberServiceTest {
     }
     @Test
     public void usernameDuplicationExceptTest() {
-        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com", "123456");
+        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com");
         service.sendCodeToEmail(request1.getEmail());
         MemberResponse response = service.insert(request1);
         Assertions.assertDoesNotThrow(()->service.update(response.getUuid() ,new UpdateMemberRequest(response.getUsername(), "password1", response.getEmail())));
     }
     @Test
     public void withdrawalTwiceTest() {
-        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com", "123456");
+        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com");
         service.sendCodeToEmail(request1.getEmail());
         MemberResponse response = service.insert(request1);
         service.withdrawal(response.getUuid());
@@ -199,12 +190,12 @@ public class MemberServiceTest {
     }
     @Test
     public void loginTest() {
-        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com", "123456");
+        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com");
         service.sendCodeToEmail(request1.getEmail());
         MemberResponse response = service.insert(request1);
         LoginMemberRequest request = new LoginMemberRequest("id1", "password1");
         JwtTokenResponse token = service.login(request);
-        Assertions.assertEquals(response.getUuid(), jwtTokenProvider.getUsername(token.getAccessToken()));
+        Assertions.assertEquals(response.getUuid(), jwtTokenUtility.getUsername(token.getAccessToken()));
     }
     @Test
     public void loginBadRequest() {
@@ -213,7 +204,7 @@ public class MemberServiceTest {
     }
     @Test
     public void loginFailTest() {
-        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com", "123456");
+        AddMemberRequest request1 = new AddMemberRequest("id1", "password1", "member1@email.com");
         service.sendCodeToEmail(request1.getEmail());
         service.insert(request1);
         LoginMemberRequest request = new LoginMemberRequest("id1", "password2");

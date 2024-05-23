@@ -13,7 +13,6 @@ public class AddMemberRequest {
     private String username;
     private String password;
     private String email;
-    private String code;
     public Member toEntity(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .username(username)
