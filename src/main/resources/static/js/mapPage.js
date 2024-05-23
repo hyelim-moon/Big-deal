@@ -21,11 +21,19 @@ var ps = new kakao.maps.services.Places();
 var currentFranchiseName = '';  // 전역 변수로 가맹점 이름 저장
 
 function showReviewModal(franchiseName) {
-    currentFranchiseName = franchiseName;  // 전역 변수 업데이트
-    document.getElementById('reviewModalLabel').innerHTML = '평점 등록 - ' + franchiseName;
-    document.getElementById('reviewText').placeholder = franchiseName + '에 대한 리뷰를 입력해주세요...';
-    var reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'));
-    reviewModal.show();
+    const token = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
+
+    // 토큰이 없으면 로그인이 필요하다는 경고창을 띄우고 로그인 페이지로 이동
+    if (!token) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'loginPage.html';
+    } else {
+        currentFranchiseName = franchiseName;  // 전역 변수 업데이트
+        document.getElementById('reviewModalLabel').innerHTML = '평점 등록 - ' + franchiseName;
+        document.getElementById('reviewText').placeholder = franchiseName + '에 대한 리뷰를 입력해주세요...';
+        var reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'));
+        reviewModal.show();
+    }
 }
 
 // 기존의 loadData 함수 내에서 마커 이벤트 리스너 수정
@@ -79,26 +87,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const reviewTextElement = document.getElementById('reviewText');
     const imageUploadElement = document.getElementById('imageUpload');
     const submitButton = document.getElementById('submitReviewButton');
+    const reviewModalElement = document.getElementById('reviewModal');
 
-    // 별점 입력 시 별의 시각적 표현 업데이트
+    if (!reviewModalElement) {
+        console.error('Modal element not found');
+        return; // 모달 요소가 없으면 초기화 중단
+    }
+
+    const reviewModal = new bootstrap.Modal(reviewModalElement);
+
     ratingInput.addEventListener('input', function() {
         ratingStar.style.width = `${this.value * 10}%`;
     });
 
-    // 리뷰 등록 버튼 클릭 이벤트
-    submitButton.addEventListener('click', function() {
-        // 평점을 0-10 범위에서 0.5-5 범위로 조정
+    submitButton.addEventListener('click', function(event) {
         const rating = ratingInput.value / 2;
         const reviewText = reviewTextElement.value;
         const files = imageUploadElement.files;
         const fileName = files.length > 0 ? files[0].name : "No file uploaded";
 
-        // 콘솔에 정보 출력
-        console.log("상호명: " + currentFranchiseName); // 현재 선택된 가맹점 이름
-        console.log("별점: " + rating + "점"); // 계산된 별점
-        console.log("리뷰 내용: " + reviewText); // 입력된 리뷰 내용
-        console.log("업로드한 파일: " + fileName); // 업로드된 파일의 이름
+        console.log("등록 정보:", {
+            상호명: currentFranchiseName,
+            별점: rating,
+            리뷰내용: reviewText,
+            파일명: fileName
+        });
 
+         // 모달 닫기
+        $('#reviewModal').modal('hide');
+        alert("등록이 완료되었습니다.");
 /*
         // AJAX 요청을 통해 서버에 데이터 전송
         if (window.XMLHttpRequest) { // modern browsers
@@ -113,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                 // 요청 처리 성공 시
                 console.log("Response:", this.responseText);
+                reviewModal.hide(); // 요청 성공 후 모달 닫기를 여기서도 추가할 수 있음
             }
         };
         xhr.send(JSON.stringify({
@@ -125,6 +143,50 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// HTML 문서에 맞추어 수정된 submitReview 함수
+function submitReview() {
+    // 평점 및 리뷰 내용 가져오기
+    var rating = $('input[type="range"]').val(); // 평점 값을 정확히 가져오는 코드로 수정
+    var reviewText = $('#reviewText').val();
+    var imageUpload = $('#imageUpload')[0].files[0];
+
+    // 첨부된 이미지를 Base64로 변환하여 저장
+    if (imageUpload) {
+        var reader = new FileReader();
+        reader.onloadend = function() {
+            var base64Image = reader.result;
+            saveReview(rating, reviewText, base64Image);
+        };
+        reader.readAsDataURL(imageUpload);
+    } else {
+        saveReview(rating, reviewText, null);
+    }
+
+    // 모달 닫기
+    $('#reviewModal').modal('hide');
+}
+
+// 로컬 스토리지에 리뷰 저장하는 saveReview 함수
+function saveReview(rating, reviewText, base64Image) {
+    // 리뷰 객체 생성
+    var review = {
+        rating: rating/2,
+        reviewText: reviewText,
+        image: base64Image
+    };
+
+    // 기존 리뷰 목록 가져오기
+    var reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+
+    // 새로운 리뷰 추가
+    reviews.push(review);
+
+    // 로컬 스토리지에 저장
+    localStorage.setItem('reviews', JSON.stringify(reviews));
+
+    // 로그에 출력 (테스트용)
+    console.log("리뷰 저장:", review);
+}
 
 
 // 키워드 검색을 요청하는 함수

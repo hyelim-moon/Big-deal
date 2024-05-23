@@ -100,6 +100,7 @@ nav {
 #keyword {
   flex-grow: 1; /* 입력 필드가 더 많은 공간을 차지하도록 설정합니다. */
   height: 56px;
+  margin-left: 5px;
 }
 
 /* 지도 섹션 */
@@ -133,6 +134,7 @@ body {
 .search-form .search-btn {
 margin-left: 5px;
 margin-right: 5px;
+height: 56px;
 }
 
 .search-form .location-btn {

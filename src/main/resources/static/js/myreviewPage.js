@@ -36,13 +36,18 @@ function showReviewDetail(reviewId) {
     const review = reviews[reviewId];
     const reviewDetailContent = document.getElementById('reviewDetailContent');
 
+    // 별점을 숫자로 표시
+    const ratingDisplay = review.rating.toFixed(1); // 소수점 첫째 자리까지 표현
+
     // 리뷰 상세 내용 표시
     reviewDetailContent.innerHTML = `
-        <h5>별점: ${'★'.repeat(review.rating)}</h5>
-        <p>${review.reviewText}</p>
+        <h5>별점: ${ratingDisplay} 점</h5>
+        <p>내용: ${review.reviewText}</p>
         ${review.image ? `<img src="${review.image}" alt="첨부된 이미지" class="img-fluid">` : ''}
     `;
 
     const reviewDetailModal = new bootstrap.Modal(document.getElementById('reviewDetailModal'));
     reviewDetailModal.show();
 }
+
+
