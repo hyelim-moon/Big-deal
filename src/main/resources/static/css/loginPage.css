@@ -1,9 +1,7 @@
 body {
-    background-color: #f8f9fa; /* 부트스트랩 기본 배경색 */
 }
 
 header {
-    background-color: #f8f9fa; /* mappage의 헤더 배경색과 동일 */
     padding: 20px 0;
 }
 
