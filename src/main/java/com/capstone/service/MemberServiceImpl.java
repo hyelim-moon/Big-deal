@@ -80,6 +80,7 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    @Transactional
     @Override
     public MemberResponse update(String uuid, UpdateMemberRequest request) throws  MemberUsernameDuplicateException, MemberNotFoundException{
         Member member = repository.findById(uuid).orElseThrow(MemberNotFoundException::new);

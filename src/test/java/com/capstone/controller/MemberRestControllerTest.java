@@ -2,9 +2,11 @@ package com.capstone.controller;
 
 import com.capstone.dto.member.*;
 import com.capstone.provider.PinNumberUtility;
+import com.capstone.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.apache.catalina.security.SecurityConfig;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import(SecurityConfig.class)
-@Transactional
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -40,6 +41,8 @@ public class MemberRestControllerTest {
     protected MockMvc mockMvc;
     @Autowired
     private WebApplicationContext context;
+    @Autowired
+    private MemberRepository memberRepository;
     private final ObjectMapper om = new ObjectMapper();
     @MockBean
     private JavaMailSender javaMailSender;
@@ -50,13 +53,24 @@ public class MemberRestControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(SecurityMockMvcConfigurers.springSecurity()).build();
         doReturn("123456").when(pinNumberUtility).createCode();
     }
+    @AfterEach
+    public void deleteAll() {
+        memberRepository.deleteAll();
+    }
     @Test
     public void loginTest() throws Exception {
-        LoginMemberRequest request = new LoginMemberRequest("user1","1234");
-        ObjectMapper om = new ObjectMapper();
-        ResultActions result = mockMvc.perform(post("/api/v1/member/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(request)));
+        AddMemberRequest addMemberRequest = new AddMemberRequest("id1", "1234", "id1@email.com");
+        SendToEmailMemberRequest sendToEmailMemberRequest = new SendToEmailMemberRequest(addMemberRequest.getEmail());
+        VerifiedMemberRequest verifiedMemberRequest = new VerifiedMemberRequest(addMemberRequest.getEmail(), "123456");
+        LoginMemberRequest request = new LoginMemberRequest("id1","1234");
+        mockMvc.perform(post("/api/v1/member/auth/email").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(sendToEmailMemberRequest)));
+        String singUpResponse = mockMvc.perform(post("/api/v1/member/auth/code").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(verifiedMemberRequest))).andReturn().getResponse().getContentAsString();
+        String grantType = om.readTree(singUpResponse).get("grantType").asText();
+        String accessToken = om.readTree(singUpResponse).get("accessToken").asText();
+        mockMvc.perform(post("/api/v1/member").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(addMemberRequest)).header("Authorization", grantType + " " + accessToken));
+
+        ResultActions result = mockMvc.perform(post("/api/v1/member/auth/login").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)));
+
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -65,19 +79,34 @@ public class MemberRestControllerTest {
     }
     @Test
     public void loginNotFoundTest() throws Exception {
-        LoginMemberRequest request = new LoginMemberRequest("user0", "1234");
-        ObjectMapper om = new ObjectMapper();
-        ResultActions result = mockMvc.perform(post("/api/v1/member/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(request)));
+        AddMemberRequest addMemberRequest = new AddMemberRequest("id1", "1234", "id1@email.com");
+        SendToEmailMemberRequest sendToEmailMemberRequest = new SendToEmailMemberRequest(addMemberRequest.getEmail());
+        VerifiedMemberRequest verifiedMemberRequest = new VerifiedMemberRequest(addMemberRequest.getEmail(), "123456");
+        LoginMemberRequest request = new LoginMemberRequest("id0", "1234");
+        mockMvc.perform(post("/api/v1/member/auth/email").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(sendToEmailMemberRequest)));
+        String singUpResponse = mockMvc.perform(post("/api/v1/member/auth/code").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(verifiedMemberRequest))).andReturn().getResponse().getContentAsString();
+        String grantType = om.readTree(singUpResponse).get("grantType").asText();
+        String accessToken = om.readTree(singUpResponse).get("accessToken").asText();
+        mockMvc.perform(post("/api/v1/member").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(addMemberRequest)).header("Authorization", grantType + " " + accessToken));
+
+        ResultActions result = mockMvc.perform(post("/api/v1/member/auth/login").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)));
+
         result
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
     @Test
     public void loginUnauthorizedTest() throws Exception {
-        LoginMemberRequest request = new LoginMemberRequest("user1", "1235");
-        ObjectMapper om = new ObjectMapper();
+        AddMemberRequest addMemberRequest = new AddMemberRequest("id1", "1234", "id1@email.com");
+        SendToEmailMemberRequest sendToEmailMemberRequest = new SendToEmailMemberRequest(addMemberRequest.getEmail());
+        VerifiedMemberRequest verifiedMemberRequest = new VerifiedMemberRequest(addMemberRequest.getEmail(), "123456");
+        LoginMemberRequest request = new LoginMemberRequest("id1", "1235");
+        mockMvc.perform(post("/api/v1/member/auth/email").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(sendToEmailMemberRequest)));
+        String singUpResponse = mockMvc.perform(post("/api/v1/member/auth/code").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(verifiedMemberRequest))).andReturn().getResponse().getContentAsString();
+        String grantType = om.readTree(singUpResponse).get("grantType").asText();
+        String accessToken = om.readTree(singUpResponse).get("accessToken").asText();
+        mockMvc.perform(post("/api/v1/member").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(addMemberRequest)).header("Authorization", grantType + " " + accessToken));
+
         ResultActions result = mockMvc.perform(post("/api/v1/member/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(request)));
@@ -91,7 +120,7 @@ public class MemberRestControllerTest {
         ObjectMapper om = new ObjectMapper();
         ResultActions result = null;
 
-        request = new LoginMemberRequest("user1", "");
+        request = new LoginMemberRequest("id1", "");
         result = mockMvc.perform(post("/api/v1/member/auth/login").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)));
         result
                 .andExpect(status().isBadRequest())
@@ -103,7 +132,7 @@ public class MemberRestControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        request = new LoginMemberRequest("user1", "1234");
+        request = new LoginMemberRequest("id1", "1234");
         result = mockMvc.perform(post("/api/v1/member/auth/login").contentType(MediaType.TEXT_PLAIN).content(om.writeValueAsString(request)));
         result
                 .andExpect(status().isUnsupportedMediaType())
@@ -273,12 +302,14 @@ public class MemberRestControllerTest {
         String grantType = om.readTree(singUpResponse).get("grantType").asText();
         String accessToken = om.readTree(singUpResponse).get("accessToken").asText();
         String response = mockMvc.perform(post("/api/v1/member").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)).header("Authorization",grantType + " " + accessToken)).andReturn().getResponse().getContentAsString();
+        String uuid = om.readTree(response).get("uuid").asText();
         String username = om.readTree(response).get("username").asText();
         response = mockMvc.perform(post("/api/v1/member/auth/login").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(new LoginMemberRequest(username, "1234")))).andReturn().getResponse().getContentAsString();
         grantType = om.readTree(response).get("grantType").asText();
         accessToken = om.readTree(response).get("accessToken").asText();
 
-        result = mockMvc.perform(put("/api/v1/member").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(updateRequest)).header("Authorization", grantType + " " + accessToken));
+        mockMvc.perform(put("/api/v1/member").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(updateRequest)).header("Authorization", grantType + " " + accessToken));
+        result = mockMvc.perform(get("/api/v1/member/" + uuid).contentType(MediaType.APPLICATION_JSON));
 
         result
                 .andExpect(status().isOk())
