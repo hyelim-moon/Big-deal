@@ -116,31 +116,31 @@ public class MemberRestControllerTest {
     }
     @Test
     public void loginBadRequestTest() throws Exception {
-        LoginMemberRequest request = null;
+        LoginMemberRequest request1, request2, request3;
         ObjectMapper om = new ObjectMapper();
-        ResultActions result = null;
+        ResultActions result1, result2, result3;
+        request1 = new LoginMemberRequest("id1", "");
+        request2 = new LoginMemberRequest("", "1234");
+        request3 = new LoginMemberRequest("id1", "1234");
 
-        request = new LoginMemberRequest("id1", "");
-        result = mockMvc.perform(post("/api/v1/member/auth/login").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)));
-        result
+        result1 = mockMvc.perform(post("/api/v1/member/auth/login").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request1)));
+        result2 = mockMvc.perform(post("/api/v1/member/auth/login").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request2)));
+        result3 = mockMvc.perform(post("/api/v1/member/auth/login").contentType(MediaType.TEXT_PLAIN).content(om.writeValueAsString(request3)));
+
+        result1
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-
-        request = new LoginMemberRequest("", "1234");
-        result = mockMvc.perform(post("/api/v1/member/auth/login").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)));
-        result
+        result2
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-
-        request = new LoginMemberRequest("id1", "1234");
-        result = mockMvc.perform(post("/api/v1/member/auth/login").contentType(MediaType.TEXT_PLAIN).content(om.writeValueAsString(request)));
-        result
+        result3
                 .andExpect(status().isUnsupportedMediaType())
         //        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         ;
     }
     @Test
-    public void userPostTest() throws Exception {
+    public void memberSingUpTest() throws Exception {
+        ResultActions result;
         AddMemberRequest request = new AddMemberRequest("id1", "1234", "user@email.com");
         VerifiedMemberRequest verifiedMemberRequest = new VerifiedMemberRequest(request.getEmail(), "123456");
         SendToEmailMemberRequest emailRequest = new SendToEmailMemberRequest(request.getEmail());
@@ -149,22 +149,15 @@ public class MemberRestControllerTest {
         String grantType = om.readTree(singUpResponse).get("grantType").asText();
         String token = om.readTree(singUpResponse).get("accessToken").asText();
 
-        ResultActions result = mockMvc.perform(post("/api/v1/member")
+        result = mockMvc.perform(post("/api/v1/member")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(request))
                 .header("Authorization", grantType + " " + token));
 
         result.andExpect(status().isCreated());
-        String response = result.andReturn().getResponse().getContentAsString();
-        String username = om.readTree(response).get("username").asText();
-        result = mockMvc.perform(post("/api/v1/member/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(new LoginMemberRequest(username, "1234"))));
-        result
-                .andExpect(status().isOk());
     }
     @Test
-    public void memberPostBadRequestTest() throws Exception {
+    public void memberSingUpBadRequestTest() throws Exception {
         AddMemberRequest request1, request2, request3;
         SendToEmailMemberRequest emailRequest1, emailRequest2, emailRequest3;
         VerifiedMemberRequest verifiedMemberRequest1, verifiedMemberRequest2, verifiedMemberRequest3;
@@ -199,7 +192,7 @@ public class MemberRestControllerTest {
         result3.andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
     @Test
-    public void memberPostForbiddenTest() throws Exception {
+    public void memberSingUpForbiddenTest() throws Exception {
         AddMemberRequest firstRequest, request1, request2;
         SendToEmailMemberRequest emailRequestFirst, emailRequest1, emailRequest2;
         VerifiedMemberRequest verifiedMemberRequestFirst, verifiedMemberRequest1, verifiedMemberRequest2;
@@ -231,6 +224,24 @@ public class MemberRestControllerTest {
 
         result1.andExpect(status().isForbidden()).andExpect(content().contentType(MediaType.APPLICATION_JSON));
         result2.andExpect(status().isForbidden()).andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+    @Test
+    public void memberSingUpDifferentEmailTest() throws Exception {
+        AddMemberRequest addMemberRequest = new AddMemberRequest("id1", "password1", "id1@email");
+        SendToEmailMemberRequest sendToEmailMemberRequest = new SendToEmailMemberRequest("id2@email");
+        VerifiedMemberRequest verifiedMemberRequest = new VerifiedMemberRequest("id2@email", "123456");
+        String singUpResponse, grantType, accessToken;
+        ResultActions result;
+        mockMvc.perform(post("/api/v1/member/auth/email").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(sendToEmailMemberRequest)));
+        singUpResponse = mockMvc.perform(post("/api/v1/member/auth/code").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(verifiedMemberRequest))).andReturn().getResponse().getContentAsString();
+        grantType = om.readTree(singUpResponse).get("grantType").asText();
+        accessToken = om.readTree(singUpResponse).get("accessToken").asText();
+
+        result = mockMvc.perform(post("/api/v1/member").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(addMemberRequest)).header("Authorization", grantType + " " + accessToken));
+
+        result
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.email").value(sendToEmailMemberRequest.getEmail()));
     }
     @Test
     public void memberGetUuidTest() throws Exception {

@@ -7,11 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 public class EmailCodeAuthenticationToken extends AbstractAuthenticationToken {
-    private UserDetails userDetails;
+    private String email;
     private String code;
-    public EmailCodeAuthenticationToken(UserDetails userDetails, String code, Collection<? extends GrantedAuthority> authorities) {
+    public EmailCodeAuthenticationToken(String email, String code, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
-        this.userDetails = userDetails;
+        this.email = email;
         this.code = code;
     }
     public EmailCodeAuthenticationToken(Collection<? extends GrantedAuthority> authorities) {
@@ -25,6 +25,6 @@ public class EmailCodeAuthenticationToken extends AbstractAuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return this.userDetails;
+        return this.email;
     }
 }

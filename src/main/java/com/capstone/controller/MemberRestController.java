@@ -30,8 +30,9 @@ public class MemberRestController {
         return ResponseEntity.ok().body(service.findById(uuid));
     }
     @PostMapping("")
-    public ResponseEntity<MemberResponse> signUp(@RequestBody AddMemberRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.insert(request));
+    public ResponseEntity<MemberResponse> signUp(@RequestBody AddMemberControllerRequest request, @RequestHeader(value = "Authorization", required = true, defaultValue = "") String authorization) {
+        String token = jwtTokenUtility.getTokenAtHeader(authorization);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.insert(new AddMemberRequest(request.getUsername(), request.getPassword(), jwtTokenUtility.getUsername(token))));
     }
     @PostMapping("auth/email")
     public ResponseEntity<Object> sendEmail(@RequestBody SendToEmailMemberRequest request) {

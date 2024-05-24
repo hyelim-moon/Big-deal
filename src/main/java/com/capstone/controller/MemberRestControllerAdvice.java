@@ -50,4 +50,9 @@ public class MemberRestControllerAdvice {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorCodeResponse.of("unauthorized"));
     }
+    @ExceptionHandler(value = EmailNotFoundException.class)
+    public ResponseEntity<ErrorCodeResponse> emailNotFound(EmailNotFoundException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorCodeResponse.of("unauthorized"));
+    }
 }

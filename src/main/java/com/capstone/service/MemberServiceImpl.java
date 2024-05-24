@@ -124,7 +124,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public JwtTokenResponse verifiedEmail(VerifiedMemberRequest request) {
         if (emailCodeService.getValues(request.getEmail()) == null) {
-            throw new BadCredentialsException("email does not exist");
+            throw new EmailNotFoundException();
         }
         if (!emailCodeService.getValues(request.getEmail()).equals(request.getCode())) {
             throw new EmailInvalidateCodeException();
