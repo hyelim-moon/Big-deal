@@ -1,27 +1,38 @@
 package com.capstone.service;
 
 import com.capstone.dto.JwtTokenResponse;
+import com.capstone.dto.SetEmailCode;
 import com.capstone.dto.member.*;
+import com.capstone.entity.EmailCode;
 import com.capstone.entity.Member;
 import com.capstone.exception.*;
-import com.capstone.jwt.JwtTokenProvider;
+import com.capstone.provider.JwtTokenUtility;
+import com.capstone.provider.PinNumberUtility;
 import com.capstone.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service("memberServiceImpl")
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService, UserDetailsService {
+public class MemberServiceImpl implements MemberService {
     private final MemberRepository repository;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenUtility jwtTokenUtility;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final EmailCodeService emailCodeService;
+    private final PinNumberUtility pinNumberUtility;
+    @Value("${spring.mail.auth-code-expiration-millis}")
+    private long authCodeExpirationMillis;
 
     @Override
     public MemberResponse findById(String uuid) throws MemberNotFoundException {
@@ -67,6 +78,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         }
     }
 
+    @Transactional
     @Override
     public MemberResponse update(String uuid, UpdateMemberRequest request) throws  MemberUsernameDuplicateException, MemberNotFoundException{
         Member member = repository.findById(uuid).orElseThrow(MemberNotFoundException::new);
@@ -93,6 +105,30 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         repository.findById(uuid).orElseThrow(MemberNotFoundException::new).withdrawal();
         return true;
     }
+    @Override
+    public void sendCodeToEmail(String email) {
+        if (repository.existsByEmail(email)) {
+            throw new MemberEmailDuplicateException();
+        }
+        String title = "이메일 인증 번호";
+        String authCode = pinNumberUtility.createCode();
+        emailService.sendEmail(email, title, authCode);
+        emailCodeService.setValues(SetEmailCode.builder()
+                .email(email)
+                .code(authCode)
+                .time(Duration.ofMillis(this.authCodeExpirationMillis))
+                .build());
+    }
+    @Override
+    public JwtTokenResponse verifiedEmail(VerifiedMemberRequest request) {
+        if (emailCodeService.getValues(request.getEmail()) == null) {
+            throw new EmailNotFoundException();
+        }
+        if (!emailCodeService.getValues(request.getEmail()).equals(request.getCode())) {
+            throw new EmailInvalidateCodeException();
+        }
+        return new JwtTokenResponse("Bearer", jwtTokenUtility.createToken(request.getEmail(), EmailCode.authorities().stream().map(GrantedAuthority::getAuthority).toList()));
+    }
 
     @Override
     public JwtTokenResponse login(LoginMemberRequest request) throws MemberBadRequestException, MemberNotFoundException, MemberPasswordNotEqualsException {
@@ -109,11 +145,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         if (member.getWithdrawalDateTime() != null) {
             throw new MemberInvalidateLoginException();
         }
-        String accessToken = jwtTokenProvider.createToken(member.getUuid(), List.of("user"));
+        String accessToken = jwtTokenUtility.createToken(member.getUuid(), List.of("ROLE_USER"));
         return new JwtTokenResponse("Bearer", accessToken);
     }
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        return repository.findById(username).orElseThrow(MemberNotFoundException::new);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return repository.findById(username).orElseThrow(()->new UsernameNotFoundException("member not found."));
     }
 }

@@ -2,6 +2,7 @@ package com.capstone.service;
 
 import com.capstone.dto.franchise.FranchiseResponse;
 import com.capstone.entity.Franchise;
+import com.capstone.service.franchise.FranchiseNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ public class FranchiseServiceTest {
     @DisplayName("exception")
     @Test
     public void errorTest() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {service.findById("1L");});
+        Assertions.assertThrows(FranchiseNotFoundException.class, () -> {service.findById("1L");});
     }
     @Test
     public void findBySectorCode() {

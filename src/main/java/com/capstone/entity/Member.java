@@ -36,12 +36,9 @@ public class Member implements UserDetails {
     private String email;
     @CreatedDate
     private LocalDateTime singUpDateTime;
-    @Column
-    @Enumerated(EnumType.STRING)
-    private Role role;
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    private List<String> authorizations = new ArrayList<>();
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime withdrawalDateTime;
     @Builder
@@ -66,7 +63,7 @@ public class Member implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream().map(SimpleGrantedAuthority::new).toList();
+        return this.authorizations.stream().map(SimpleGrantedAuthority::new).toList();
     }
     @Override
     public String getUsername() {
