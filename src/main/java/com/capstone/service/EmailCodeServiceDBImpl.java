@@ -34,8 +34,4 @@ public class EmailCodeServiceDBImpl implements EmailCodeService {
         }
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return emailCodeRepository.findById(username).orElseThrow(()-> new UsernameNotFoundException("member not found")).details();
-    }
 }

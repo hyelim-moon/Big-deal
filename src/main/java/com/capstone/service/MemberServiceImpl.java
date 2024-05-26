@@ -1,9 +1,9 @@
 package com.capstone.service;
 
-import com.capstone.dto.EmailCodeDetails;
 import com.capstone.dto.JwtTokenResponse;
 import com.capstone.dto.SetEmailCode;
 import com.capstone.dto.member.*;
+import com.capstone.entity.EmailCode;
 import com.capstone.entity.Member;
 import com.capstone.exception.*;
 import com.capstone.provider.JwtTokenUtility;
@@ -13,10 +13,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -129,7 +127,7 @@ public class MemberServiceImpl implements MemberService {
         if (!emailCodeService.getValues(request.getEmail()).equals(request.getCode())) {
             throw new EmailInvalidateCodeException();
         }
-        return new JwtTokenResponse("Bearer", jwtTokenUtility.createToken(request.getEmail(), EmailCodeDetails.authorities().stream().map(GrantedAuthority::getAuthority).toList()));
+        return new JwtTokenResponse("Bearer", jwtTokenUtility.createToken(request.getEmail(), EmailCode.authorities().stream().map(GrantedAuthority::getAuthority).toList()));
     }
 
     @Override

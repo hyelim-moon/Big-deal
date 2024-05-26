@@ -19,10 +19,11 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        if (!jwtTokenUtility.validateToken((String)authentication.getCredentials())) {
-            throw new BadCredentialsException("jwt signature invalidate");
+        if (jwtTokenUtility.validateToken((String)authentication.getCredentials())) {
+            authentication.setAuthenticated(true);
+        } else {
+            authentication = null;
         }
-        authentication.setAuthenticated(true);
         return authentication;
     }
 

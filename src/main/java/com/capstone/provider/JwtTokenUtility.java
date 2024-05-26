@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-@Component("jwtTokenProvider")
+@Component("jwtTokenUtility")
 public class JwtTokenUtility {
     private final Key key;
     private final long tokenValidMillisecond;

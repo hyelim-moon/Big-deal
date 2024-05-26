@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.time.Duration;
 
-public interface EmailCodeService extends UserDetailsService {
+public interface EmailCodeService {
     void setValues(SetEmailCode setEmailCode);
     String getValues(String k);
 }
