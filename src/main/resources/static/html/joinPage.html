@@ -29,18 +29,21 @@
         <form id="user-form">
             <div class="mb-3 d-flex align-items-center">
                 <input type="text" class="form-control" id="username" name="username" placeholder="아이디" required>
-                <button type="button" class="btn btn-primary ms-2" id="check-username">중복확인</button>
+                <!-- 일반 회원 아이디 중복 확인 버튼 -->
+                <button type="button" class="btn btn-primary ms-2" id="check-username" data-username-input-id="username">중복확인</button>
             </div>
             <div class="mb-3">
                 <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" required>
             </div>
             <div class="mb-3 d-flex align-items-center">
                 <input type="email" class="form-control" id="email" name="email" placeholder="이메일 인증" required>
-                <button type="button" class="btn btn-primary ms-2">메일발송</button>
+                <!-- 이메일 인증 버튼에 이벤트 추가 -->
+                <button type="button" class="btn btn-primary ms-2" id="send-email">메일발송</button>
             </div>
             <div class="mb-3 d-flex align-items-center">
                 <input type="text" class="form-control" id="authCode" name="authCode" placeholder="인증번호">
-                <button type="button" class="btn btn-primary ms-2">인증번호확인</button>
+                <!-- 인증번호 확인 버튼에 이벤트 추가 -->
+                <button type="button" class="btn btn-primary ms-2" id="verify-authCode">인증번호확인</button>
             </div>
             <button type="submit" class="btn btn-primary btn-block">가입하기</button>
         </form>
@@ -53,7 +56,8 @@
             </div>
             <div class="mb-3 d-flex align-items-center">
                 <input type="text" class="form-control" id="business-username" name="business-username" placeholder="아이디" required>
-                <button type="button" class="btn btn-primary ms-2" id="check-business-username">중복확인</button>
+                <!-- 사업자 아이디 중복 확인 버튼 -->
+                <button type="button" class="btn btn-primary ms-2" id="check-business-username" data-username-input-id="business-username">중복확인</button>
             </div>
             <div class="mb-3">
                 <input type="password" class="form-control" id="business-password" name="business-password" placeholder="비밀번호" required>

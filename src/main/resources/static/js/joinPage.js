@@ -1,155 +1,151 @@
 $(document).ready(function(){
-    // 사업자 버튼 클릭 시 사업자 가입 폼 표시
+    // 폼 전환 이벤트
     $("#business-btn").click(function(){
         $("#user-form").hide();
         $("#business-form").show();
     });
 
-    // 일반 회원 버튼 클릭 시 일반 회원 가입 폼 표시
     $("#user-btn").click(function(){
         $("#business-form").hide();
         $("#user-form").show();
     });
-});
 
-document.addEventListener('DOMContentLoaded', function() {
-    const userForm = document.getElementById('user-form');
-    const businessForm = document.getElementById('business-form');
+    /* 중복확인 api 개발시 적용
+    // 아이디 중복 확인
+    $("#check-username, #check-business-username").click(function() {
+        var usernameInputId = $(this).data('username-input-id');
+        checkUsername(usernameInputId);
+    });
 
-// 일반 회원 가입 폼 제출 처리
-userForm.addEventListener('submit', async function(event) {
-    event.preventDefault(); // 폼 제출 기본 동작 막기
-
-    const formData = {
-        username: userForm.username.value,
-        password: userForm.password.value,
-        email: userForm.email.value
-    };
-
-    try {
-        const response = await fetch('http://localhost:8080/api/v1/member', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (response.ok) {
-            console.log('회원가입 성공');
-            alert('회원가입 성공');
-            // 회원가입 성공 후 로그인 페이지로 리디렉션
-            window.location.href = 'loginPage.html';
-        } else {
-            const errorData = await response.json();
-            console.error('회원가입 실패:', errorData.message);
-            alert(`회원가입 실패: ${errorData.message}`);
-        }
-    } catch (error) {
-        console.error('회원가입 요청 중 오류 발생:', error);
-        alert('회원가입 요청 중 오류가 발생했습니다.');
-    }
-});
-
-// 사업자 회원 가입 폼 제출 처리
-businessForm.addEventListener('submit', async function(event) {
-    event.preventDefault(); // 폼 제출 기본 동작 막기
-
-    const formData = {
-        username: businessForm['business-username'].value,
-        password: businessForm['business-password'].value,
-        email: businessForm['business-email'].value
-    };
-
-    try {
-        const response = await fetch('http://localhost:8080/api/v1/member', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (response.ok) {
-            console.log('회원가입 성공');
-            alert('회원가입 성공');
-            // 회원가입 성공 후 로그인 페이지로 리디렉션
-            window.location.href = 'loginPage.html';
-        } else {
-            const errorData = await response.json();
-            console.error('회원가입 실패:', errorData.message);
-            alert(`회원가입 실패: ${errorData.message}`);
-        }
-    } catch (error) {
-        console.error('회원가입 요청 중 오류 발생:', error);
-        alert('회원가입 요청 중 오류가 발생했습니다.');
-    }
-});
-
- // 일반 회원 아이디 중복 확인  -- 아이디 중복확인 엔드포인트 필요
-    $("#check-username").click(async function() {
-        const username = $("#username").val();
-
-        if (!username) {
+    function checkUsername(usernameInputId) {
+        var username = $('#' + usernameInputId).val().trim();
+        if (username === '') {
             alert('아이디를 입력해주세요.');
             return;
         }
-
-        try {
-            const response = await fetch(`http://localhost:8080/api/v1/member/check-username?username=${username}`);
-            if (response.ok) {
-                const data = await response.json();
-                if (data.available) {
-                    alert(`${username} 는 사용 가능한 아이디입니다.`);
-                } else {
-                    alert(`${username} 는 이미 사용 중인 아이디입니다.`);
-                }
-            } else {
-                alert('아이디 중복 확인 중 오류가 발생했습니다.');
+        fetch(`http://localhost:8080/api/v1/member/check-username?username=${encodeURIComponent(username)}`, {
+            method: 'GET'
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('서버로부터 응답을 받는 데 실패했습니다. 상태 코드: ' + response.status);
             }
-        } catch (error) {
-            console.error('아이디 중복 확인 요청 중 오류 발생:', error);
-            alert('아이디 중복 확인 요청 중 오류가 발생했습니다.');
-        }
-    });
+            return response.json();
+        }).then(data => {
+            if (data.available) {
+                alert('사용 가능한 아이디입니다.');
+            } else {
+                alert('이미 사용 중인 아이디입니다.');
+            }
+        }).catch(error => {
+            console.error('아이디 중복 검사 중 오류 발생:', error);
+            alert('아이디 중복 검사 중 오류가 발생했습니다.');
+        });
+    }
+    */
 
-    // 사업자 아이디 중복 확인
-    $("#check-business-username").click(async function() {
-        const username = $("#business-username").val();
-
-        if (!username) {
-            alert('아이디를 입력해주세요.');
+    // 이메일 발송 요청
+    $("#send-email").click(function() {
+        const email = $('#email').val().trim();
+        if (!email) {
+            alert('이메일을 입력해주세요.');
             return;
         }
+        sendEmail(email);
+    });
 
+    // 이메일 발송 함수
+    async function sendEmail(email) {
         try {
-            const response = await fetch(`http://localhost:8080/api/v1/member/check-username?username=${username}`);
+            const response = await fetch('http://localhost:8080/api/v1/member/auth/email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email })
+            });
             if (response.ok) {
-                const data = await response.json();
-                if (data.available) {
-                    alert(`${username} 는 사용 가능한 아이디입니다.`);
-                } else {
-                    alert(`${username} 는 이미 사용 중인 아이디입니다.`);
-                }
+                alert('인증 코드가 이메일로 발송되었습니다.');
             } else {
-                alert('아이디 중복 확인 중 오류가 발생했습니다.');
+                const errorData = await response.json();
+                alert('이메일 발송에 실패하였습니다: ' + errorData.message);
             }
         } catch (error) {
-            console.error('아이디 중복 확인 요청 중 오류 발생:', error);
-            alert('아이디 중복 확인 요청 중 오류가 발생했습니다.');
+            alert('이메일 발송 중 오류가 발생했습니다.');
         }
+    }
+
+    // 인증번호 확인
+    $("#verify-authCode").click(function() {
+        const email = $('#email').val().trim();
+        const authCode = $('#authCode').val().trim();
+        verifyAuthCode(email, authCode);
+    });
+
+    // 인증 코드 검증 함수
+    async function verifyAuthCode(email, authCode) {
+        try {
+            const response = await fetch('http://localhost:8080/api/v1/member/auth/code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email, code: authCode })
+            });
+            const data = await response.json();
+            console.log(data); // 응답 데이터를 콘솔에 출력
+            if (response.ok) {
+                alert('인증 성공, 회원가입을 계속 진행하세요.');
+                if (data.accessToken) { // 서버 응답의 필드 이름이 accessToken 반영
+                    localStorage.setItem('authToken', data.accessToken);
+                    console.log('인증 토큰:', data.accessToken);
+                } else {
+                    console.error('토큰이 응답에 포함되지 않았습니다.');
+                }
+            } else {
+                alert(`인증 실패: ${data.message}`);
+            }
+        } catch (error) {
+            alert('인증번호 검증 중 오류가 발생했습니다.');
+        }
+    }
+
+    // 회원가입 요청 함수
+    async function submitRegistration(formData) {
+        try {
+            const token = localStorage.getItem('authToken'); // 저장된 인증 토큰 사용
+            const response = await fetch('http://localhost:8080/api/v1/member', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            // 응답 처리
+            if (response.ok) {
+                console.log('회원가입 성공');
+                alert('회원가입 성공');
+                window.location.href = 'loginPage.html'; // 성공 페이지로 리디렉션
+            } else {
+                const errorData = await response.json();
+                console.error('회원가입 실패:', errorData.message || '알 수 없는 오류');
+                alert(`회원가입 실패: ${errorData.message || '알 수 없는 오류'}`);
+            }
+        } catch (error) {
+            console.error('회원가입 요청 중 오류 발생:', error);
+            alert('회원가입 요청 중 오류가 발생했습니다.');
+        }
+    }
+
+    // 폼 제출 이벤트
+    $('#user-form').on('submit', function(event) {
+        event.preventDefault();
+        const formData = {
+            username: $('#username').val(),
+            password: $('#password').val(),
+            email: $('#email').val()
+        };
+        submitRegistration(formData);
     });
 });
-
-
-// 사업자 및 일반 회원 선택 버튼 클릭 이벤트 처리
-document.getElementById('business-btn').addEventListener('click', function() {
-    userForm.style.display = 'none';
-    businessForm.style.display = 'block';
-});
-
-document.getElementById('user-btn').addEventListener('click', function() {
-    userForm.style.display = 'block';
-    businessForm.style.display = 'none';
-});
-
