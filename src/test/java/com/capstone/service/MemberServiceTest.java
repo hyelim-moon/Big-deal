@@ -245,4 +245,20 @@ public class MemberServiceTest {
 
         Assertions.assertThrows(MemberNotFoundException.class, ()->service.login(request));
     }
+    @Test
+    public void checkDuplicationUsername() {
+        AddMemberRequest addMemberRequest = new AddMemberRequest("id1", "password1", "id1@email.com");
+        service.insert(addMemberRequest);
+
+        Assertions.assertTrue(service.existUsername(addMemberRequest.getUsername()));
+        Assertions.assertFalse(service.existUsername("id2"));
+    }
+    @Test
+    public void checkDuplicationEmail() {
+        AddMemberRequest addMemberRequest = new AddMemberRequest("id1", "password1", "id1@email.com");
+        service.insert(addMemberRequest);
+
+        Assertions.assertTrue(service.existEmail(addMemberRequest.getEmail()));
+        Assertions.assertFalse(service.existEmail("id2@email.com"));
+    }
 }

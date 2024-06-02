@@ -405,4 +405,48 @@ public class MemberRestControllerTest {
         result1
                 .andExpect(status().isForbidden());
     }
+    @Test
+    public void checkDuplicationUsernameTest() throws Exception {
+        SendToEmailMemberRequest sendToEmailMemberRequest = new SendToEmailMemberRequest("id1@email.com");
+        AddMemberRequest addMemberRequest = new AddMemberRequest("id1", "password1", "id1@email.com");
+        VerifiedMemberRequest verifiedMemberRequest = new VerifiedMemberRequest("id1@email.com", "123456");
+        String singUpResponse, grantType, accessToken;
+        mockMvc.perform(post("/api/v1/member/auth/email").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(sendToEmailMemberRequest)));
+        singUpResponse = mockMvc.perform(post("/api/v1/member/auth/code").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(verifiedMemberRequest))).andReturn().getResponse().getContentAsString();
+        grantType = om.readTree(singUpResponse).get("grantType").asText();
+        accessToken = om.readTree(singUpResponse).get("accessToken").asText();
+        mockMvc.perform(post("/api/v1/member").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(addMemberRequest)).header("Authorization", grantType + " " + accessToken));
+
+        ResultActions resultActions1 = mockMvc.perform(get("/api/v1/member/duplication/username/" + "id1"));
+        ResultActions resultActions2 = mockMvc.perform(get("/api/v1/member/duplication/username/" + "id2"));
+
+        resultActions1
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value("true"));
+        resultActions2
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value("false"));
+    }
+    @Test
+    public void checkDuplicationEmailTest() throws Exception {
+        SendToEmailMemberRequest sendToEmailMemberRequest = new SendToEmailMemberRequest("id1@email.com");
+        AddMemberRequest addMemberRequest = new AddMemberRequest("id1", "password1", "id1@email.com");
+        VerifiedMemberRequest verifiedMemberRequest = new VerifiedMemberRequest("id1@email.com", "123456");
+        String singUpResponse, grantType, accessToken;
+        mockMvc.perform(post("/api/v1/member/auth/email").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(sendToEmailMemberRequest)));
+        singUpResponse = mockMvc.perform(post("/api/v1/member/auth/code").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(verifiedMemberRequest))).andReturn().getResponse().getContentAsString();
+        grantType = om.readTree(singUpResponse).get("grantType").asText();
+        accessToken = om.readTree(singUpResponse).get("accessToken").asText();
+        mockMvc.perform(post("/api/v1/member").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(addMemberRequest)).header("Authorization", grantType + " " + accessToken));
+
+        ResultActions resultActions1 = mockMvc.perform(get("/api/v1/member/duplication/email/" + "id1@email.com"));
+        ResultActions resultActions2 = mockMvc.perform(get("/api/v1/member/duplication/email/" + "id2@email.com"));
+
+        resultActions1
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value("true"));
+        resultActions2
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value("false"));
+    }
 }

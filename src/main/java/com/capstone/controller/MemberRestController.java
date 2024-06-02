@@ -29,6 +29,14 @@ public class MemberRestController {
     public ResponseEntity<MemberResponse> findById(@PathVariable String uuid) {
         return ResponseEntity.ok().body(service.findById(uuid));
     }
+    @GetMapping("duplication/username/{username}")
+    public ResponseEntity<Boolean> checkUsernameDuplication(@PathVariable String username) {
+        return ResponseEntity.ok().body(service.existUsername(username));
+    }
+    @GetMapping("duplication/email/{email}")
+    public ResponseEntity<Boolean> checkEmailDuplication(@PathVariable String email) {
+        return ResponseEntity.ok().body(service.existEmail(email));
+    }
     @PostMapping("")
     public ResponseEntity<MemberResponse> signUp(@RequestBody AddMemberControllerRequest request, @RequestHeader(value = "Authorization", required = true, defaultValue = "") String authorization) {
         String token = jwtTokenUtility.getTokenAtHeader(authorization);
