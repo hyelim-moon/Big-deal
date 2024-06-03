@@ -41,7 +41,7 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public RatingResponse save(AddRatingRequest request) {
+    public RatingResponse insert(AddRatingRequest request) {
         if (ratingRepository.findByMemberUuidAndFranchiseUuid(request.getMemberUuid(), request.getFranchiseUuid()) != null) {
             throw new RatingDuplicateException("rating already exists");
         }

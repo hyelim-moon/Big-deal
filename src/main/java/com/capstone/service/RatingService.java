@@ -12,7 +12,7 @@ public interface RatingService {
     List<RatingResponse> findByMemberUuid(String MemberUuid);
     List<RatingResponse> findByFranchiseUuid(String FranchiseUuid);
     List<RatingResponse> findAll();
-    RatingResponse save(AddRatingRequest request);
+    RatingResponse insert(AddRatingRequest request);
     RatingResponse update(String memberUuid, UpdateRatingRequest request);
     RatingResponse remove(String memberUuid, RemoveRatingRequest request);
 }

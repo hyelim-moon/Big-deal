@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class RatingResponse {
+    private final String uuid;
     private final String memberUuid;
     private final String franchiseUuid;
     private final Integer starRating;
@@ -17,6 +18,7 @@ public class RatingResponse {
     private final LocalDateTime registerDateTime;
     private final LocalDateTime deleteDateTime;
     public RatingResponse(Rating rating) {
+        this.uuid = rating.getUuid();
         this.memberUuid = rating.getMemberUuid();
         this.franchiseUuid = rating.getFranchiseUuid();
         this.starRating = rating.getStarRating();

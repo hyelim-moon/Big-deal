@@ -42,8 +42,8 @@ public class Rating {
         this.deleteDateTime = deleteDateTime;
     }
     public Rating update(UpdateRatingRequest request) {
-        starRating = request.getStarRating();
-        review = request.getReview();
+        starRating = request.getStarRating() == null ? starRating : request.getStarRating();
+        review = request.getReview() == null ? review : request.getReview();
         return this;
     }
     public Rating remove() {
