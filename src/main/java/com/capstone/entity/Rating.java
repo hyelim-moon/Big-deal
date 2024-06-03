@@ -1,10 +1,13 @@
 package com.capstone.entity;
 
+import com.capstone.dto.rating.UpdateRatingRequest;
+import com.capstone.exception.RatingInvalidateRemoveException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +28,7 @@ public class Rating {
     private Integer starRating;
     @Column
     private String review;
-    @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
     private LocalDateTime registerDateTime;
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime deleteDateTime;
@@ -37,5 +40,17 @@ public class Rating {
         this.review = review;
         this.registerDateTime = registerDateTime;
         this.deleteDateTime = deleteDateTime;
+    }
+    public Rating update(UpdateRatingRequest request) {
+        starRating = request.getStarRating();
+        review = request.getReview();
+        return this;
+    }
+    public Rating remove() {
+        if (this.deleteDateTime != null) {
+            throw new RatingInvalidateRemoveException("rating duplicate remove");
+        }
+        this.deleteDateTime = LocalDateTime.now();
+        return this;
     }
 }

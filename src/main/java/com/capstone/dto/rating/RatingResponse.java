@@ -1,10 +1,13 @@
 package com.capstone.dto.rating;
 
 import com.capstone.entity.Rating;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
 @Getter
 public class RatingResponse {
     private final String memberUuid;
