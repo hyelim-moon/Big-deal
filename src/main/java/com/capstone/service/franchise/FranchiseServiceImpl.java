@@ -64,4 +64,8 @@ public class FranchiseServiceImpl implements FranchiseService {
     public List<FranchiseResponse> findAll() {
         return repository.findAll().stream().map(FranchiseResponse::new).toList();
     }
+    @Override
+    public Boolean exist(String uuid) {
+        return  repository.existsById(uuid);
+    }
 }

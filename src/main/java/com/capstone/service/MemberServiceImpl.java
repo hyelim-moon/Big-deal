@@ -150,6 +150,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public Boolean exist(String uuid) {
+        return repository.existsById(uuid);
+    }
+    @Override
     public Boolean existUsername(String username) {
         return repository.existsByUsername(username);
     }

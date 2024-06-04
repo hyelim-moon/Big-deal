@@ -3,7 +3,6 @@ package com.capstone.dto.rating;
 import com.capstone.entity.Rating;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +15,7 @@ public class RatingResponse {
     private final Integer starRating;
     private final String review;
     private final LocalDateTime registerDateTime;
-    private final LocalDateTime deleteDateTime;
+    private final LocalDateTime removeDateTime;
     public RatingResponse(Rating rating) {
         this.uuid = rating.getUuid();
         this.memberUuid = rating.getMemberUuid();
@@ -24,6 +23,6 @@ public class RatingResponse {
         this.starRating = rating.getStarRating();
         this.review = rating.getReview();
         this.registerDateTime = rating.getRegisterDateTime();
-        this.deleteDateTime = rating.getDeleteDateTime();
+        this.removeDateTime = rating.getRemoveDateTime();
     }
 }

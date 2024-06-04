@@ -18,6 +18,7 @@ public interface MemberService extends UserDetailsService {
 
     JwtTokenResponse login(LoginMemberRequest request);
 
+    Boolean exist(String uuid);
     Boolean existUsername(String username);
 
     Boolean existEmail(String email);

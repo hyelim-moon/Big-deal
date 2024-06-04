@@ -1,10 +1,8 @@
 package com.capstone.controller;
 
 import com.capstone.dto.ErrorCodeResponse;
-import com.capstone.exception.RatingDuplicateException;
-import com.capstone.exception.RatingInvalidateRemoveException;
-import com.capstone.exception.RatingInvalidateUpdateException;
-import com.capstone.exception.RatingNotFoundException;
+import com.capstone.exception.*;
+import com.capstone.service.franchise.FranchiseNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +15,16 @@ public class RatingRestControllerAdvice {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorCodeResponse.of("rating not found"));
     }
+    @ExceptionHandler(value = MemberNotFoundException.class)
+    public ResponseEntity<ErrorCodeResponse> memberNotFound(MemberNotFoundException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorCodeResponse.of("member does not exists"));
+    }
+    @ExceptionHandler(value = FranchiseNotFoundException.class)
+    public ResponseEntity<ErrorCodeResponse> franchiseNotFound(FranchiseNotFoundException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorCodeResponse.of("franchise does not exists"));
+    }
     @ExceptionHandler(value = RatingInvalidateUpdateException.class)
     public ResponseEntity<ErrorCodeResponse> ratingInvalidateUpdate(RatingInvalidateUpdateException e) {
         e.printStackTrace();
@@ -24,6 +32,11 @@ public class RatingRestControllerAdvice {
     }
     @ExceptionHandler(value = RatingInvalidateRemoveException.class)
     public ResponseEntity<ErrorCodeResponse> ratingInvalidateRemove(RatingInvalidateRemoveException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorCodeResponse.of("you do not have permission to remove for this rating."));
+    }
+    @ExceptionHandler(value = RatingDuplicateRemoveException.class)
+    public ResponseEntity<ErrorCodeResponse> ratingDuplicateRemove(RatingDuplicateRemoveException e) {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorCodeResponse.of("you do not have permission to remove for this rating."));
     }
