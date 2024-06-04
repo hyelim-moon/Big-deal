@@ -15,16 +15,6 @@ public class RatingRestControllerAdvice {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorCodeResponse.of("rating not found"));
     }
-    @ExceptionHandler(value = MemberNotFoundException.class)
-    public ResponseEntity<ErrorCodeResponse> memberNotFound(MemberNotFoundException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorCodeResponse.of("member does not exists"));
-    }
-    @ExceptionHandler(value = FranchiseNotFoundException.class)
-    public ResponseEntity<ErrorCodeResponse> franchiseNotFound(FranchiseNotFoundException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorCodeResponse.of("franchise does not exists"));
-    }
     @ExceptionHandler(value = RatingInvalidateUpdateException.class)
     public ResponseEntity<ErrorCodeResponse> ratingInvalidateUpdate(RatingInvalidateUpdateException e) {
         e.printStackTrace();
@@ -44,5 +34,10 @@ public class RatingRestControllerAdvice {
     public ResponseEntity<ErrorCodeResponse> ratingDuplicate(RatingDuplicateException e) {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorCodeResponse.of("you do not have permission to register a rating."));
+    }
+    @ExceptionHandler(value = RatingInvalidateInsertException.class)
+    public ResponseEntity<ErrorCodeResponse> ratingInvalidateInsert(RatingInvalidateInsertException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorCodeResponse.of(e.getMessage()));
     }
 }

@@ -4,6 +4,7 @@ import com.capstone.dto.rating.*;
 import com.capstone.provider.JwtTokenUtility;
 import com.capstone.service.RatingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,17 +34,17 @@ public class RatingRestController {
         return ResponseEntity.ok().body(ratingService.findAll());
     }
     @PostMapping("")
-    public ResponseEntity<RatingResponse> insert(@RequestHeader(name = "Authentication", required = true, defaultValue = "") String authentication, @RequestBody AddRatingControllerRequest controllerRequest) {
-        AddRatingRequest request = controllerRequest.toAddRatingRequest(jwtTokenUtility.getUsername(jwtTokenUtility.getTokenAtHeader(authentication)));
-        return ResponseEntity.ok().body(ratingService.insert(request));
+    public ResponseEntity<RatingResponse> insert(@RequestHeader(name = "Authorization", required = true, defaultValue = "") String authorization, @RequestBody AddRatingControllerRequest controllerRequest) {
+        AddRatingRequest request = controllerRequest.toAddRatingRequest(jwtTokenUtility.getUsername(jwtTokenUtility.getTokenAtHeader(authorization)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ratingService.insert(request));
     }
     @PutMapping("")
-    public ResponseEntity<RatingResponse> update(@RequestHeader(name = "Authentication", required = true, defaultValue = "") String authentication, @RequestBody UpdateRatingControllerRequest controllerRequest) {
+    public ResponseEntity<RatingResponse> update(@RequestHeader(name = "Authorization", required = true, defaultValue = "") String authorization, @RequestBody UpdateRatingControllerRequest controllerRequest) {
         UpdateRatingRequest request = controllerRequest.toUpdateRatingRequest();
-        return ResponseEntity.ok().body(ratingService.update(jwtTokenUtility.getUsername(jwtTokenUtility.getTokenAtHeader(authentication)), request));
+        return ResponseEntity.ok().body(ratingService.update(jwtTokenUtility.getUsername(jwtTokenUtility.getTokenAtHeader(authorization)), request));
     }
     @DeleteMapping("")
-    public ResponseEntity<RatingResponse> remove(@RequestHeader(name = "Authentication", required = true, defaultValue = "") String authentication, @RequestBody RemoveRatingRequest request) {
-        return ResponseEntity.ok().body(ratingService.remove(jwtTokenUtility.getUsername(jwtTokenUtility.getTokenAtHeader(authentication)), request));
+    public ResponseEntity<RatingResponse> remove(@RequestHeader(name = "Authorization", required = true, defaultValue = "") String authorization, @RequestBody RemoveRatingRequest request) {
+        return ResponseEntity.ok().body(ratingService.remove(jwtTokenUtility.getUsername(jwtTokenUtility.getTokenAtHeader(authorization)), request));
     }
 }
