@@ -1,3 +1,9 @@
+function navigateToMyReviewPage() {
+    window.location.href = 'myreviewPage.html';
+}
+function navigateToMyWorkPage() {
+    window.location.href = 'workPlace.html';
+}
 // 회원 탈퇴 사유들을 경고창에 표시
 function showReasons() {
         let reasons = [];
