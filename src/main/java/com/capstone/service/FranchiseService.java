@@ -15,5 +15,6 @@ public interface FranchiseService {
     List<FranchiseResponse> findByCenter(BigDecimal latitude, BigDecimal longitude);
     Page<Franchise> findByCityName(String cityName, Pageable pageRequest);
     List<FranchiseResponse> findAll();
+    Boolean exist(String uuid);
     // findByPaperAndMobileAndCard
 }

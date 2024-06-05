@@ -148,6 +148,21 @@ public class MemberServiceImpl implements MemberService {
         String accessToken = jwtTokenUtility.createToken(member.getUuid(), List.of("ROLE_USER"));
         return new JwtTokenResponse("Bearer", accessToken);
     }
+
+    @Override
+    public Boolean exist(String uuid) {
+        return repository.existsById(uuid);
+    }
+    @Override
+    public Boolean existUsername(String username) {
+        return repository.existsByUsername(username);
+    }
+
+    @Override
+    public Boolean existEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findById(username).orElseThrow(()->new UsernameNotFoundException("member not found."));

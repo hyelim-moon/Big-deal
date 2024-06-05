@@ -12,20 +12,9 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 @Builder
 @Getter
-public class AddRatingRequest {
+public class UpdateRatingRequest {
     @NotEmpty
-    private String memberUuid;
-    @NotEmpty
-    private String franchiseUuid;
-    @NotNull
+    private String uuid;
     private Integer starRating;
     private String review;
-    public Rating toEntity() {
-        return Rating.builder()
-                .memberUuid(memberUuid)
-                .franchiseUuid(franchiseUuid)
-                .starRating(starRating)
-                .review(review)
-                .build();
-    }
 }

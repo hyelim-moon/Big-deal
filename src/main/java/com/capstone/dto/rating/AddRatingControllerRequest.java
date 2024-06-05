@@ -1,28 +1,25 @@
 package com.capstone.dto.rating;
 
-import com.capstone.entity.Rating;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
 @Getter
-public class AddRatingRequest {
-    @NotEmpty
-    private String memberUuid;
+public class AddRatingControllerRequest {
     @NotEmpty
     private String franchiseUuid;
     @NotNull
     private Integer starRating;
     private String review;
-    public Rating toEntity() {
-        return Rating.builder()
-                .memberUuid(memberUuid)
+    public AddRatingRequest toAddRatingRequest(String uuid) {
+        return AddRatingRequest.builder()
+                .memberUuid(uuid)
                 .franchiseUuid(franchiseUuid)
                 .starRating(starRating)
                 .review(review)
