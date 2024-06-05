@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/loginPage.css">
+    <link href="../css/loginPage.css" rel="stylesheet">
 </head>
 <body>
 <header>
@@ -26,7 +26,7 @@
         </div>
 
         <!-- 사업자 및 일반 회원 로그인 폼 -->
-        <form id="login-form">
+        <form id="login-form" action="/login" method="post">
             <div class="mb-3">
                 <input type="text" class="form-control" id="username" name="username" placeholder="사용자명" required>
             </div>

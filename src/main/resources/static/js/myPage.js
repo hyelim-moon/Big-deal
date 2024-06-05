@@ -49,7 +49,7 @@ function withdraw() {
                 alert('회원 탈퇴가 성공적으로 처리되었습니다.');
                 localStorage.removeItem('username');
                 localStorage.removeItem('accessToken');
-                window.location.href = 'mapPage.html'; // 탈퇴 후 리디렉션
+                window.location.href = 'mapPage'; // 탈퇴 후 리디렉션
             } else {
                 return response.json().then(errorData => {
                     throw new Error(errorData.message || '회원 탈퇴 중 오류가 발생했습니다.');
