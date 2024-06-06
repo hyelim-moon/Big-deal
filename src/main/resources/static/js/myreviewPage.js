@@ -1,64 +1,74 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const ratingInput = document.querySelector('.rating input[type="range"]');
-    const ratingStar = document.querySelector('.rating_star');
-    const reviewTextElement = document.getElementById('reviewText');
-    const imageUploadElement = document.getElementById('imageUpload');
-    const submitButton = document.getElementById('submitReviewButton');
-    const reviewModalElement = document.getElementById('reviewModal');
+    const reviewList = document.getElementById('reviewList');
+    const accessToken = localStorage.getItem('accessToken'); // AccessToken을 로컬 스토리지에서 가져옵니다.
 
-    if (!reviewModalElement) {
-        console.error('Modal element not found');
-        return; // 모달 요소가 없으면 초기화 중단
-    }
+    // 로컬 스토리지에서 리뷰 데이터를 읽어와서 표시하는 함수
+    function displayReviews() {
+        if (!reviewList) {
+            console.error('Review list element not found');
+            return;
+        }
 
-    const reviewModal = new bootstrap.Modal(reviewModalElement);
+        const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+        reviewList.innerHTML = ''; // 기존 리뷰 목록 초기화
 
-    // 별점 입력 값 변경 시, 별점 표시 업데이트
-    ratingInput.addEventListener('input', function() {
-        ratingStar.style.width = `${this.value * 10}%`;
-    });
-
-    // 리뷰 제출 버튼 클릭 시
-    submitButton.addEventListener('click', function(event) {
-        event.preventDefault(); // 폼 제출 기본 동작 방지
-
-        const rating = ratingInput.value / 2;
-        const reviewText = reviewTextElement.value;
-        const files = imageUploadElement.files;
-        const fileName = files.length > 0 ? files[0].name : "No file uploaded";
-
-        console.log("등록 정보:", {
-            상호명: currentFranchiseName,
-            별점: rating,
-            리뷰내용: reviewText,
-            파일명: fileName
+        reviews.forEach((review, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${review.franchiseName || ''}</td>
+                <td>${review.rating}</td>
+                <td>${review.reviewText}</td>
+                <td><img src="${review.image}" alt="Review Image" style="width: 100px;"></td>
+                <td><button class="delete-button" data-index="${index}" style="background-color: red; color: white;">X</button></td>
+            `;
+            reviewList.appendChild(row);
         });
 
-        // 리뷰 제출 후 모달 닫기
-        reviewModal.hide();
+        // 모든 삭제 버튼에 이벤트 리스너 추가
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const index = this.getAttribute('data-index');
+                deleteReview(index);
+            });
+        });
+    }
 
-        // 리뷰 데이터를 서버로 전송 (여기서는 예시로 콘솔에 출력)
-        fetch('/api/v1/reviews', {
-            method: 'POST',
+    // 리뷰 삭제 함수
+    function deleteReview(index) {
+        var reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+        const review = reviews[index];
+        if (!review) return;
+
+        const requestPayload = {
+            franchiseName: review.franchiseName,
+            rating: review.rating,
+            reviewText: review.reviewText,
+            image: review.image
+        };
+
+        fetch('http://localhost:8080/api/v1/rating', {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                'Authorization': 'Bearer ' + accessToken
             },
-            body: JSON.stringify({
-                franchiseName: currentFranchiseName,
-                rating: rating,
-                reviewText: reviewText,
-                fileName: fileName
-            })
+            body: JSON.stringify(requestPayload)
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Review submitted successfully:', data);
-            // 성공 시 추가 작업 (예: 알림 표시, 리뷰 목록 갱신 등)
+            console.log('Review deleted successfully:', data);
+            // 서버에서 성공적으로 삭제되면 로컬 스토리지에서도 삭제
+            if (index > -1) {
+                reviews.splice(index, 1);
+            }
+            localStorage.setItem('reviews', JSON.stringify(reviews));
+            displayReviews();
         })
         .catch(error => {
-            console.error('Error submitting review:', error);
-            // 실패 시 추가 작업 (예: 오류 메시지 표시)
+            console.error('Error deleting review:', error);
         });
-    });
+    }
+
+    // 페이지 로드 시 리뷰 데이터 가져오기 호출
+    displayReviews();
 });

@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     submitButton.addEventListener('click', function(event) {
+        event.preventDefault();
         const rating = ratingInput.value / 2;
         const reviewText = reviewTextElement.value;
         const files = imageUploadElement.files;
@@ -118,44 +119,38 @@ document.addEventListener('DOMContentLoaded', function() {
             파일명: fileName
         });
 
-        // 모달 닫기
-        $('#reviewModal').modal('hide');
-        alert("등록이 완료되었습니다.");
-    });
-});
-
-function submitReview() {
-    var rating = $('input[type="range"]').val();
-    var reviewText = $('#reviewText').val();
-    var imageUpload = $('#imageUpload')[0].files[0];
-
-    if (imageUpload) {
-        var reader = new FileReader();
+        const reader = new FileReader();
         reader.onloadend = function() {
-            var base64Image = reader.result;
-            saveReview(rating, reviewText, base64Image);
+            const base64Image = reader.result;
+            saveReview(currentFranchiseName, rating, reviewText, base64Image);
+            $('#reviewModal').modal('hide');
+            alert("등록이 완료되었습니다.");
         };
-        reader.readAsDataURL(imageUpload);
-    } else {
-        saveReview(rating, reviewText, null);
+
+        if (files.length > 0) {
+            reader.readAsDataURL(files[0]);
+        } else {
+            saveReview(currentFranchiseName, rating, reviewText, null);
+            $('#reviewModal').modal('hide');
+            alert("등록이 완료되었습니다.");
+        }
+    });
+
+    function saveReview(franchiseName, rating, reviewText, base64Image) {
+        var review = {
+            franchiseName: franchiseName,
+            rating: rating,
+            reviewText: reviewText,
+            image: base64Image
+        };
+
+        var reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+        reviews.push(review);
+        localStorage.setItem('reviews', JSON.stringify(reviews));
+
+        console.log("리뷰 저장:", review);
     }
-
-    $('#reviewModal').modal('hide');
-}
-
-function saveReview(rating, reviewText, base64Image) {
-    var review = {
-        rating: rating / 2,
-        reviewText: reviewText,
-        image: base64Image
-    };
-
-    var reviews = JSON.parse(localStorage.getItem('reviews')) || [];
-    reviews.push(review);
-    localStorage.setItem('reviews', JSON.stringify(reviews));
-
-    console.log("리뷰 저장:", review);
-}
+});
 
 function searchPlaces() {
     var keyword = document.getElementById('keyword').value;
