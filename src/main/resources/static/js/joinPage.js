@@ -20,7 +20,7 @@ $(document).ready(function() {
             return;
         }
 
-        const requestURL = `http://localhost:8080/api/v1/member/duplication/username/${encodeURIComponent(username)}`;
+        const requestURL = `/api/v1/member/duplication/username/${encodeURIComponent(username)}`;
         fetch(requestURL, { method: 'GET' })
             .then(response => {
                 if (!response.ok) throw new Error(`Server responded with status: ${response.status}`);
@@ -56,7 +56,7 @@ $(document).ready(function() {
 
     async function sendEmail(email) {
         try {
-            const response = await fetch('http://localhost:8080/api/v1/member/auth/email', {
+            const response = await fetch('/api/v1/member/auth/email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -88,7 +88,7 @@ $(document).ready(function() {
 
     async function verifyAuthCode(email, authCode) {
         try {
-            const response = await fetch('http://localhost:8080/api/v1/member/auth/code', {
+            const response = await fetch('/api/v1/member/auth/code', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -140,7 +140,7 @@ $(document).ready(function() {
         }
         try {
             const token = localStorage.getItem('authToken'); // 저장된 인증 토큰 사용
-            const response = await fetch('http://localhost:8080/api/v1/member', {
+            const response = await fetch('/api/v1/member', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

@@ -1,10 +1,4 @@
 spring:
-  thymeleaf:
-    enabled: true
-    cache: false #개발시 새로고침하면 적용.
-    prefix: classpath:templates/
-    suffix: .html
-    check-template-location: true
   profiles:
     active: dev
   mail:

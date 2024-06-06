@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
 
             try {
-                const response = await fetch('http://localhost:8080/api/v1/member/auth/login', {
+                const response = await fetch('/api/v1/member/auth/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.setItem('accessToken', data.accessToken);
 
                 // 로그인 성공 후, memberUuid를 가져오기 위해 추가 API 호출
-                const uuidResponse = await fetch('http://localhost:8080/api/v1/member', {
+                const uuidResponse = await fetch('/api/v1/member', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

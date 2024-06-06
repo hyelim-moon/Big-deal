@@ -43,7 +43,7 @@ function withdraw() {
             return;
         }
 
-        fetch('http://localhost:8080/api/v1/member', {
+        fetch('/api/v1/member', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
