@@ -1,0 +1,89 @@
+.map_wrap, .map_wrap * {margin:0; padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
+.map_wrap {position:relative;width:100%;height:100%;}
+#category {position:absolute;top:10px;left:10px;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2;}
+#category li {float:left;list-style: none;width:50px;px;border-right:1px solid #acacac;padding:6px 0;text-align: center; cursor: pointer;}
+#category li.on {background: #eee;}
+#category li:hover {background: #ffe6e6;border-left:1px solid #acacac;margin-left: -1px;}
+#category li:last-child{margin-right:0;border-right:0;}
+#category li span {display: block;margin:0 auto 3px;width:27px;height: 28px;}
+#category li .category_bg {background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png) no-repeat;}
+#category li .bank {background-position: -10px 0;}
+#category li .mart {background-position: -10px -36px;}
+#category li .pharmacy {background-position: -10px -72px;}
+#category li .oil {background-position: -10px -108px;}
+#category li .cafe {background-position: -10px -144px;}
+#category li .store {background-position: -10px -180px;}
+#category li.on .category_bg {background-position-x:-46px;}
+.placeinfo_wrap {position:absolute;bottom:28px;left:-150px;width:300px;}
+.placeinfo {position:relative;width:100%;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;padding-bottom: 10px;background: #fff;}
+.placeinfo:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}
+.placeinfo_wrap .after {content:'';position:relative;margin-left:-12px;left:50%;width:22px;height:12px;background:url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+.placeinfo a, .placeinfo a:hover, .placeinfo a:active{color:#fff;text-decoration: none;}
+.placeinfo a, .placeinfo span {display: block;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+.placeinfo span {margin:5px 5px 0 5px;cursor: default;font-size:13px;}
+.placeinfo .title {font-weight: bold; font-size:14px;border-radius: 6px 6px 0 0;margin: -1px -1px 0 -1px;padding:10px; color: #fff;background: #d95050;background: #d95050 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;}
+.placeinfo .tel {color:#0f7833;}
+.placeinfo .jibun {color:#999;font-size:11px;margin-top:0;}
+
+
+
+.map-container {
+    width: 100%;
+    height: 100%;
+}
+
+.btn-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+.button {
+    background: #3D4C53; /* 버튼 배경색 */
+    margin: 20px auto; /* 버튼 사이 여백 */
+    width: 150px; /* 버튼 너비 */
+    height: 40px; /* 버튼 높이 */
+    overflow: hidden; /* 내용이 넘칠 경우 숨기기 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    transition: .2s; /* 전환 효과 */
+    cursor: pointer; /* 커서 포인터로 변경 */
+    border-radius: 3px; /* 모서리 둥글게 */
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, .2); /* 그림자 효과 */
+}
+
+.btnTwo {
+    position: relative; /* 상대 위치 지정 */
+    width: 200px; /* 너비 */
+    height: 100px; /* 높이 */
+    margin-top: -100px; /* 위로 이동 */
+    padding-top: 2px; /* 위쪽 여백 */
+    background: #26A69A; /* 버튼 배경색 */
+    left: -250px; /* 왼쪽으로 이동 */
+    transition: .3s; /* 전환 효과 */
+}
+
+.btnText {
+    color: white; /* 텍스트 색상 */
+    transition: .3s; /* 전환 효과 */
+    margin-top: 6px;
+}
+
+.btnText2 {
+    margin-top: 60px; /* 위쪽 여백 */
+    margin-right: -130px; /* 오른쪽 여백 */
+    color: #FFF; /* 텍스트 색상 */
+}
+
+.button:hover .btnTwo {
+    left: -130px; /* 호버 시 이동 */
+}
+
+.button:hover .btnText {
+    margin-left: 65px; /* 호버 시 이동 */
+}
+
+.button:active {
+    box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3); /* 클릭 시 그림자 효과 */
+}
+
