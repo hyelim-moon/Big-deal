@@ -1,6 +1,6 @@
 .map_wrap, .map_wrap * {margin:0; padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
 .map_wrap {position:relative;width:100%;height:100%;}
-#category {position:absolute;top:10px;left:10px;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2;}
+#category {position:absolute;top:70px;left:10px;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2;}
 #category li {float:left;list-style: none;width:50px;px;border-right:1px solid #acacac;padding:6px 0;text-align: center; cursor: pointer;}
 #category li.on {background: #eee;}
 #category li:hover {background: #ffe6e6;border-left:1px solid #acacac;margin-left: -1px;}
@@ -25,19 +25,84 @@
 .placeinfo .tel {color:#0f7833;}
 .placeinfo .jibun {color:#999;font-size:11px;margin-top:0;}
 
-
-
-.map-container {
-    width: 100%;
+html, body {
     height: 100%;
+    margin: 0;
 }
 
+/* header는 상단에 고정 */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    width: 100%;
+    padding: 10px 0;
+}
+
+/* innerSearchLayer는 header 아래에 고정된 높이로 배치 */
+#innerSearchLayer {
+    position: fixed;
+    top: 60px;  /* header의 높이만큼 아래로 위치 */
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background-color: white;
+    padding: 5px;
+    height: 55px; /* 원하는 높이로 설정 */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: auto;
+}
+
+#innerQuery {
+        width: 100%;  /* 부모 요소의 너비를 꽉 채움 */
+        padding: 10px;  /* 내부 여백을 추가 */
+        border: 1px solid #ccc;  /* 테두리 스타일 */
+        border-radius: 5px;  /* 둥근 테두리 */
+        box-sizing: border-box;  /* padding과 border를 너비에 포함 */
+        background-color: #f2f3f5;
+    }
+
+    .box_search {
+            display: flex; /* Flexbox 레이아웃 적용 */
+            width: 100%; /* 부모 요소 크기에 맞게 100% */
+            margin: 0 auto; /* 가운데 정렬 */
+            box-sizing: border-box; /* 패딩과 테두리가 너비에 포함되도록 */
+        }
+
+.map-container {
+    position: absolute;
+    top: 104px;  /* innerSearchLayer의 아래에 위치 */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+
+}
+
+.navbar .container-fluid {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            position: relative;
+        }
+        .navbar-toggler {
+            margin-right: auto;
+        }
+        .navbar-brand {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+/* 로그인 회원가입 버튼 css
 .btn-container {
     position: absolute;
     top: 10px;
     right: 10px;
     z-index: 1000;
 }
+*/
 
 .button {
     background: #3D4C53; /* 버튼 배경색 */
