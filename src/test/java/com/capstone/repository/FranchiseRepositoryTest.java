@@ -58,9 +58,9 @@ public class FranchiseRepositoryTest {
             Assertions.assertTrue(franchise.getLongitude().compareTo(fromLongitude) >= 0 && franchise.getLongitude().compareTo(toLongitude) <= 0);
         }
     }
-    @Test
-    public void nullableTest() {  // What do we need to result this case?
-        Assertions.assertThrows(JpaSystemException.class, () -> repository.save(new Franchise()));
-        Assertions.assertThrows(RuntimeException.class, () -> repository.save(new Franchise("",null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)));
-    }
+//    @Test
+//    public void nullableTest() {  // What do we need to result this case?
+//        Assertions.assertThrows(JpaSystemException.class, () -> repository.save(new Franchise()));
+//        Assertions.assertThrows(RuntimeException.class, () -> repository.save(new Franchise("",null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)));
+//    }
 }

@@ -5,15 +5,16 @@ var mapContainer = document.getElementById('map'),
     };
 
 var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
+
 var markers = []; // 마커를 저장할 배열
 var infowindow = new kakao.maps.InfoWindow({removable: true}); // 전역 인포윈도우 객체
 
 // 마커 클러스터러 생성
-var clusterer = new kakao.maps.MarkerClusterer({
-    map: map,
-    averageCenter: true,
-    minLevel: 10
-});
+//var clusterer = new kakao.maps.MarkerClusterer({
+//    map: map,
+//    averageCenter: true,
+//    minLevel: 10
+//});
 
 // 장소 검색 객체를 생성합니다
 var ps = new kakao.maps.services.Places();
@@ -86,274 +87,274 @@ function loadData() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const ratingInput = document.querySelector('.rating input[type="range"]');
-    const ratingStar = document.querySelector('.rating_star');
-    const reviewTextElement = document.getElementById('reviewText');
-    const imageUploadElement = document.getElementById('imageUpload');
-    const submitButton = document.getElementById('submitReviewButton');
-    const reviewModalElement = document.getElementById('reviewModal');
+//document.addEventListener('DOMContentLoaded', function() {
+//    const ratingInput = document.querySelector('.rating input[type="range"]');
+//    const ratingStar = document.querySelector('.rating_star');
+//    const reviewTextElement = document.getElementById('reviewText');
+//    const imageUploadElement = document.getElementById('imageUpload');
+//    const submitButton = document.getElementById('submitReviewButton');
+//    const reviewModalElement = document.getElementById('reviewModal');
+//
+//    if (!reviewModalElement) {
+//        console.error('Modal element not found');
+//        return; // 모달 요소가 없으면 초기화 중단
+//    }
+//
+//    const reviewModal = new bootstrap.Modal(reviewModalElement);
+//
+//    ratingInput.addEventListener('input', function() {
+//        ratingStar.style.width = `${this.value * 10}%`;
+//    });
+//
+//    submitButton.addEventListener('click', function(event) {
+//        event.preventDefault();
+//        const rating = ratingInput.value / 2;
+//        const reviewText = reviewTextElement.value;
+//        const files = imageUploadElement.files;
+//        const fileName = files.length > 0 ? files[0].name : "No file uploaded";
+//
+//        console.log("등록 정보:", {
+//            상호명: currentFranchiseName,
+//            별점: rating,
+//            리뷰내용: reviewText,
+//            파일명: fileName
+//        });
+//
+//        const reader = new FileReader();
+//        reader.onloadend = function() {
+//            const base64Image = reader.result;
+//            saveReview(currentFranchiseName, rating, reviewText, base64Image);
+//            $('#reviewModal').modal('hide');
+//            alert("등록이 완료되었습니다.");
+//        };
+//
+//        if (files.length > 0) {
+//            reader.readAsDataURL(files[0]);
+//        } else {
+//            saveReview(currentFranchiseName, rating, reviewText, null);
+//            $('#reviewModal').modal('hide');
+//            alert("등록이 완료되었습니다.");
+//        }
+//    });
+//
+//    function saveReview(franchiseName, rating, reviewText, base64Image) {
+//        var review = {
+//            franchiseName: franchiseName,
+//            rating: rating,
+//            reviewText: reviewText,
+//            image: base64Image
+//        };
+//
+//        var reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+//        reviews.push(review);
+//        localStorage.setItem('reviews', JSON.stringify(reviews));
+//
+//        console.log("리뷰 저장:", review);
+//    }
+//});
 
-    if (!reviewModalElement) {
-        console.error('Modal element not found');
-        return; // 모달 요소가 없으면 초기화 중단
-    }
+//function searchPlaces() {
+//    var keyword = document.getElementById('keyword').value;
+//    if (!keyword.replace(/^\s+|\s+$/g, '')) {
+//        alert('키워드를 입력해주세요!');
+//        return false;
+//    }
+//
+//    ps.keywordSearch(keyword, placesSearchCB);
+//}
+//
+//function placesSearchCB(data, status, pagination) {
+//    if (status === kakao.maps.services.Status.OK) {
+//        displayPlaces(data);
+//        displayPagination(pagination);
+//    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+//        alert('검색 결과가 존재하지 않습니다.');
+//        removeAllChildNods(document.getElementById('placesList'));
+//    } else if (status === kakao.maps.services.Status.ERROR) {
+//        alert('검색 결과 중 오류가 발생했습니다.');
+//    }
+//}
+//
+//function displayPlaces(places) {
+//    var listEl = document.getElementById('placesList'),
+//        menuEl = document.getElementById('menu_wrap'),
+//        fragment = document.createDocumentFragment(),
+//        bounds = new kakao.maps.LatLngBounds();
+//
+//    removeAllChildNods(listEl);
+//    removeMarker();
+//
+//    // 검색된 장소 중 가맹점만 필터링
+//    var filteredPlaces = places.filter(function(place) {
+//        return franchises.some(function(franchise) {
+//            return franchise.name === place.place_name;
+//        });
+//    });
+//
+//    filteredPlaces.forEach(function(place, index) {
+//        var markerPosition = new kakao.maps.LatLng(place.y, place.x);
+//        var marker = new kakao.maps.Marker({
+//            position: markerPosition
+//        });
+//        markers.push(marker);
+//
+//        var itemEl = getListItem(index, place); // 아이템 생성
+//        fragment.appendChild(itemEl);
+//        bounds.extend(markerPosition); // 마커의 위치를 bounds에 추가
+//
+//        kakao.maps.event.addListener(marker, 'mouseover', function() {
+//            infowindow.setContent('<div style="padding:5px; white-space: nowrap;">' + place.place_name + '</div>');
+//            infowindow.open(map, marker);
+//        });
+//
+//        kakao.maps.event.addListener(marker, 'mouseout', function() {
+//            infowindow.close();
+//        });
+//
+//        itemEl.onmouseover = function() {
+//            infowindow.setContent('<div style="padding:5px; white-space: nowrap;">' + place.place_name + '</div>');
+//            infowindow.open(map, marker);
+//        };
+//
+//        itemEl.onmouseout = function() {
+//            infowindow.close();
+//        };
+//    });
+//
+//    // 필터링된 가맹점이 없을 경우 메시지 표시
+//    if (filteredPlaces.length === 0) {
+//        var itemEl = document.createElement('li');
+//        itemEl.innerHTML = '검색 결과가 없습니다.';
+//        fragment.appendChild(itemEl);
+//    }
+//
+//    listEl.appendChild(fragment);
+//    menuEl.scrollTop = 0;
+//
+//    // 검색된 장소의 중심으로 지도 이동 및 확대 레벨 설정
+//    if (places.length > 0) {
+//        var placeCenter = new kakao.maps.LatLng(places[0].y, places[0].x);
+//        map.setCenter(placeCenter);
+//        map.setLevel(3);  // 숫자가 작을수록 더 확대됨
+//    }
+//}
+//
+//function getListItem(index, place) {
+//    var el = document.createElement('li'),
+//        itemStr = '<span class="markerbg marker_' + (index + 1) + '"></span>' +
+//                  '<div class="info">' +
+//                  '<h5>' + place.place_name + '</h5>' +
+//                  '<span>' + '주소 : ' + place.address_name + '<br>' +
+//                            '도로명 주소 : ' + place.road_address_name + '<br>' +
+//                            '카테고리 : ' + place.category_name + '<br>' +
+//                            '장소 주소 : ' + place.place_url + '</span>' +
+//                  '</div>';
+//
+//    el.innerHTML = itemStr;
+//    el.className = 'item';
+//
+//    return el;
+//}
+//
+//function removeMarker() {
+//    for (var i = 0; i < markers.length; i++) {
+//        markers[i].setMap(null);
+//    }
+//    markers = [];
+//}
+//
+//function displayPagination(pagination) {
+//    var paginationEl = document.getElementById('pagination'),
+//        fragment = document.createDocumentFragment(),
+//        i;
+//
+//    while (paginationEl.hasChildNodes()) {
+//        paginationEl.removeChild(paginationEl.lastChild);
+//    }
+//
+//    for (i = 1; i <= pagination.last; i++) {
+//        var el = document.createElement('a');
+//        el.href = "#";
+//        el.innerHTML = i;
+//
+//        if (i === pagination.current) {
+//            el.className = 'on';
+//        } else {
+//            el.onclick = (function(i) {
+//                return function() {
+//                    pagination.gotoPage(i);
+//                }
+//            })(i);
+//        }
+//
+//        fragment.appendChild(el);
+//    }
+//    paginationEl.appendChild(fragment);
+//}
+//
+//function removeAllChildNods(el) {
+//    while (el.hasChildNodes()) {
+//        el.removeChild(el.lastChild);
+//    }
+//}
+//
+//window.onload = loadData; // 페이지 로드 시 데이터 로드 함수 호출
+//
+//document.addEventListener('DOMContentLoaded', function() {
+//    const myPageButton = document.getElementById('mypage-button');
+//
+//    if (myPageButton) {
+//        myPageButton.addEventListener('click', function() {
+//            const token = localStorage.getItem('accessToken');
+//            if (!token) {
+//                alert('로그인이 필요합니다.');
+//                window.location.href = 'loginPage.html';
+//            } else {
+//                window.location.href = 'myPage.html';
+//            }
+//        });
+//    }
+//});
 
-    const reviewModal = new bootstrap.Modal(reviewModalElement);
-
-    ratingInput.addEventListener('input', function() {
-        ratingStar.style.width = `${this.value * 10}%`;
-    });
-
-    submitButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        const rating = ratingInput.value / 2;
-        const reviewText = reviewTextElement.value;
-        const files = imageUploadElement.files;
-        const fileName = files.length > 0 ? files[0].name : "No file uploaded";
-
-        console.log("등록 정보:", {
-            상호명: currentFranchiseName,
-            별점: rating,
-            리뷰내용: reviewText,
-            파일명: fileName
-        });
-
-        const reader = new FileReader();
-        reader.onloadend = function() {
-            const base64Image = reader.result;
-            saveReview(currentFranchiseName, rating, reviewText, base64Image);
-            $('#reviewModal').modal('hide');
-            alert("등록이 완료되었습니다.");
-        };
-
-        if (files.length > 0) {
-            reader.readAsDataURL(files[0]);
-        } else {
-            saveReview(currentFranchiseName, rating, reviewText, null);
-            $('#reviewModal').modal('hide');
-            alert("등록이 완료되었습니다.");
-        }
-    });
-
-    function saveReview(franchiseName, rating, reviewText, base64Image) {
-        var review = {
-            franchiseName: franchiseName,
-            rating: rating,
-            reviewText: reviewText,
-            image: base64Image
-        };
-
-        var reviews = JSON.parse(localStorage.getItem('reviews')) || [];
-        reviews.push(review);
-        localStorage.setItem('reviews', JSON.stringify(reviews));
-
-        console.log("리뷰 저장:", review);
-    }
-});
-
-function searchPlaces() {
-    var keyword = document.getElementById('keyword').value;
-    if (!keyword.replace(/^\s+|\s+$/g, '')) {
-        alert('키워드를 입력해주세요!');
-        return false;
-    }
-
-    ps.keywordSearch(keyword, placesSearchCB);
-}
-
-function placesSearchCB(data, status, pagination) {
-    if (status === kakao.maps.services.Status.OK) {
-        displayPlaces(data);
-        displayPagination(pagination);
-    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-        alert('검색 결과가 존재하지 않습니다.');
-        removeAllChildNods(document.getElementById('placesList'));
-    } else if (status === kakao.maps.services.Status.ERROR) {
-        alert('검색 결과 중 오류가 발생했습니다.');
-    }
-}
-
-function displayPlaces(places) {
-    var listEl = document.getElementById('placesList'),
-        menuEl = document.getElementById('menu_wrap'),
-        fragment = document.createDocumentFragment(),
-        bounds = new kakao.maps.LatLngBounds();
-
-    removeAllChildNods(listEl);
-    removeMarker();
-
-    // 검색된 장소 중 가맹점만 필터링
-    var filteredPlaces = places.filter(function(place) {
-        return franchises.some(function(franchise) {
-            return franchise.name === place.place_name;
-        });
-    });
-
-    filteredPlaces.forEach(function(place, index) {
-        var markerPosition = new kakao.maps.LatLng(place.y, place.x);
-        var marker = new kakao.maps.Marker({
-            position: markerPosition
-        });
-        markers.push(marker);
-
-        var itemEl = getListItem(index, place); // 아이템 생성
-        fragment.appendChild(itemEl);
-        bounds.extend(markerPosition); // 마커의 위치를 bounds에 추가
-
-        kakao.maps.event.addListener(marker, 'mouseover', function() {
-            infowindow.setContent('<div style="padding:5px; white-space: nowrap;">' + place.place_name + '</div>');
-            infowindow.open(map, marker);
-        });
-
-        kakao.maps.event.addListener(marker, 'mouseout', function() {
-            infowindow.close();
-        });
-
-        itemEl.onmouseover = function() {
-            infowindow.setContent('<div style="padding:5px; white-space: nowrap;">' + place.place_name + '</div>');
-            infowindow.open(map, marker);
-        };
-
-        itemEl.onmouseout = function() {
-            infowindow.close();
-        };
-    });
-
-    // 필터링된 가맹점이 없을 경우 메시지 표시
-    if (filteredPlaces.length === 0) {
-        var itemEl = document.createElement('li');
-        itemEl.innerHTML = '검색 결과가 없습니다.';
-        fragment.appendChild(itemEl);
-    }
-
-    listEl.appendChild(fragment);
-    menuEl.scrollTop = 0;
-
-    // 검색된 장소의 중심으로 지도 이동 및 확대 레벨 설정
-    if (places.length > 0) {
-        var placeCenter = new kakao.maps.LatLng(places[0].y, places[0].x);
-        map.setCenter(placeCenter);
-        map.setLevel(3);  // 숫자가 작을수록 더 확대됨
-    }
-}
-
-function getListItem(index, place) {
-    var el = document.createElement('li'),
-        itemStr = '<span class="markerbg marker_' + (index + 1) + '"></span>' +
-                  '<div class="info">' +
-                  '<h5>' + place.place_name + '</h5>' +
-                  '<span>' + '주소 : ' + place.address_name + '<br>' +
-                            '도로명 주소 : ' + place.road_address_name + '<br>' +
-                            '카테고리 : ' + place.category_name + '<br>' +
-                            '장소 주소 : ' + place.place_url + '</span>' +
-                  '</div>';
-
-    el.innerHTML = itemStr;
-    el.className = 'item';
-
-    return el;
-}
-
-function removeMarker() {
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(null);
-    }
-    markers = [];
-}
-
-function displayPagination(pagination) {
-    var paginationEl = document.getElementById('pagination'),
-        fragment = document.createDocumentFragment(),
-        i;
-
-    while (paginationEl.hasChildNodes()) {
-        paginationEl.removeChild(paginationEl.lastChild);
-    }
-
-    for (i = 1; i <= pagination.last; i++) {
-        var el = document.createElement('a');
-        el.href = "#";
-        el.innerHTML = i;
-
-        if (i === pagination.current) {
-            el.className = 'on';
-        } else {
-            el.onclick = (function(i) {
-                return function() {
-                    pagination.gotoPage(i);
-                }
-            })(i);
-        }
-
-        fragment.appendChild(el);
-    }
-    paginationEl.appendChild(fragment);
-}
-
-function removeAllChildNods(el) {
-    while (el.hasChildNodes()) {
-        el.removeChild(el.lastChild);
-    }
-}
-
-window.onload = loadData; // 페이지 로드 시 데이터 로드 함수 호출
-
-document.addEventListener('DOMContentLoaded', function() {
-    const myPageButton = document.getElementById('mypage-button');
-
-    if (myPageButton) {
-        myPageButton.addEventListener('click', function() {
-            const token = localStorage.getItem('accessToken');
-            if (!token) {
-                alert('로그인이 필요합니다.');
-                window.location.href = 'loginPage.html';
-            } else {
-                window.location.href = 'myPage.html';
-            }
-        });
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const currentLocationButton = document.getElementById('current-location-button');
-
-    if (currentLocationButton) {
-        currentLocationButton.addEventListener('click', function() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    const locPosition = new kakao.maps.LatLng(lat, lon);
-
-                    map.setCenter(locPosition);
-                    map.setLevel(3);
-
-                    const marker = new kakao.maps.Marker({
-                        position: locPosition,
-                        map: map
-                    });
-
-                    const infowindowContent = document.createElement('div');
-                    infowindowContent.innerHTML = '현재 위치';
-                    infowindowContent.style.padding = '5px';  // 패딩 설정
-                    infowindowContent.style.whiteSpace = 'nowrap';  // 줄바꿈 방지
-                    infowindow.setContent(infowindowContent);
-
-                    kakao.maps.event.addListener(marker, 'click', function() {
-                        infowindow.open(map, marker);
-                    });
-
-                    kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
-                        infowindow.close();
-                    });
-
-                }, function(err) {
-                    alert('현재 위치를 찾을 수 없습니다.');
-                });
-            } else {
-                alert('Geolocation을 사용할 수 없습니다.');
-            }
-        });
-    }
-});
+//document.addEventListener('DOMContentLoaded', function() {
+//    const currentLocationButton = document.getElementById('current-location-button');
+//
+//    if (currentLocationButton) {
+//        currentLocationButton.addEventListener('click', function() {
+//            if (navigator.geolocation) {
+//                navigator.geolocation.getCurrentPosition(function(position) {
+//                    const lat = position.coords.latitude;
+//                    const lon = position.coords.longitude;
+//                    const locPosition = new kakao.maps.LatLng(lat, lon);
+//
+//                    map.setCenter(locPosition);
+//                    map.setLevel(3);
+//
+//                    const marker = new kakao.maps.Marker({
+//                        position: locPosition,
+//                        map: map
+//                    });
+//
+//                    const infowindowContent = document.createElement('div');
+//                    infowindowContent.innerHTML = '현재 위치';
+//                    infowindowContent.style.padding = '5px';  // 패딩 설정
+//                    infowindowContent.style.whiteSpace = 'nowrap';  // 줄바꿈 방지
+//                    infowindow.setContent(infowindowContent);
+//
+//                    kakao.maps.event.addListener(marker, 'click', function() {
+//                        infowindow.open(map, marker);
+//                    });
+//
+//                    kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+//                        infowindow.close();
+//                    });
+//
+//                }, function(err) {
+//                    alert('현재 위치를 찾을 수 없습니다.');
+//                });
+//            } else {
+//                alert('Geolocation을 사용할 수 없습니다.');
+//            }
+//        });
+//    }
+//});

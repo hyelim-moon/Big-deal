@@ -1,7 +1,36 @@
-.map_wrap, .map_wrap * {margin:0; padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
-.map_wrap {position:relative;width:100%;height:100%;}
-#category {position:absolute;top:70px;left:10px;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2;}
-#category li {float:left;list-style: none;width:50px;px;border-right:1px solid #acacac;padding:6px 0;text-align: center; cursor: pointer;}
+.map_wrap, .map_wrap * {
+    margin:0;
+    padding:0;
+    font-family:'Malgun Gothic',dotum,'돋움',sans-serif;
+    font-size:12px;
+}
+.map_wrap {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+#category {
+    position: absolute;
+        top: 25px;
+        left: 10px;
+        border-radius: 5px;
+        border: 1px solid #909090;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+        background: #fff;
+        overflow: hidden;
+        z-index: 2;
+ }
+
+#category li {
+      float: left;
+      list-style: none;
+      width: 110px;
+      border-right: 1px solid #acacac;
+      padding: 7px 0px;
+      text-align: center;
+      cursor: pointer;
+  }
 #category li.on {background: #eee;}
 #category li:hover {background: #ffe6e6;border-left:1px solid #acacac;margin-left: -1px;}
 #category li:last-child{margin-right:0;border-right:0;}
@@ -78,6 +107,9 @@ header {
     right: 0;
     bottom: 0;
     z-index: 1;
+    width: 100%;
+    height: calc(100% - 104px);  /* 상단 고정된 요소들을 제외한 나머지 공간을 사용 */
+        /* 높이를 100%에서 상단의 innerSearchLayer 높이인 104px을 뺀 값으로 설정 */
 
 }
 
@@ -95,6 +127,7 @@ header {
             left: 50%;
             transform: translateX(-50%);
         }
+
 /* 로그인 회원가입 버튼 css
 .btn-container {
     position: absolute;
@@ -102,53 +135,54 @@ header {
     right: 10px;
     z-index: 1000;
 }
-*/
 
 .button {
-    background: #3D4C53; /* 버튼 배경색 */
-    margin: 20px auto; /* 버튼 사이 여백 */
-    width: 150px; /* 버튼 너비 */
-    height: 40px; /* 버튼 높이 */
-    overflow: hidden; /* 내용이 넘칠 경우 숨기기 */
-    text-align: center; /* 텍스트 중앙 정렬 */
-    transition: .2s; /* 전환 효과 */
-    cursor: pointer; /* 커서 포인터로 변경 */
-    border-radius: 3px; /* 모서리 둥글게 */
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, .2); /* 그림자 효과 */
+    background: #3D4C53;  버튼 배경색
+    margin: 20px auto;  버튼 사이 여백
+    width: 150px;  버튼 너비
+    height: 40px;  버튼 높이
+    overflow: hidden;  내용이 넘칠 경우 숨기기
+    text-align: center;  텍스트 중앙 정렬
+    transition: .2s;  전환 효과
+    cursor: pointer;  커서 포인터로 변경
+    border-radius: 3px;  모서리 둥글게
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, .2);  그림자 효과
 }
 
 .btnTwo {
-    position: relative; /* 상대 위치 지정 */
-    width: 200px; /* 너비 */
-    height: 100px; /* 높이 */
-    margin-top: -100px; /* 위로 이동 */
-    padding-top: 2px; /* 위쪽 여백 */
-    background: #26A69A; /* 버튼 배경색 */
-    left: -250px; /* 왼쪽으로 이동 */
-    transition: .3s; /* 전환 효과 */
+    position: relative;  상대 위치 지정
+    width: 200px;  너비
+    height: 100px;  높이
+    margin-top: -100px;  위로 이동
+    padding-top: 2px;  위쪽 여백
+    background: #26A69A;  버튼 배경색
+    left: -250px;  왼쪽으로 이동
+    transition: .3s;  전환 효과
 }
 
 .btnText {
-    color: white; /* 텍스트 색상 */
-    transition: .3s; /* 전환 효과 */
+    color: white;  텍스트 색상
+    transition: .3s;  전환 효과
     margin-top: 6px;
 }
 
 .btnText2 {
-    margin-top: 60px; /* 위쪽 여백 */
-    margin-right: -130px; /* 오른쪽 여백 */
-    color: #FFF; /* 텍스트 색상 */
+    margin-top: 60px;  위쪽 여백
+    margin-right: -130px;  오른쪽 여백
+    color: #FFF;  텍스트 색상
 }
 
 .button:hover .btnTwo {
-    left: -130px; /* 호버 시 이동 */
+    left: -130px;  호버 시 이동
 }
 
 .button:hover .btnText {
-    margin-left: 65px; /* 호버 시 이동 */
+    margin-left: 65px;  호버 시 이동
 }
 
 .button:active {
-    box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3); /* 클릭 시 그림자 효과 */
+    box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3);  클릭 시 그림자 효과
 }
+*/
+
 
