@@ -3,6 +3,8 @@ package com.capstone.controller;
 import com.capstone.dto.franchise.FranchiseResponse;
 import com.capstone.service.franchise.FranchiseNotFoundException;
 import com.capstone.service.FranchiseService;
+import com.opencsv.CSVParser;
+import io.jsonwebtoken.io.IOException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -12,12 +14,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name="가맹점 관련 서비스 접근 api",description=
         "<p>지역화폐가맹점을 검색하거나 관리할 때 사용하는 rest api 입니다.</p>")
@@ -59,4 +66,9 @@ public class FranchiseRestController {
             BigDecimal lo) {
         return ResponseEntity.ok().body(service.findByCenter(la, lo));
     }
+
+
+
+
+
 }

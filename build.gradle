@@ -42,6 +42,29 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
+
+    implementation 'com.opencsv:opencsv:5.5.2'
+    /*
+    OpenCSV는 Java에서 CSV(Comma-Separated Values) 파일을 읽고 쓰는 데 사용되는 라이브러리입니다.
+    CSV 파일은 데이터 저장과 교환에 널리 사용되며, OpenCSV를 사용하면 이러한 파일을 쉽게 처리할 수 있습니다.
+
+    주요 기능:
+            CSV 파일을 간단하게 읽을 수 있는 CSVReader 클래스를 제공합니다.
+            CSV 파일에 데이터를 쉽게 쓸 수 있는 CSVWriter 클래스를 제공합니다.
+            CSV 파일의 데이터 형식을 관리하는 데 필요한 다양한 설정을 지원합니다 (예: 구분자, 따옴표 처리 등).
+    */
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    /*
+    Jackson은 Java 객체와 JSON 간의 변환을 수행하는 데 널리 사용되는 라이브러리입니다.
+    jackson-databind는 Jackson의 데이터 바인딩 기능을 제공하며,
+    Java 객체를 JSON 형식으로 변환하거나 JSON 데이터를 Java 객체로 변환하는 데 사용됩니다.
+
+    주요 기능:
+            Java 객체를 JSON 문자열로 변환(Serialization).
+            JSON 문자열을 Java 객체로 변환(Deserialization).
+            JSON 데이터를 처리하기 위한 다양한 기능을 제공합니다 (예: JSON 데이터의 탐색, 수정 등).
+    */
+
 }
 
 test {

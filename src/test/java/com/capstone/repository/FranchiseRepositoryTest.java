@@ -24,6 +24,7 @@ public class FranchiseRepositoryTest {
         Franchise franc = repository.findById("0").orElseThrow(IllegalArgumentException::new);
         Assertions.assertEquals("펄스코(PULSECO)", franc.getName());
 
+
         List<Franchise> francList = repository.findAll(Pageable.ofSize(2).withPage(1)).toList();
         Assertions.assertEquals(2, francList.size());
         List<Franchise> francList2 = repository.findAll(Pageable.ofSize(2).withPage(2)).toList();

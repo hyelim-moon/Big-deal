@@ -53,9 +53,28 @@ function searchPlaces() {
 
     // 지도에 표시되고 있는 마커를 제거합니다
     removeMarker();
-    
-    ps.categorySearch(currCategory, placesSearchCB, {useMapBounds:true}); 
+
+    // 서버로 모든 가맹점 데이터 요청
+    fetch(`/api/v1/franchise?la=${map.getCenter().getLat()}&lo=${map.getCenter().getLng()}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length > 0) {
+                displayPlaces(data);
+            } else {
+                alert('검색 결과가 없습니다.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
 }
+
+
+
+
 
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
 function placesSearchCB(data, status, pagination) {
@@ -74,25 +93,21 @@ function placesSearchCB(data, status, pagination) {
 
 // 지도에 마커를 표출하는 함수입니다
 function displayPlaces(places) {
+    // 마커를 제거합니다
+    removeMarker();
 
-    // 몇번째 카테고리가 선택되어 있는지 얻어옵니다
-    // 이 순서는 스프라이트 이미지에서의 위치를 계산하는데 사용됩니다
-    var order = document.getElementById(currCategory).getAttribute('data-order');
+    // 마커를 표시합니다
+    for (var i = 0; i < places.length; i++) {
+        // 위도와 경도로 마커를 생성하고 지도에 표시합니다
+        var position = new kakao.maps.LatLng(places[i].latitude, places[i].longitude);
+        var marker = addMarker(position, 0); // 카테고리 인덱스를 0으로 설정 (예시)
 
-    
-
-    for ( var i=0; i<places.length; i++ ) {
-
-            // 마커를 생성하고 지도에 표시합니다
-            var marker = addMarker(new kakao.maps.LatLng(places[i].y, places[i].x), order);
-
-            // 마커와 검색결과 항목을 클릭 했을 때
-            // 장소정보를 표출하도록 클릭 이벤트를 등록합니다
-            (function(marker, place) {
-                kakao.maps.event.addListener(marker, 'click', function() {
-                    displayPlaceInfo(place);
-                });
-            })(marker, places[i]);
+        // 마커와 검색결과 항목을 클릭 했을 때 장소정보를 표출하도록 클릭 이벤트를 등록합니다
+        (function(marker, place) {
+            kakao.maps.event.addListener(marker, 'click', function() {
+                displayPlaceInfo(place);
+            });
+        })(marker, places[i]);
     }
 }
 
@@ -126,25 +141,34 @@ function removeMarker() {
 }
 
 // 클릭한 마커에 대한 장소 상세정보를 커스텀 오버레이로 표시하는 함수입니다
-function displayPlaceInfo (place) {
+function displayPlaceInfo(place) {
+    var searchQuery = encodeURIComponent(place.name + " " + (place.address || "")); // 검색어 생성
     var content = '<div class="placeinfo">' +
-                    '   <a class="title" href="' + place.place_url + '" target="_blank" title="' + place.place_name + '">' + place.place_name + '</a>';   
+                    '   <a class="title" href="https://map.kakao.com/?q=' + searchQuery + '" target="_blank" title="' + place.name + '">' + place.name + '</a>';
 
-    if (place.road_address_name) {
-        content += '    <span title="' + place.road_address_name + '">' + place.road_address_name + '</span>' +
-                    '  <span class="jibun" title="' + place.address_name + '">(지번 : ' + place.address_name + ')</span>';
-    }  else {
-        content += '    <span title="' + place.address_name + '">' + place.address_name + '</span>';
-    }                
-   
-    content += '    <span class="tel">' + place.phone + '</span>' + 
-                '</div>' + 
-                '<div class="after"></div>';
+    // sector와 road_address 추가
+    if (place.mapAddress) {
+        content += '    <span title="' + place.mapAddress + '">상세 주소: ' + place.mapAddress + '</span>';
+    }
 
-    contentNode.innerHTML = content;
-    placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
-    placeOverlay.setMap(map);  
+    if (place.sector) {
+        content += '    <span title="' + place.sector + '">업종: ' + place.sector + '</span>';
+    }
+
+    // 평점 버튼 추가
+    content += '<span class="tel">' + place.phone + '</span>' +
+               // 버튼을 감싸는 div 추가하여 가운데 정렬
+               '<div class="text-center" style="margin-top: 10px;">' +
+                   '<button class="btn btn-outline-danger rating-button" onclick="ratePlace(\'' + place.name + '\')" style="border-radius: 10px;">평점 남기기</button>' +
+               '</div>' +
+               '</div>' +
+               '<div class="after"></div>';
+
+    contentNode.innerHTML = content; // 커스텀 오버레이의 내용을 설정
+    placeOverlay.setPosition(new kakao.maps.LatLng(place.latitude, place.longitude)); // 오버레이의 위치 설정
+    placeOverlay.setMap(map); // 오버레이를 지도에 표시
 }
+
 
 
 // 각 카테고리에 클릭 이벤트를 등록합니다
@@ -235,3 +259,144 @@ if (navigator.geolocation) {
     // idle 이벤트 등록 (지도가 움직일 때마다 검색 실행)
     kakao.maps.event.addListener(map, 'idle', searchPlaces);
 }
+
+
+// 리뷰
+
+// 평점 버튼 클릭 시 모달을 여는 함수
+function ratePlace(placeName) {
+    showReviewModal(placeName); // showReviewModal 호출
+}
+
+
+function showReviewModal(franchiseName) {
+    const token = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
+
+    // 토큰이 없으면 로그인이 필요하다는 경고창을 띄우고 로그인 페이지로 이동
+    if (!token) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'loginPage.html';
+    } else {
+        currentFranchiseName = franchiseName;  // 전역 변수 업데이트
+        document.getElementById('reviewModalLabel').innerHTML = '평점 등록 - ' + franchiseName;
+        document.getElementById('reviewText').placeholder = franchiseName + '에 대한 리뷰를 입력해주세요...';
+        var reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'));
+        reviewModal.show();
+    }
+}
+
+// DOMContentLoaded 이벤트 리스너
+document.addEventListener('DOMContentLoaded', function() {
+    const ratingInput = document.querySelector('.rating input[type="range"]');
+    const ratingStar = document.querySelector('.rating_star');
+    const reviewTextElement = document.getElementById('reviewText');
+    const imageUploadElement = document.getElementById('imageUpload');
+    const submitButton = document.getElementById('submitReviewButton');
+    const reviewModalElement = document.getElementById('reviewModal');
+
+    if (!reviewModalElement) {
+        console.error('Modal element not found');
+        return; // 모달 요소가 없으면 초기화 중단
+    }
+
+    const reviewModal = new bootstrap.Modal(reviewModalElement);
+
+    ratingInput.addEventListener('input', function() {
+        ratingStar.style.width = `${this.value * 10}%`;
+    });
+
+    submitButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        const rating = ratingInput.value / 2; // 별점
+        const reviewText = reviewTextElement.value; // 리뷰 내용
+        const files = imageUploadElement.files; // 업로드된 파일
+        const fileName = files.length > 0 ? files[0].name : "No file uploaded"; // 파일 이름
+
+        console.log("등록 정보:", {
+            상호명: currentFranchiseName,
+            별점: rating,
+            리뷰내용: reviewText,
+            파일명: fileName
+        });
+
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            const base64Image = reader.result; // 이미지를 Base64로 변환
+            saveReview(currentFranchiseName, rating, reviewText, base64Image);
+            $('#reviewModal').modal('hide');
+            alert("등록이 완료되었습니다.");
+        };
+
+        if (files.length > 0) {
+            reader.readAsDataURL(files[0]);
+        } else {
+            saveReview(currentFranchiseName, rating, reviewText, null);
+            $('#reviewModal').modal('hide');
+            alert("등록이 완료되었습니다.");
+        }
+    });
+});
+
+// 리뷰 저장 함수
+function saveReview(franchiseName, rating, reviewText, base64Image) {
+    var review = {
+        franchiseName: franchiseName,
+        rating: rating,
+        reviewText: reviewText,
+        image: base64Image
+    };
+
+    var reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+    reviews.push(review);
+    localStorage.setItem('reviews', JSON.stringify(reviews));
+
+    console.log("리뷰 저장:", review);
+}
+
+
+
+// 프로필 함수
+document.addEventListener('DOMContentLoaded', function() {
+    const profileButton = document.getElementById('btnProfile');
+    const profileLayer = document.getElementById('profileLayer');
+    const loginButton = document.getElementById('loginButton');
+    const nickName = document.querySelector('.tit_name[data-id="nickName"]');
+    const profileImg = document.querySelector('.thumb_profile img[data-id="profileImg"]');
+    const accessToken = localStorage.getItem('accessToken');
+    const username = localStorage.getItem('username');
+
+    // 로그인 상태 확인 및 UI 업데이트
+    if (accessToken && username) {
+
+        // 로그인 된 상태
+        nickName.textContent = username;
+        loginButton.classList.add('d-none');
+        profileButton.classList.remove('d-none');
+
+        // 프로필 버튼 클릭 이벤트
+        profileButton.addEventListener('click', function(event) {
+            event.preventDefault(); // 기본 클릭 이벤트 방지
+            profileLayer.style.display = profileLayer.style.display === 'none' ? 'block' : 'none'; // 보이기/숨기기 토글
+        });
+
+        // 문서의 다른 부분을 클릭했을 때 프로필 창 숨기기
+        document.addEventListener('click', function(event) {
+            if (!profileButton.contains(event.target) && !profileLayer.contains(event.target)) {
+                profileLayer.style.display = 'none'; // 프로필 창 숨기기
+            }
+        });
+
+    } else {
+        // 로그인 되지 않은 상태
+        loginButton.classList.remove('d-none');
+        profileButton.classList.add('d-none');
+
+        loginButton.addEventListener('click', function(event) {
+            // 로그인 페이지로 이동
+            window.location.href = 'loginPage.html';
+        });
+    }
+});
+
+
+

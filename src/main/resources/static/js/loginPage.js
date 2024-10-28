@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('memberUuid:', memberUuid); // memberUuid 확인
                 localStorage.setItem('memberUuid', memberUuid); // memberUuid 저장
 
-                // 로그인 성공 후, successPage로 리디렉션
-                window.location.href = 'successPage.html'; // 실제 보호된 페이지로 변경 필요
+                // 로그인 성공 후, newmapPage로 리디렉션
+                window.location.href = 'newmapPage.html'; // 실제 보호된 페이지로 변경 필요
 
             } catch (error) {
                 console.error('로그인 실패:', error);

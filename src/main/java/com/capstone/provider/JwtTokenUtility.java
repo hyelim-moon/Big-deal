@@ -43,24 +43,42 @@ public class JwtTokenUtility {
         return token;
     }
     public String getUsername(String token) {
-        String info = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getSubject();
-        return info;
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
+
     public Collection<? extends GrantedAuthority> getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        return Arrays.stream(claims.get("roles").toString().replaceAll("[\\[\\] ]", "").split(",")).map(SimpleGrantedAuthority::new).toList();
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return Arrays.stream(claims.get("roles").toString().replaceAll("[\\[\\] ]", "").split(","))
+                .map(SimpleGrantedAuthority::new)
+                .toList();
     }
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
-    }
+
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
         }
     }
+
+
+    public String resolveToken(HttpServletRequest request) {
+        return request.getHeader("Authorization");
+    }
+
     public String getTokenAtHeader(String header) {
         return Arrays.stream(header.split(" ")).toList().get(1);
     }

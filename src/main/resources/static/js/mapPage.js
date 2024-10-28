@@ -87,71 +87,71 @@ function loadData() {
     });
 }
 
-//document.addEventListener('DOMContentLoaded', function() {
-//    const ratingInput = document.querySelector('.rating input[type="range"]');
-//    const ratingStar = document.querySelector('.rating_star');
-//    const reviewTextElement = document.getElementById('reviewText');
-//    const imageUploadElement = document.getElementById('imageUpload');
-//    const submitButton = document.getElementById('submitReviewButton');
-//    const reviewModalElement = document.getElementById('reviewModal');
-//
-//    if (!reviewModalElement) {
-//        console.error('Modal element not found');
-//        return; // 모달 요소가 없으면 초기화 중단
-//    }
-//
-//    const reviewModal = new bootstrap.Modal(reviewModalElement);
-//
-//    ratingInput.addEventListener('input', function() {
-//        ratingStar.style.width = `${this.value * 10}%`;
-//    });
-//
-//    submitButton.addEventListener('click', function(event) {
-//        event.preventDefault();
-//        const rating = ratingInput.value / 2;
-//        const reviewText = reviewTextElement.value;
-//        const files = imageUploadElement.files;
-//        const fileName = files.length > 0 ? files[0].name : "No file uploaded";
-//
-//        console.log("등록 정보:", {
-//            상호명: currentFranchiseName,
-//            별점: rating,
-//            리뷰내용: reviewText,
-//            파일명: fileName
-//        });
-//
-//        const reader = new FileReader();
-//        reader.onloadend = function() {
-//            const base64Image = reader.result;
-//            saveReview(currentFranchiseName, rating, reviewText, base64Image);
-//            $('#reviewModal').modal('hide');
-//            alert("등록이 완료되었습니다.");
-//        };
-//
-//        if (files.length > 0) {
-//            reader.readAsDataURL(files[0]);
-//        } else {
-//            saveReview(currentFranchiseName, rating, reviewText, null);
-//            $('#reviewModal').modal('hide');
-//            alert("등록이 완료되었습니다.");
-//        }
-//    });
-//
-//    function saveReview(franchiseName, rating, reviewText, base64Image) {
-//        var review = {
-//            franchiseName: franchiseName,
-//            rating: rating,
-//            reviewText: reviewText,
-//            image: base64Image
-//        };
-//
-//        var reviews = JSON.parse(localStorage.getItem('reviews')) || [];
-//        reviews.push(review);
-//        localStorage.setItem('reviews', JSON.stringify(reviews));
-//
-//        console.log("리뷰 저장:", review);
-//    }
-//});
+document.addEventListener('DOMContentLoaded', function() {
+    const ratingInput = document.querySelector('.rating input[type="range"]');
+    const ratingStar = document.querySelector('.rating_star');
+    const reviewTextElement = document.getElementById('reviewText');
+    const imageUploadElement = document.getElementById('imageUpload');
+    const submitButton = document.getElementById('submitReviewButton');
+    const reviewModalElement = document.getElementById('reviewModal');
+
+    if (!reviewModalElement) {
+        console.error('Modal element not found');
+        return; // 모달 요소가 없으면 초기화 중단
+    }
+
+    const reviewModal = new bootstrap.Modal(reviewModalElement);
+
+    ratingInput.addEventListener('input', function() {
+        ratingStar.style.width = `${this.value * 10}%`;
+    });
+
+    submitButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        const rating = ratingInput.value / 2;
+        const reviewText = reviewTextElement.value;
+        const files = imageUploadElement.files;
+        const fileName = files.length > 0 ? files[0].name : "No file uploaded";
+
+        console.log("등록 정보:", {
+            상호명: currentFranchiseName,
+            별점: rating,
+            리뷰내용: reviewText,
+            파일명: fileName
+        });
+
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            const base64Image = reader.result;
+            saveReview(currentFranchiseName, rating, reviewText, base64Image);
+            $('#reviewModal').modal('hide');
+            alert("등록이 완료되었습니다.");
+        };
+
+        if (files.length > 0) {
+            reader.readAsDataURL(files[0]);
+        } else {
+            saveReview(currentFranchiseName, rating, reviewText, null);
+            $('#reviewModal').modal('hide');
+            alert("등록이 완료되었습니다.");
+        }
+    });
+
+    function saveReview(franchiseName, rating, reviewText, base64Image) {
+        var review = {
+            franchiseName: franchiseName,
+            rating: rating,
+            reviewText: reviewText,
+            image: base64Image
+        };
+
+        var reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+        reviews.push(review);
+        localStorage.setItem('reviews', JSON.stringify(reviews));
+
+        console.log("리뷰 저장:", review);
+    }
+});
 
 //function searchPlaces() {
 //    var keyword = document.getElementById('keyword').value;

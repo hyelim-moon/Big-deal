@@ -17,4 +17,6 @@ public interface FranchiseService {
     List<FranchiseResponse> findAll();
     Boolean exist(String uuid);
     // findByPaperAndMobileAndCard
+
+
 }

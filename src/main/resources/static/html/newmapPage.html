@@ -18,6 +18,48 @@
             <a class="navbar-brand" href="#">
                 <img src="../img/Logo.png" alt="지역화폐 서비스 로고" style="height: 40px;"/>
             </a>
+
+
+                <!-- 로그인, 회원가입 버튼 -->
+                <div id="loginButton" class="d-none">
+                    <div class="button">
+                        <p class="btnText">로그인</p>
+                        <div class="btnTwo">
+                            <p class="btnText2">Go!</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- 프로필 버튼 -->
+            <h2 class="tit_profile PROFILE-IMG profile-button" id="btnProfile" class="d-none">
+                <a href="#">
+                    <img src="../img/btn_pro.png" width="36" height="36" class="img_profile HIDDEN" alt="프로필" id="profileImg">
+                </a>
+            </h2>
+
+
+
+            <div class="LayerProfile" id="profileLayer" style="display: none;">
+                <div class="info_profile">
+                    <div class="thumb_profile">
+                        <img src="../img/btn_pro.png" width="44" height="44" class="img_profile" alt="" data-id="profileImg">
+                    </div>
+                    <div class="wrap_user">
+                        <strong class="tit_name" data-id="nickName">영수</strong>
+                        <a href="#none" class="link_profile edit" data-id="edit">프로필 수정</a>
+                    </div>
+                    <a href="https://accounts.kakao.com/logout?continue=https://map.kakao.com" class="btn_logout" data-id="logout">로그아웃</a>
+                </div>
+                <div class="my_page">
+                    <a href="#none" target="_top" data-id="fav">즐겨찾기</a>
+                    <a href="#none" target="_top" data-id="homeCompany">내 장소</a>
+                    <a href="#none" target="_top" data-id="review">후기 <em class="num" data-id="reviewCount"></em></a>
+                </div>
+            </div>
+
+
+
+
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">지역화폐 활성화 서비스</h5>
@@ -26,7 +68,8 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">내정보</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">평점</a></li>
                     </ul>
                 </div>
             </div>
@@ -54,19 +97,7 @@
         <ul id="category">
             <li id="BK9" data-order="0">
                 <span class="category_bg bank"></span>
-                모바일형(QR코드)
-            </li>
-            <li id="MT1" data-order="1">
-                <span class="category_bg mart"></span>
-                선불카드형
-            </li>
-            <li id="PM9" data-order="2">
-                <span class="category_bg pharmacy"></span>
-                체크카드형
-            </li>
-            <li id="OL7" data-order="3">
-                <span class="category_bg oil"></span>
-                지류형(종이 화폐)
+                지역화폐
             </li>
         </ul>
     </div>
