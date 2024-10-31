@@ -1,3 +1,32 @@
+#placesList li {list-style: none;}
+#placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
+#placesList .item span {display: block;margin-top:4px;}
+#placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+#placesList .item .info{padding:10px 0 10px 55px;}
+#placesList .info .gray {color:#8a8a8a;}
+#placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+#placesList .info .tel {color:#009900;}
+#placesList .item .markerbg {float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;}
+#placesList .item .marker_1 {background-position: 0 -10px;}
+#placesList .item .marker_2 {background-position: 0 -56px;}
+#placesList .item .marker_3 {background-position: 0 -102px}
+#placesList .item .marker_4 {background-position: 0 -148px;}
+#placesList .item .marker_5 {background-position: 0 -194px;}
+#placesList .item .marker_6 {background-position: 0 -240px;}
+#placesList .item .marker_7 {background-position: 0 -286px;}
+#placesList .item .marker_8 {background-position: 0 -332px;}
+#placesList .item .marker_9 {background-position: 0 -378px;}
+#placesList .item .marker_10 {background-position: 0 -423px;}
+#placesList .item .marker_11 {background-position: 0 -470px;}
+#placesList .item .marker_12 {background-position: 0 -516px;}
+#placesList .item .marker_13 {background-position: 0 -562px;}
+#placesList .item .marker_14 {background-position: 0 -608px;}
+#placesList .item .marker_15 {background-position: 0 -654px;}
+#pagination {margin:10px auto;text-align: center;}
+#pagination a {display:inline-block;margin-right:10px;}
+#pagination .on {font-weight: bold; cursor: default;color:#777;}
+
+
 .map_wrap, .map_wrap * {
     margin:0;
     padding:0;
@@ -20,6 +49,7 @@
         background: #fff;
         overflow: hidden;
         z-index: 2;
+        padding: unset;
  }
 
 #category li {
@@ -356,62 +386,10 @@ div#loginButton {
 }
 
 
-
-/* 로그인 회원가입 버튼 css
-.btn-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
-}
-
-.button {
-    background: #3D4C53;  버튼 배경색
-    margin: 20px auto;  버튼 사이 여백
-    width: 150px;  버튼 너비
-    height: 40px;  버튼 높이
-    overflow: hidden;  내용이 넘칠 경우 숨기기
-    text-align: center;  텍스트 중앙 정렬
-    transition: .2s;  전환 효과
-    cursor: pointer;  커서 포인터로 변경
-    border-radius: 3px;  모서리 둥글게
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, .2);  그림자 효과
-}
-
-.btnTwo {
-    position: relative;  상대 위치 지정
-    width: 200px;  너비
-    height: 100px;  높이
-    margin-top: -100px;  위로 이동
-    padding-top: 2px;  위쪽 여백
-    background: #26A69A;  버튼 배경색
-    left: -250px;  왼쪽으로 이동
-    transition: .3s;  전환 효과
-}
-
-.btnText {
-    color: white;  텍스트 색상
-    transition: .3s;  전환 효과
-    margin-top: 6px;
-}
-
-.btnText2 {
-    margin-top: 60px;  위쪽 여백
-    margin-right: -130px;  오른쪽 여백
-    color: #FFF;  텍스트 색상
-}
-
-.button:hover .btnTwo {
-    left: -130px;  호버 시 이동
-}
-
-.button:hover .btnText {
-    margin-left: 65px;  호버 시 이동
-}
-
-.button:active {
-    box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3);  클릭 시 그림자 효과
-}
-*/
-
+button#create_marker {
+    border: none;
+    background-color: white;
+    width: 100px;
+    height: 55px;
+    text-align: center;
 

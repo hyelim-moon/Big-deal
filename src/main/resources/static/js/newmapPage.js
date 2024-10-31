@@ -11,10 +11,110 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     };
 
 // 지도를 생성합니다    
-var map = new kakao.maps.Map(mapContainer, mapOption); 
+var map = new kakao.maps.Map(mapContainer, mapOption);
+
+
+
+
+
+// 전역 변수로 map과 manager 선언
+var map;
+var manager;
+
+// 지도 초기화 함수
+function initializeMap() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude,
+                lon = position.coords.longitude;
+
+            var locPosition = new kakao.maps.LatLng(lat, lon);
+
+            // 지도 생성
+            map = new kakao.maps.Map(document.getElementById('map'), {
+                center: locPosition,
+                level: 5
+            });
+
+            // Drawing Manager 옵션 설정
+            var options = {
+                map: map,
+                drawingMode: [
+                    kakao.maps.drawing.OverlayType.MARKER,
+                ],
+                guideTooltip: ['draw', 'drag', 'edit'],
+                markerOptions: {
+                    draggable: true,
+                    removable: true
+                },
+                polylineOptions: {
+                    draggable: true,
+                    removable: true,
+                    editable: true,
+                    strokeColor: '#39f',
+                    hintStrokeStyle: 'dash',
+                    hintStrokeOpacity: 0.5
+                }
+            };
+
+            // Drawing Manager 생성
+            manager = new kakao.maps.drawing.DrawingManager(options);
+
+            // 지도 이벤트 등록
+            kakao.maps.event.addListener(map, 'idle', searchPlaces);
+
+        }, function(error) {
+            // 위치 정보를 가져오는데 실패한 경우 서울시청을 중심으로 설정
+            var defaultPosition = new kakao.maps.LatLng(37.566826, 126.9786567);
+            initializeWithPosition(defaultPosition);
+        });
+    } else {
+        // geolocation을 사용할 수 없는 경우 서울시청을 중심으로 설정
+        var defaultPosition = new kakao.maps.LatLng(37.566826, 126.9786567);
+        initializeWithPosition(defaultPosition);
+    }
+}
+
+// 위치 정보로 지도 초기화하는 함수
+function initializeWithPosition(position) {
+    map = new kakao.maps.Map(document.getElementById('map'), {
+        center: position,
+        level: 5
+    });
+
+    // Drawing Manager 옵션과 생성은 위와 동일하게 구현
+    // ... (options 설정 코드)
+    manager = new kakao.maps.drawing.DrawingManager(options);
+
+    kakao.maps.event.addListener(map, 'idle', searchPlaces);
+}
+
+// 그리기 도구 선택 함수
+function selectOverlay(type) {
+    // 그리기 중이면 그리기를 취소합니다
+    manager.cancel();
+
+    // 클릭한 그리기 요소 타입을 선택하고 그리기 모드로 전환합니다
+    manager.select(kakao.maps.drawing.OverlayType[type]);
+}
+
+// 페이지 로드 시 지도 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    initializeMap();
+});
+
+
+
+
+
 
 // 장소 검색 객체를 생성합니다
-var ps = new kakao.maps.services.Places(map); 
+var ps = new kakao.maps.services.Places(map);
+
+// 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
+var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+
+
 
 // 지도에 idle 이벤트를 등록합니다
 kakao.maps.event.addListener(map, 'idle', searchPlaces);
@@ -173,12 +273,8 @@ function displayPlaceInfo(place) {
 
 // 각 카테고리에 클릭 이벤트를 등록합니다
 function addCategoryClickEvent() {
-    var category = document.getElementById('category'),
-        children = category.children;
-
-    for (var i=0; i<children.length; i++) {
-        children[i].onclick = onClickCategory;
-    }
+    var specificCategory = document.getElementById('BK9'); // 특정 li 요소를 선택
+    specificCategory.onclick = onClickCategory; // 해당 요소에 클릭 이벤트 등록
 }
 
 // 카테고리를 클릭했을 때 호출되는 함수입니다
@@ -397,6 +493,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+
+
+
+
 
 
 
