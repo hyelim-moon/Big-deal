@@ -1,54 +1,113 @@
-.modal-body .form-check {
-            margin-bottom: 10px; /* 각 옵션 사이의 간격을 조정 */
-        }
-        .modal-body textarea {
-            width: 100%;
-            height: 150px; /* 텍스트 영역의 크기 조정 */
-            margin-top: 20px; /* 텍스트 영역과 옵션 사이의 간격 */
-        }
-        .modal-footer {
-            justify-content: center; /* 버튼을 중앙으로 정렬 */
-        }
-        .modal-footer .btn {
-            width: 100px; /* 버튼의 너비 조정 */
-        }
-
-.sidebar {
-    height: 100%;
-    width: 200px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #dffee0;
-    padding-top: 20px;
-    border-right: 1px solid #e0e0e0;
+/* Body 배경색 변경 */
+body {
+    background-color: #f8f9fa; /* 기존 card-container 배경색 */
 }
 
-.sidebar a {
-    padding: 15px 20px;
-    text-decoration: none;
-    font-size: 18px;
-    color: #333;
-    display: block;
-}
-
-.sidebar a:hover {
-    background-color: #c3ffc5;
-    color: #000;
-}
-
-.content {
-    margin-left: 220px;
-    padding: 20px;
-}
-
+/* Card-container 배경색 변경 */
 .card-container {
-    border: 1px solid #28a745;
-    border-radius: 50px;
+    background-color: #ffffff; /* 기존 body 배경색 */
+    border-radius: 15px;
     padding: 30px;
     text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Icon container remains the same */
+.icon-container {
+    margin-bottom: 20px;
+}
+
+/* Card text styling remains the same */
+.card-container h5 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #333;
+}
+
+.card-container p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: #666;
 }
 
 .card-container button {
     margin-bottom: 20px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: bold;
+}
+
+/* Modal styles remain the same */
+.modal-body .form-check {
+    margin-bottom: 10px;
+}
+
+.modal-body textarea {
+    width: 100%;
+    height: 150px;
+    margin-top: 20px;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.modal-footer {
+    justify-content: center;
+}
+
+.modal-footer .btn {
+    width: 120px;
+    padding: 10px;
+    border-radius: 50px;
+    font-weight: bold;
+}
+
+/* Header styling remains the same */
+header {
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+header .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo {
+    width: 150px;
+    height: auto;
+}
+
+header a.btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: bold;
+}
+
+/* Icon styling */
+.icon-container i {
+    font-size: 3rem;
+    color: #555;
+}
+
+.icon-container i.text-primary {
+    color: #007bff;
+}
+
+.icon-container i.text-info {
+    color: #17a2b8;
+}
+
+.icon-container i.text-danger {
+    color: #dc3545;
 }

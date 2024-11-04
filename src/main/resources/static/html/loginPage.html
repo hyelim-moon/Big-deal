@@ -1,59 +1,78 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/loginPage.css" rel="stylesheet">
+
 </head>
 <body>
-<header>
-    <div class="container">
-        <!-- 로고 클릭 시 mappage로 이동 -->
-        <a href="newmapPage.html">
-            <img src="../img/MainLogo.png" alt="지역화폐 로고" width="150" height="150">
-        </a>
-    </div>
-</header>
-
-<section class="login-section">
-    <div class="container">
-        <!-- 버튼으로 사업자 및 일반 회원 선택 -->
-        <div class="mb-3 text-center">
-            <button type="button" class="btn btn-primary me-3" id="business-btn">사업자</button>
-            <button type="button" class="btn btn-primary" id="user-btn">일반 회원</button>
+<div class="shape1">
+    <header>
+        <div class="container">
+            <!-- 로고 클릭 시 mappage로 이동 -->
+            <a href="newmapPage.html">
+                <img src="../img/MainLogo.png" alt="지역화폐 로고" width="115" height="115">
+            </a>
         </div>
+    </header>
 
-        <!-- 사업자 및 일반 회원 로그인 폼 -->
-        <form id="login-form" action="/login" method="post">
-            <div class="mb-3">
-                <input type="text" class="form-control" id="username" name="username" placeholder="사용자명" required>
+    <section class="login-section">
+        <div class="container">
+            <!-- 버튼으로 사업자 및 일반 회원 선택 -->
+            <div class="mb-3 text-center">
+                <button type="button" class="btn btn-outline-primary me-3" id="business-btn">사업자</button>
+                <button type="button" class="btn btn-outline-primary" id="user-btn">일반 회원</button>
             </div>
-            <div class="mb-3">
-                <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">로그인</button>
-        </form>
+
+            <!-- 사업자 및 일반 회원 로그인 폼 -->
+            <form id="login-form" action="/login" method="post">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="아이디" required>
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" required>
+                </div>
+                <button type="submit" class="btn btn-outline-primary btn-block">로그인</button>
+            </form>
+        </div>
+    </section>
+
+    <!--KakaoLogin 이미지를 포함한 버튼-->
+    <div class="kakao-login-btn">
+        <button type="button" id="kakao-login-btn">
+            <img src="/img/kakao_login_medium_wide.png" alt="카카오 로그인">
+        </button>
     </div>
-</section>
 
-<!-- KakaoLogin 이미지를 포함한 버튼 -->
-<div class="text-center">
-    <button type="button" class="kakao-login-btn">
-        <img src="../img/KakaoLogin.png" alt="KakaoLogin">
-    </button>
+    <!-- 아이디/비밀번호 찾기 및 회원가입 링크 -->
+    <section class="text-center mt-4">
+        <a href="#" class="me-3">아이디/비밀번호 찾기</a>
+        <a href="joinPage.html">회원가입</a>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js"></script>
+    <script src="../js/loginPage.js"></script>
+    <script>
+        // 카카오 로그인 버튼에 로그인 URL을 동적으로 설정
+        $(document).ready(function() {
+            $.ajax({
+                url: '/login/kakao-url',  // 서버에 요청을 보내서 카카오 로그인 URL을 받아옴
+                method: 'GET',
+                success: function(response) {
+                    $('#kakao-login-btn').on('click', function() {
+                        window.location.href = response;  // 받아온 URL로 이동
+                    });
+                },
+                error: function() {
+                    alert("카카오 로그인 URL을 불러오는 데 실패했습니다.");
+                }
+            });
+        });
+    </script>
 </div>
-
-<!-- 아이디/비밀번호 찾기 및 회원가입 링크 -->
-<section class="text-center mt-4">
-    <a href="#" class="me-3">아이디/비밀번호 찾기</a>
-    <a href="joinPage.html">회원가입</a>
-</section>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js"></script>
-<script src="../js/loginPage.js"></script>
 </body>
 </html>

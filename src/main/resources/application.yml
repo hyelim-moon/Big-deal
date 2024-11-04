@@ -40,3 +40,6 @@ springdoc:
 jwt:
   expiration-time: 86400000
   secret: VGhlIGdyZWF0ZXN0IGdsb3J5IGluIGxpdmluZyBsaWVzIG5vdCBpbiBuZXZlciBmYWxsaW5nLCBidXQgaW4gcmlzaW5nIGV2ZXJ5IHRpbWUgd2UgZmFsbC4=
+kakao:
+  client_id: 0696c4ca8c9cf91931a3a54962777835
+  redirect_uri: http://localhost:8080/kakao-login
