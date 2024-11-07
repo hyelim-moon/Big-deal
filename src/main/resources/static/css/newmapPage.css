@@ -28,21 +28,32 @@
 
 
 .map_wrap, .map_wrap * {
-    margin:0;
+    margin:3px;
     padding:0;
     font-family:'Malgun Gothic',dotum,'돋움',sans-serif;
     font-size:12px;
+    z-index:2;
 }
 .map_wrap {
-    width: 100%;
-    height: 100%;
     position: absolute;
+        top: 100px;
+        height:80%;
+        left: 1px;
+        bottom: 0;
+        width: 305px;
+        margin: 10px 0 30px 10px;
+        padding: 5px;
+        overflow-y: auto;
+        background: rgba(255, 255, 255, 0.7);
+        z-index: 2;
+        font-size: 12px;
+        border-radius: 20px;
 }
 
 #category {
     position: absolute;
-        top: 25px;
-        left: 10px;
+        top: 18px;
+        left: 37px;
         border-radius: 5px;
         border: 1px solid #909090;
         box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
@@ -64,15 +75,30 @@
 #category li.on {background: #eee;}
 #category li:hover {background: #ffe6e6;border-left:1px solid #acacac;margin-left: -1px;}
 #category li:last-child{margin-right:0;border-right:0;}
-#category li span {display: block;margin:0 auto 3px;width:27px;height: 28px;}
+#category li span {display: block;margin:0 auto 3px; width:27px;height: 28px;}
 #category li .category_bg {background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png) no-repeat;}
-#category li .bank {background-position: -10px 0;}
-#category li .mart {background-position: -10px -36px;}
-#category li .pharmacy {background-position: -10px -72px;}
-#category li .oil {background-position: -10px -108px;}
-#category li .cafe {background-position: -10px -144px;}
-#category li .store {background-position: -10px -180px;}
-#category li.on .category_bg {background-position-x:-46px;}
+#category li .bank {background-position: -7px 2px; margin-bottom: 15px;}
+#category li.on .category_bg {background-position-x:-43px;}
+
+/* category li 설정 */
+#category li {
+    position: relative; /* 자식 요소 위치 고정을 위한 설정 */
+}
+
+
+/* new_marker 크기 설정 */
+#category li .new_marker {
+    background: url('../img/new.png') no-repeat center center;
+    width: 37px;
+    height: 40px;
+    background-position: -58px -9px;
+}
+
+#category li.on .new_marker{
+}
+
+
+
 .placeinfo_wrap {position:absolute;bottom:28px;left:-150px;width:300px;}
 .placeinfo {position:relative;width:100%;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;padding-bottom: 10px;background: #fff;}
 .placeinfo:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}
@@ -119,6 +145,13 @@ header {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     overflow: auto;
 }
+
+#searchButton {
+    width: 65px;
+    height: 35px;
+}
+
+
 
 #innerQuery {
         width: 100%;  /* 부모 요소의 너비를 꽉 채움 */
@@ -392,4 +425,6 @@ button#create_marker {
     width: 100px;
     height: 55px;
     text-align: center;
+
+
 

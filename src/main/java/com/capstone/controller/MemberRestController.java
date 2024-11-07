@@ -1,15 +1,25 @@
 package com.capstone.controller;
 
 import com.capstone.dto.JwtTokenResponse;
+//import com.capstone.dto.franchise.FranchiseRequest;
+import com.capstone.dto.franchise.NewFranchiseRequest;
+import com.capstone.dto.franchise.NewFranchiseResponse;
 import com.capstone.dto.member.*;
+//import com.capstone.entity.NewFranchise;
+import com.capstone.entity.NewFranchise;
 import com.capstone.provider.JwtTokenUtility;
 import com.capstone.service.MemberService;
+//import com.capstone.service.franchise.FranchiseSave;
+import com.capstone.service.franchise.NewFranchiseService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @RequestMapping("/api/v1/member")
 @RequiredArgsConstructor
@@ -17,6 +27,10 @@ import java.util.List;
 public class MemberRestController {
     private final MemberService service;
     private final JwtTokenUtility jwtTokenUtility;
+
+    private final NewFranchiseService newFranchiseService;  // NewFranchiseService 추가
+
+
     @GetMapping("")
     public ResponseEntity<List<MemberResponse>> findByAll() {
         return ResponseEntity.ok().body(service.findAll());
@@ -60,5 +74,32 @@ public class MemberRestController {
     public ResponseEntity<Boolean> withdrawal(@RequestHeader(value = "Authorization", required = true, defaultValue = "") String authorization) {
         String token = jwtTokenUtility.getTokenAtHeader(authorization);
         return ResponseEntity.ok().body(service.withdrawal(jwtTokenUtility.getUsername(token)));
+    }
+
+
+    // New Franchise 생성 API 추가
+    @PostMapping("franchise")
+    public ResponseEntity<NewFranchiseResponse> createNewFranchise(@RequestBody NewFranchiseRequest newFranchiseRequest, @RequestHeader(value = "Authorization", required = true, defaultValue = "") String authorization) {
+        String token = jwtTokenUtility.getTokenAtHeader(authorization);
+        try {
+            NewFranchise newFranchise = newFranchiseService.saveNewFranchise(newFranchiseRequest);
+            NewFranchiseResponse response = new NewFranchiseResponse();
+            response.setId(newFranchise.getId());
+            response.setName(newFranchise.getName());
+            response.setAddress(newFranchise.getAddress());
+            response.setSector(newFranchise.getSector());
+            response.setLatitude(newFranchise.getLatitude());
+            response.setLongitude(newFranchise.getLongitude());
+            response.setCurrencies(newFranchise.getCurrencies());
+            response.setCreatedAt(newFranchise.getCreatedAt().toString());
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new NewFranchiseResponse());
+        } catch (DuplicateKeyException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new NewFranchiseResponse());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(new NewFranchiseResponse());
+        }
     }
 }

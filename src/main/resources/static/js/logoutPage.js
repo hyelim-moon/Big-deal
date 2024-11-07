@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.removeItem('username');
             localStorage.removeItem('accessToken');
             alert('로그아웃 성공');
-            window.location.href = 'mapPage.html';
+            window.location.href = 'newmapPage.html';
         });
     } else {
         console.error('logoutButton is null');

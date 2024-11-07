@@ -38,7 +38,7 @@
             </h2>
 
 
-
+            <!--프로필 내용-->
             <div class="LayerProfile" id="profileLayer" style="display: none;">
                 <div class="info_profile">
                     <div class="thumb_profile">
@@ -48,18 +48,17 @@
                         <strong class="tit_name" data-id="nickName">영수</strong>
                         <a href="/html/myPage.html" class="link_profile edit" data-id="edit">프로필 수정</a>
                     </div>
-                    <a href="https://accounts.kakao.com/logout?continue=https://map.kakao.com" class="btn_logout" data-id="logout">로그아웃</a>
+                    <a href="#" class="btn_logout" data-id="logout" id="logout-button">로그아웃</a>
                 </div>
                 <div class="my_page">
-                    <a href="#none" target="_top" data-id="fav">즐겨찾기</a>
-                    <a href="#none" target="_top" data-id="homeCompany">내 장소</a>
+                    <a href="#none" target="_top" data-id="fav">내 정보</a>
+                    <a href="#none" target="_top" data-id="homeCompany">내 리뷰</a>
                     <a href="#none" target="_top" data-id="review">후기 <em class="num" data-id="reviewCount"></em></a>
                 </div>
             </div>
 
 
-
-
+            <!--왼쪽 상단 메뉴바-->
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">지역화폐 활성화 서비스</h5>
@@ -79,7 +78,7 @@
 
 <!-- 지도 검색 레이어 -->
 <div id="innerSearchLayer">
-    <form id="insideTotalSearchForm" class="inside_sch" role="search">
+    <form id="insideTotalSearchForm" class="inside_sch" role="search" onsubmit="searchPlace(); return false">
         <fieldset>
             <div class="box_search default_search">
                 <input type="search" id="innerQuery" class="tf_keyword" placeholder="장소, 주소 검색">
@@ -93,15 +92,15 @@
     <div class="map_wrap">
         <!-- 지도를 이곳에 넣음 -->
         <div id="menu_wrap" class="bg_white">
-            <div class="option">
-                <div>
-                    <form onsubmit="searchPlaces(); return false">
-                        키워드 :
-                        <input type="text" value="" id="keyword" size="15">
-                        <button type="submit">검색하기</button>
-                    </form>
-                </div>
-            </div>
+<!--            <div class="option">-->
+<!--                <div>-->
+<!--                    <form onsubmit="searchPlace(); return false">-->
+<!--                        장소 검색 :-->
+<!--                        <input type="text" value="" id="keyword" size="15">-->
+<!--                        <button id="searchButton" type="submit" class="btn btn-primary">검색</button>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
             <hr>
             <ul id="placesList"></ul>
            <div id="pagination"></div>
@@ -116,8 +115,9 @@
                 <span class="category_bg bank"></span>
                 지역화폐
             </li>
-            <li id="drawing-tools">
-                <button id="create_marker" class="drawing-btn" onclick="selectOverlay('MARKER')">가맹점 등록</button>
+            <li id="create_marker" class="drawing-btn" data-type="MARKER">
+                <span class="new_marker"></span> <!-- 새로운 클래스 new_marker 사용 -->
+                가맹점 등록
             </li>
          </ul>
 </div>
@@ -164,5 +164,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b43e302547d37e9c52e6fc0644fae888&libraries=services,clusterer,drawing"></script>
 <script src="../js/newmapPage.js"></script>
+<script src="../js/logoutPage.js"></script>
 </body>
 </html>
