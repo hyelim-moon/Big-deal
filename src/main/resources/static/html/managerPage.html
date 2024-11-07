@@ -1,59 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>관리자 페이지</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="../css/managerPage.css" rel="stylesheet">
 </head>
 <body>
-<div class="sidebar">
-    <a href="managerPage.html">관리자</a>
-    <a href="memberManagementPage.html">회원 관리</a>
-    <a href="businessManagementPage.html">사업장 관리</a>
-</div>
-<div class="container">
-    <a href="newmapPage.html">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-auto">
-                    <img src="../img/MainLogo.png" alt="지역화폐 로고" width="150" height="150">
+<header class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <img src="../img/MainLogo.png" alt="지역화폐 로고" class="logo">
+        <button onclick="navigateToHome()" class="btn btn-outline-secondary rounded-pill">홈으로 돌아가기</button>
+    </div>
+</header>
+
+<div class="container mt-5">
+    <h4 class="text-center mb-5">관리자 페이지</h4>
+    <div class="row justify-content-center">
+        <!-- 회원 관리 카드 -->
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="card-container shadow-sm">
+                <div class="icon-container mb-3">
+                    <i class="fas fa-user-cog fa-3x text-primary"></i>
                 </div>
+                <h5>회원 관리</h5>
+                <p>등록된 회원 정보를 확인하고 관리하세요.</p>
+                <button onclick="navigateTo('memberManagementPage.html')" class="btn btn-primary rounded-pill">관리하기</button>
             </div>
         </div>
-    </a>
-    <div class="container mt-5">
-        <h4 class="text-center mb-5">관리자 페이지</h4>
-        <div class="card mx-auto border border-success" style="width: 25rem; height: 30rem; border-radius: 50px;">
-            <div class="card-body mt-4">
-                <div class="d-flex flex-column align-items-center text-center">
-                    <div class="p-2 w-20">
-                        <div class="card">
-                            <button class="btn btn-outline-success btn-lg">회원관리</button>
-                        </div>
-                    </div>
-                    <div class="p-2 w-20">
-                        <div class="card mt-5">
-                            <button class="btn btn-outline-success btn-lg">사업장관리</button>
-                        </div>
-                    </div>
-                    <div class="p-2 w-20">
-                        <div class="card mt-5">
-                            <button class="btn btn-outline-success btn-lg">문의사항</button>
-                        </div>
-                    </div>
-                    <div class="p-2 w-20">
-                        <div class="card mt-5">
-                            <button class="btn btn-outline-success btn-lg">평점관리</button>
-                        </div>
-                    </div>
+
+        <!-- 사업장 관리 카드 -->
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="card-container shadow-sm">
+                <div class="icon-container mb-3">
+                    <i class="fas fa-store fa-3x text-success"></i>
                 </div>
+                <h5>사업장 관리</h5>
+                <p>사업장 정보를 확인하고 관리하세요.</p>
+                <button onclick="navigateTo('businessManagementPage.html')" class="btn btn-success rounded-pill">관리하기</button>
+            </div>
+        </div>
+
+        <!-- 문의 사항 카드 -->
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="card-container shadow-sm">
+                <div class="icon-container mb-3">
+                    <i class="fas fa-question-circle fa-3x text-warning"></i>
+                </div>
+                <h5>문의 사항</h5>
+                <p>회원 문의를 확인하고 답변하세요.</p>
+                <button onclick="navigateTo('inquiryManagementPage.html')" class="btn btn-warning rounded-pill">확인하기</button>
+            </div>
+        </div>
+
+        <!-- 평점 관리 카드 -->
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="card-container shadow-sm">
+                <div class="icon-container mb-3">
+                    <i class="fas fa-star fa-3x text-info"></i>
+                </div>
+                <h5>평점 관리</h5>
+                <p>회원들의 평점을 확인하고 관리하세요.</p>
+                <button onclick="navigateTo('ratingManagementPage.html')" class="btn btn-info rounded-pill">관리하기</button>
             </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+<script src="../js/managerPage.js"></script>
 </body>
 </html>

@@ -70,4 +70,9 @@ document.addEventListener('DOMContentLoaded', function() {
             memberDetailModal.hide();
         }
     }
+
+    // 메인 페이지로 돌아가기 함수
+    window.navigateToMainPage = function() {
+        window.location.href = 'managerPage.html';
+    }
 });
