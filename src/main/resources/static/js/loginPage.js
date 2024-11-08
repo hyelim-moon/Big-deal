@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('login-form');
 
+    //일반 로그인 폼 처리
     if (loginForm) {
         loginForm.addEventListener('submit', async function(event) {
             event.preventDefault(); // 폼 제출 기본 동작 막기
@@ -63,4 +64,45 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error('loginForm is null');
     }
+
+    // 카카오 소셜 로그인 처리
+    Kakao.init('a5ea1ed9bba9add0206c13bb610063ae');  // 카카오 앱 키 설정
+
+    // 커스터마이징 버튼 클릭 시 로그인 처리
+    document.getElementById('kakao-login-btn').addEventListener('click', function () {
+        Kakao.Auth.login({
+            success: function (authObj) {
+                console.log('카카오 로그인 성공:', authObj);
+
+                // 카카오 로그인 후 사용자 정보 가져오기
+                Kakao.API.request({
+                    url: '/v2/user/me',
+                    success: function (response) {
+                        console.log('사용자 정보:', response);
+
+                        // 사용자 정보로 필요한 작업 (예: 프로필 이미지 가져오기)
+                        const userProfileImage = response.properties.profile_image;
+
+                        // 로그인 성공 후 버튼 이미지 변경
+                        const loginButton = document.getElementById('loginButton');
+                        if (loginButton) {
+                            loginButton.src = '../img/btn_pro.png'; // 로그인 버튼 이미지를 프로필 이미지로 변경
+                        }
+
+                        // 추가적으로 사용자 정보를 로컬 스토리지에 저장하거나 처리할 수 있음
+                        localStorage.setItem('userProfile', JSON.stringify(response));
+
+                        // 로그인 성공 후 다른 페이지로 리디렉션
+                        window.location.href = 'newmapPage.html';
+                    },
+                    fail: function (error) {
+                        console.error('사용자 정보 요청 실패:', error);
+                    }
+                });
+            },
+            fail: function (error) {
+                console.error('카카오 로그인 실패:', error);
+            }
+        });
+    });
 });
