@@ -22,7 +22,10 @@ var manager;
 // Drawing Manager 관련 전역 변수 선언
 var drawingManager = null;
 
-// 지도 초기화 함수 수정
+let initialDataLoaded = false;
+let cachedData = new Map();
+
+// 지도 초기화 시 이벤트 리스너 수정
 function initializeMap() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -40,8 +43,12 @@ function initializeMap() {
             // Drawing Manager 생성
             initializeDrawingManager();
 
-            // 지도 이벤트 등록
-            kakao.maps.event.addListener(map, 'idle', searchPlaces);
+            // 지도 이벤트 등록 - debounce 적용
+            let timer;
+            kakao.maps.event.addListener(map, 'idle', function() {
+                clearTimeout(timer);
+                timer = setTimeout(searchPlaces, 300);
+            });
 
         }, function(error) {
             var defaultPosition = new kakao.maps.LatLng(37.566826, 126.9786567);
@@ -51,6 +58,22 @@ function initializeMap() {
         var defaultPosition = new kakao.maps.LatLng(37.566826, 126.9786567);
         initializeWithPosition(defaultPosition);
     }
+}
+
+// 초기 데이터 로드 (서버 요청은 한 번만 수행)
+function loadInitialData() {
+    fetchDataFromServer().then(data => {
+        cachedData = processAndCacheData(data);
+        initialDataLoaded = true;
+        updateMapWithCachedData();
+    });
+}
+
+// 캐시된 데이터로 지도 업데이트 (서버 요청 없음)
+function updateMapWithCachedData() {
+    const currentBounds = map.getBounds();
+    const visibleData = filterVisibleData(cachedData, currentBounds);
+    displayOnMap(visibleData);
 }
 
 // Drawing Manager 이벤트 처리를 위한 함수 수정
@@ -86,18 +109,28 @@ function initializeDrawingManager() {
             console.log(`마커 위치: 위도 ${lat}, 경도 ${lng}`);
             console.log("showMarkerInfoModal 호출 준비 중");
 
-            // 마커 정보 입력 모달 표시
-            showMarkerInfoModal(lat, lng, data.target);
+            // 주소를 가져오기 위해 geocoder 사용
+            var geocoder = new kakao.maps.services.Geocoder();
+            geocoder.coord2Address(lng, lat, function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    var address = result[0].road_address ? result[0].road_address.address_name : result[0].address.address_name;
+                    console.log("주소:", address);
+
+                    // 마커 정보 입력 모달 표시
+                    showMarkerInfoModal(lat, lng, data.target, address);
+                } else {
+                    console.log("주소를 가져오지 못했습니다.");
+                    showMarkerInfoModal(lat, lng, data.target, "");
+                }
+            });
         } else {
             console.log("마커가 아닌 다른 타입의 객체가 그려짐:", data.overlayType);
         }
     });
 }
 
-
-
 // 마커 정보 입력 모달을 표시하는 함수
-function showMarkerInfoModal(lat, lng, marker) {
+function showMarkerInfoModal(lat, lng, marker, address) {
     console.log("showMarkerInfoModal 호출됨");
 
     // 기존 모달이 있다면 제거
@@ -123,7 +156,7 @@ function showMarkerInfoModal(lat, lng, marker) {
                         </div>
                         <div class="mb-3">
                             <label for="storeAddress" class="form-label">주소</label>
-                            <input type="text" class="form-control" id="storeAddress" required>
+                            <input type="text" class="form-control" id="storeAddress" value="${address}" required>
                         </div>
                         <div class="mb-3">
                             <label for="storeSector" class="form-label">업종</label>
@@ -131,17 +164,17 @@ function showMarkerInfoModal(lat, lng, marker) {
                         </div>
                         <div class="mb-3">
                             <label class="form-label">사용 가능 지역화폐</label><br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="currencyPaper" value="paper">
-                                <label class="form-check-label" for="currencyPaper">지류</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="currencyMobile" value="mobile">
-                                <label class="form-check-label" for="currencyMobile">모바일</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="currencyCard" value="card">
-                                <label class="form-check-label" for="currencyCard">카드</label>
+                            <div class="btn-group" role="group" aria-label="지역화폐 선택 버튼 그룹">
+
+                                <input type="radio" class="btn-check" name="currencyType" id="currencyPaper" value="paper" autocomplete="off">
+                                <label class="btn btn-outline-success" for="currencyPaper">지류</label>
+
+                                <input type="radio" class="btn-check" name="currencyType" id="currencyMobile" value="mobile" autocomplete="off">
+                                <label class="btn btn-outline-success" for="currencyMobile">모바일</label>
+
+                                <input type="radio" class="btn-check" name="currencyType" id="currencyCard" value="card" autocomplete="off">
+                                <label class="btn btn-outline-success" for="currencyCard">카드</label>
+
                             </div>
                         </div>
                     </form>
@@ -156,26 +189,27 @@ function showMarkerInfoModal(lat, lng, marker) {
     `;
 
     // 모달을 body에 추가
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
-        console.log("모달 HTML이 body에 추가됨");
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    console.log("모달 HTML이 body에 추가됨");
 
-        // 모달 인스턴스 생성 및 표시
-        try {
-            var modal = new bootstrap.Modal(document.getElementById('markerInfoModal'));
-            modal.show();
-            console.log("모달 표시됨");
-        } catch (error) {
-            console.error("모달 표시 중 오류 발생:", error);
-        }
-
-        // 모달이 닫힐 때 이벤트 처리
-        document.getElementById('markerInfoModal').addEventListener('hidden.bs.modal', function () {
-            // 저장되지 않은 마커는 제거
-            if (!marker.getMap()) {
-                marker.setMap(null);
-            }
-        });
+    // 모달 인스턴스 생성 및 표시
+    try {
+        var modal = new bootstrap.Modal(document.getElementById('markerInfoModal'));
+        modal.show();
+        console.log("모달 표시됨");
+    } catch (error) {
+        console.error("모달 표시 중 오류 발생:", error);
     }
+
+    // 모달이 닫힐 때 이벤트 처리
+    document.getElementById('markerInfoModal').addEventListener('hidden.bs.modal', function () {
+        // 저장되지 않은 마커는 제거
+        if (!marker.getMap()) {
+            marker.setMap(null);
+        }
+    });
+}
+
 
 // 마커 정보를 저장하는 함수
 function saveMarkerInfo(lat, lng) {
@@ -345,7 +379,11 @@ function addEventHandle(target, type, callback) {
     }
 }
 
-// 카테고리 검색을 요청하는 함수입니다
+let cachedFranchises = new Map(); // 가맹점 데이터를 저장할 캐시
+let lastFetchTime = null;         // 마지막으로 API를 호출한 시간
+const CACHE_DURATION = 5 * 60 * 1000; // 캐시 유효시간 (5분)
+const DISTANCE_THRESHOLD = 0.01;  // 새로운 데이터를 요청할 거리 기준 (약 1km)
+
 function searchPlaces() {
     if (!currCategory) {
         return;
@@ -354,25 +392,111 @@ function searchPlaces() {
     // 커스텀 오버레이를 숨깁니다
     placeOverlay.setMap(null);
 
-    // 지도에 표시되고 있는 마커를 제거합니다
+    const currentCenter = map.getCenter();
+    const currentPosition = {
+        lat: currentCenter.getLat(),
+        lng: currentCenter.getLng()
+    };
+
+    // 캐시 사용 여부 결정
+    if (shouldFetchNewData(currentPosition)) {
+        // 서버에서 새 데이터 요청
+        fetchFranchiseData(currentPosition);
+    } else {
+        // 캐시된 데이터 사용
+        displayPlaces(Array.from(cachedFranchises.values()));
+    }
+}
+
+function shouldFetchNewData(currentPosition) {
+    // 캐시가 없거나 만료된 경우
+    if (!lastFetchTime || Date.now() - lastFetchTime > CACHE_DURATION) {
+        return true;
+    }
+
+    // 이전 위치에서 많이 벗어난 경우
+    if (hasMovedSignificantly(currentPosition)) {
+        return true;
+    }
+
+    return false;
+}
+
+function hasMovedSignificantly(currentPosition) {
+    if (!lastFetchedPosition) return true;  // 첫 요청인 경우
+
+    // 위도/경도 차이 계산
+    const latDiff = Math.abs(currentPosition.lat - lastFetchedPosition.lat);
+    const lngDiff = Math.abs(currentPosition.lng - lastFetchedPosition.lng);
+
+    // 설정한 임계값보다 많이 이동했는지 확인
+    return latDiff > DISTANCE_THRESHOLD || lngDiff > DISTANCE_THRESHOLD;
+}
+
+let lastFetchedPosition = null;
+
+function fetchFranchiseData(position) {
+    // 지도에 표시되고 있는 마커를 제거
     removeMarker();
 
-    // 서버로 모든 가맹점 데이터 요청
-    fetch(`/api/v1/franchise?la=${map.getCenter().getLat()}&lo=${map.getCenter().getLng()}`)
+    // URL 파라미터 유효성 검사 추가
+    if (!position || !position.lat || !position.lng) {
+        console.error('Invalid position data');
+        return;
+    }
+
+    fetch(`/api/v1/franchise?la=${position.lat}&lo=${position.lng}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
+            // 데이터 유효성 검사
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid data format received');
+            }
+
+            // 캐시 업데이트
+            cachedFranchises.clear();
+
             if (data.length > 0) {
+                data.forEach(franchise => {
+                    cachedFranchises.set(franchise.id, franchise);
+                });
+                lastFetchTime = Date.now();
+                lastFetchedPosition = position;
+
                 displayPlaces(data);
             } else {
-                alert('검색 결과가 없습니다.');
+                // 사용자 친화적인 메시지 표시
+                const message = `현재 위치 (${position.lat.toFixed(4)}, ${position.lng.toFixed(4)}) 근처에서
+                               검색된 프랜차이즈가 없습니다. 다른 위치를 시도해보세요.`;
+                alert(message);
+
+                // 이전 캐시된 데이터가 있다면 표시 여부를 사용자에게 물어보기
+                if (cachedFranchises.size > 0) {
+                    const showCached = confirm('이전에 검색된 결과를 보시겠습니까?');
+                    if (showCached) {
+                        displayPlaces(Array.from(cachedFranchises.values()));
+                    }
+                }
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+
+            // 네트워크 오류 발생 시 캐시된 데이터 활용
+            if (cachedFranchises.size > 0) {
+                const showCached = confirm('네트워크 오류가 발생했습니다. 캐시된 데이터를 보시겠습니까?');
+                if (showCached) {
+                    displayPlaces(Array.from(cachedFranchises.values()));
+                }
+            } else {
+                alert('데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.');
+            }
+        });
 }
 
 
@@ -538,7 +662,7 @@ if (navigator.geolocation) {
         console.error("Error Code = " + error.code + " - " + error.message);
         // 사용자의 위치를 못 가져왔을 때의 기본 지도 설정 (서울시청 중심)
         var mapOption = {
-            center: new kakao.maps.LatLng(37.566826, 126.9786567), // 서울시청 좌표
+            center: new kakao.maps.LatLng(37.7454814, 127.0233146), // 경민대학교 중심 좌표
             level: 5 // 확대 레벨
         };
 

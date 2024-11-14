@@ -3,8 +3,6 @@ package com.capstone.dto.franchise;
 import com.capstone.entity.Franchise;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
 
 @AllArgsConstructor
@@ -28,6 +26,9 @@ public class FranchiseResponse {
     private final String mapAddress;
     private final Integer state;
     private final String specificInfo;
+
+
+
     public FranchiseResponse(Franchise franchise) {
         this.uuid = franchise.getUuid();
         this.registerNumber = franchise.getRegisterNumber();
@@ -47,5 +48,8 @@ public class FranchiseResponse {
         this.mapAddress = franchise.getMapAddress();
         this.state = franchise.getState();
         this.specificInfo = franchise.getSpecificInfo();
+
+
+
     }
 }
