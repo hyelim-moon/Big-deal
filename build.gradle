@@ -12,6 +12,7 @@ repositories {
 }
 
 dependencies {
+    // Spring Boot 의존성
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -20,59 +21,36 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
-    //implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.3.0'
-    // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
-    // https://mvnrepository.com/artifact/io.springfox/springfox-spring-web
+
+    // OpenAPI, Mail, Redis, JWT
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0"
     implementation group: "org.springframework.boot", name: "spring-boot-starter-mail", version: "3.0.5"
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
     implementation 'it.ozimov:embedded-redis:0.7.2'
-
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
+    // JPA, PostgreSQL, Lombok (PostgreSQL 의존성 주석 처리)
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-//    runtimeOnly('com.h2database:h2')
     compileOnly('org.projectlombok:lombok')
     annotationProcessor('org.projectlombok:lombok')
 
-    //thymeleaf
+    // Thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
-
+    // CSV & Jackson
     implementation 'com.opencsv:opencsv:5.5.2'
-    /*
-    OpenCSV는 Java에서 CSV(Comma-Separated Values) 파일을 읽고 쓰는 데 사용되는 라이브러리입니다.
-    CSV 파일은 데이터 저장과 교환에 널리 사용되며, OpenCSV를 사용하면 이러한 파일을 쉽게 처리할 수 있습니다.
-
-    주요 기능:
-            CSV 파일을 간단하게 읽을 수 있는 CSVReader 클래스를 제공합니다.
-            CSV 파일에 데이터를 쉽게 쓸 수 있는 CSVWriter 클래스를 제공합니다.
-            CSV 파일의 데이터 형식을 관리하는 데 필요한 다양한 설정을 지원합니다 (예: 구분자, 따옴표 처리 등).
-    */
     implementation 'com.fasterxml.jackson.core:jackson-databind'
-    /*
-    Jackson은 Java 객체와 JSON 간의 변환을 수행하는 데 널리 사용되는 라이브러리입니다.
-    jackson-databind는 Jackson의 데이터 바인딩 기능을 제공하며,
-    Java 객체를 JSON 형식으로 변환하거나 JSON 데이터를 Java 객체로 변환하는 데 사용됩니다.
 
-    주요 기능:
-            Java 객체를 JSON 문자열로 변환(Serialization).
-            JSON 문자열을 Java 객체로 변환(Deserialization).
-            JSON 데이터를 처리하기 위한 다양한 기능을 제공합니다 (예: JSON 데이터의 탐색, 수정 등).
-    */
-
-
-    implementation 'org.postgresql:postgresql:42.7.3'
+    // PostgreSQL과 JSON Simple 의존성 주석 처리
+    // implementation 'org.postgresql:postgresql:42.7.3'
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
-    // XML 처리를 위한 의존성 추가
+
+    // XML 처리를 위한 의존성
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
     implementation 'org.springframework:spring-oxm'
-
 }
 
 test {

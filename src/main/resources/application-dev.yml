@@ -19,11 +19,11 @@ spring:
       platform: postgresql
       data-locations: classpath:data.sql
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/franchise
-    username: postgres
-    password: qwer
-    driver-class-name: org.postgresql.Driver
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/franchise
+#    username: postgres
+#    password: qwer
+#    driver-class-name: org.postgresql.Driver
 
   redis:
     host: localhost

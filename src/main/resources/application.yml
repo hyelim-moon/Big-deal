@@ -17,6 +17,11 @@ spring:
           timeout: 5000
           writetimeout: 5000
     auth-code-expiration-millis: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  # 기존 설정들 유지
 http:
   encoding:
     charset: UTF-8
@@ -43,3 +48,6 @@ jwt:
 kakao:
   client_id: 0696c4ca8c9cf91931a3a54962777835
   redirect_uri: http://localhost:8080/kakao-login
+
+api:
+  serviceKey: 2Wp0sBIqsx1shZYCs/6VGCfG5zME2h3SQ+qVCMXH1MWusf1V6xSdAr5Q8xINQ0zys6E/s0LA7cHJgIX2neEKEA==
