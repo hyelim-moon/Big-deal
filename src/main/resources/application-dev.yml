@@ -1,7 +1,26 @@
 spring:
-  config:
-    activate:
-      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://3.83.117.87:5432/franchise
+    username: postgres
+    password: qwer
+    driver-class-name: org.postgresql.Driver
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: choda1510@kyungmin.ac.kr
+    password: xsdcxaxnwgyfswoi
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+    auth-code-expiration-millis: 1800000
 
   jpa:
     show-sql: true
@@ -19,18 +38,14 @@ spring:
       platform: postgresql
       data-locations: classpath:data.sql
 
-  datasource:
-    url: jdbc:postgresql://3.83.117.87:5432/franchise
-    username: postgres
-    password: qwer
-#    driver-class-name: org.postgresql.Driver
-
   redis:
     host: localhost
     port: 6379
 
-server:
-  port: 8080
+jwt:
+  expiration-time: 86400000
+  secret: VGhlIGdyZWF0ZXN0IGdsb3J5IGluIGxpdmluZyBsaWVzIG5vdCBpbiBuZXZlciBmYWxsaW5nLCBidXQgaW4gcmlzaW5nIGV2ZXJ5IHRpbWUgd2UgZmFsbC4=
 
-my:
-  nickname: 8080server
+kakao:
+  client_id: 0696c4ca8c9cf91931a3a54962777835
+  redirect_uri: http://localhost:8080/kakao-login

@@ -22,26 +22,28 @@ import java.util.List;
 public class JwtTokenUtility {
     private final Key key;
     private final long tokenValidMillisecond;
+
     public JwtTokenUtility(
             @Value("${jwt.secret}") String secretKey,
             @Value("${jwt.expiration-time}") long tokenValidMillisecond
-            ) {
+    ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.tokenValidMillisecond = tokenValidMillisecond;
     }
+
     public String createToken(String username, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", roles);
         Date now = new Date();
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenValidMillisecond))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-        return token;
     }
+
     public String getUsername(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -74,7 +76,6 @@ public class JwtTokenUtility {
         }
     }
 
-
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("Authorization");
     }
@@ -82,6 +83,7 @@ public class JwtTokenUtility {
     public String getTokenAtHeader(String header) {
         return Arrays.stream(header.split(" ")).toList().get(1);
     }
+
     public String getGrantTypeAtHeader(String header) {
         return Arrays.stream(header.split(" ")).toList().get(0);
     }
