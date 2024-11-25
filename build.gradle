@@ -31,7 +31,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-    // JPA, H2, Lombok
+    // JPA, PostgreSQL, Lombok (PostgreSQL 의존성 주석 처리)
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
     compileOnly('org.projectlombok:lombok')
     annotationProcessor('org.projectlombok:lombok')
@@ -44,16 +44,13 @@ dependencies {
     implementation 'com.opencsv:opencsv:5.5.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-    // H2 데이터베이스 의존성 추가
-    runtimeOnly 'com.h2database:h2:2.1.214'  // H2 데이터베이스 의존성 추가
+    // PostgreSQL과 JSON Simple 의존성 주석 처리
+    implementation 'org.postgresql:postgresql:42.7.3'
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
 
     // XML 처리를 위한 의존성
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
     implementation 'org.springframework:spring-oxm'
-
-    // PostgreSQL과 JSON Simple 의존성 주석 처리
-    // implementation 'org.postgresql:postgresql:42.7.3'
-    // implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
 }
 
 test {

@@ -310,7 +310,7 @@ function saveMarkerInfo(lat, lng) {
         return response.json();
     })
     .then(data => {
-        alert('가맹점이 등록되었습니다.');
+        alert(' 신규 장소가 성공적으로 등록되었습니다.\n 관리자의 검토 후 승인 절차가 완료되면 지도에 표시됩니다.\n 감사합니다.');
         const modal = bootstrap.Modal.getInstance(document.getElementById('markerInfoModal'));
         modal.hide();
         searchPlaces(); // 새로 고침 또는 추가된 마커 표시
