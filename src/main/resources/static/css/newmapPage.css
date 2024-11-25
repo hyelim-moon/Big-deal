@@ -192,7 +192,7 @@ header {
             margin-right: auto;
         }
         .navbar-brand {
-            position: absolute;
+            position: relative;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -207,7 +207,7 @@ header {
     letter-spacing: -1px;
     margin: 0;
     font-size: 100%;
-    position: relative;
+    position: absolute;
     top: 6px;
     right: 15px;
     z-index: 10;
