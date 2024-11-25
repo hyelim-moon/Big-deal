@@ -32,7 +32,7 @@ spring:
       platform: postgresql
       data-locations: classpath:data.sql
   datasource:
-    url: jdbc:postgresql://3.83.117.87:5432/franchise
+    url: jdbc:postgresql://localhost/franchise
     username: postgres
     password: qwer
     driver-class-name: org.postgresql.Driver
