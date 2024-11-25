@@ -18,10 +18,19 @@ spring:
           writetimeout: 5000
     auth-code-expiration-millis: 1800000
   datasource:
-    url: jdbc:postgresql://3.83.117.87:5432/franchise
-    username: postgres
-    password: qwer
-    driver-class-name: org.postgresql.Driver
+    # PostgreSQL 설정 주석 처리
+    # url: jdbc:postgresql://3.83.117.87:5432/franchise
+    # username: postgres
+    # password: qwer
+    # driver-class-name: org.postgresql.Driver
+
+    # H2 데이터베이스 설정
+    url: jdbc:h2:mem:franchise;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+    platform: h2
+
   jpa:
     hibernate:
       ddl-auto: update
