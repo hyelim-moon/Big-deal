@@ -9,8 +9,12 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    ddl-auto: update  # 데이터베이스 자동 생성/업데이트 설정
     defer-datasource-initialization: true
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb  # H2 인메모리 데이터베이스 URL
+    driver-class-name: org.h2.Driver  # 드라이버 클래스 설정
+    username: sa  # 기본 사용자명
+    password: password  # 기본 비밀번호
   my:
     nickname: 8080server
