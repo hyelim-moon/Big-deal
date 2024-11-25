@@ -31,8 +31,9 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-    // JPA, PostgreSQL, Lombok (PostgreSQL 의존성 주석 처리)
+    // JPA, H2, Lombok (PostgreSQL 의존성 주석 처리, H2 의존성 추가)
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation 'com.h2database:h2:2.1.214'  // H2 의존성 추가
     compileOnly('org.projectlombok:lombok')
     annotationProcessor('org.projectlombok:lombok')
 
@@ -45,7 +46,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
     // PostgreSQL과 JSON Simple 의존성 주석 처리
-    implementation 'org.postgresql:postgresql:42.7.3'
+    // implementation 'org.postgresql:postgresql:42.7.3'
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
 
     // XML 처리를 위한 의존성
