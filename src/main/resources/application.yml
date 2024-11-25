@@ -22,7 +22,7 @@ spring:
     url: jdbc:postgresql://3.83.117.87:5432/franchise  # DB 연결 URL
     username: postgres  # DB 사용자 이름
     password: qwer  # DB 비밀번호
-    driver-class-name: org.postgresql.Driver  # PostgreSQL 드라이버 클래스
+#    driver-class-name: org.postgresql.Driver  # PostgreSQL 드라이버 클래스
 
   redis:
     host: localhost

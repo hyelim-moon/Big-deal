@@ -23,7 +23,7 @@ spring:
     url: jdbc:postgresql://3.83.117.87:5432/franchise
     username: postgres
     password: qwer
-    driver-class-name: org.postgresql.Driver
+#    driver-class-name: org.postgresql.Driver
 
   redis:
     host: localhost
