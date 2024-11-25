@@ -17,11 +17,6 @@ spring:
           timeout: 5000
           writetimeout: 5000
     auth-code-expiration-millis: 1800000
-  datasource:
-    url: jdbc:postgresql://3.83.117.87:5432/franchise
-    username: postgres
-    password: qwer
-    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update

@@ -1,106 +1,55 @@
 // 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
-       var placeOverlay = new kakao.maps.CustomOverlay({zIndex:1}),
-           contentNode = document.createElement('div'), // 커스텀 오버레이의 컨텐츠 엘리먼트 입니다
-           markers = [], // 마커를 담을 배열입니다
-           currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
+var placeOverlay = new kakao.maps.CustomOverlay({zIndex:1}),
+    contentNode = document.createElement('div'), // 커스텀 오버레이의 컨텐츠 엘리먼트 입니다
+    markers = [], // 마커를 담을 배열입니다
+    currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
 
-       var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-           mapOption = {
-               center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-               level: 5 // 지도의 확대 레벨
-           };
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+    mapOption = {
+        center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+        level: 5 // 지도의 확대 레벨
+    };
 
-       // 지도를 생성합니다
-       var map = new kakao.maps.Map(mapContainer, mapOption);
-
-
-
-       // 지도 초기화 시 이벤트 리스너 수정
-       function initializeMap() {
-           if (navigator.geolocation) {
-               navigator.geolocation.getCurrentPosition(function (position) {
-                   const lat = position.coords.latitude,
-                       lon = position.coords.longitude;
-
-                   const locPosition = new kakao.maps.LatLng(lat, lon);
-
-                   // 지도 생성
-                   map = new kakao.maps.Map(document.getElementById('map'), {
-                       center: locPosition,
-                       level: 5
-                   });
-
-                   // Drawing Manager 생성
-                   initializeDrawingManager();
-
-                   // 초기 데이터 로드
-                   loadInitialData();
-
-                   // 지도 이벤트 등록 - debounce 적용
-                   let timer;
-                   kakao.maps.event.addListener(map, '', function () {
-                       clearTimeout(timer);
-                       timer = setTimeout(() => {
-                           updateMapWithCachedData();
-                       }, 300);
-                   });
-
-               }, function (error) {
-                   const defaultPosition = new kakao.maps.LatLng(37.566826, 126.9786567);
-                   initializeWithPosition(defaultPosition);
-               });
-           } else {
-               const defaultPosition = new kakao.maps.LatLng(37.566826, 126.9786567);
-               initializeWithPosition(defaultPosition);
-           }
-       }
-
-       // 초기 데이터 로드 (서버 요청은 한 번만 수행)
-       function loadInitialData() {
-           fetchDataFromServer().then(data => {
-               cachedData = processAndCacheData(data); // 데이터 캐싱
-               initialDataLoaded = true;
-               updateMapWithCachedData(); // 처음에 캐시된 데이터로 지도 표시
-           });
-       }
-
-       // 캐시된 데이터로 지도 업데이트 (서버 요청 없음)
-       function updateMapWithCachedData() {
-           if (!initialDataLoaded) return; // 초기 데이터가 로드되지 않은 경우 실행하지 않음
-
-           const currentBounds = map.getBounds(); // 현재 지도 영역 가져오기
-           const visibleData = filterVisibleData(cachedData, currentBounds); // 현재 지도 영역에 해당하는 데이터 필터링
-           updateMarkers(visibleData); // 마커 업데이트
-       }
-
-//       // 서버에서 데이터 가져오기
-//       function fetchDataFromServer() {
-//           return fetch('/api/v1/franchises')
-//               .then(response => {
-//                   if (!response.ok) {
-//                       throw new Error(`HTTP error! status: ${response.status}`);
-//                   }
-//                   return response.json();
-//               })
-//               .catch(error => {
-//                   console.error('Error fetching data from server:', error);
-//                   return [];
-//               });
-//       }
-
-       // 지도에 표시할 데이터 필터링
-       function filterVisibleData(data, bounds) {
-           const sw = bounds.getSouthWest();
-           const ne = bounds.getNorthEast();
-
-           return Array.from(data.values()).filter(item => {
-               const lat = parseFloat(item.latitude);
-               const lng = parseFloat(item.longitude);
-               return lat >= sw.getLat() && lat <= ne.getLat() && lng >= sw.getLng() && lng <= ne.getLng();
-           });
-       }
+// 지도를 생성합니다
+var map = new kakao.maps.Map(mapContainer, mapOption);
 
 
+
+// 전역 변수로 map과 manager 선언
+var map;
+var manager;
+
+// Drawing Manager 관련 전역 변수 선언
+var drawingManager = null;
+
+// 지도 초기화 함수 수정
+function initializeMap() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude,
+                lon = position.coords.longitude;
+
+            var locPosition = new kakao.maps.LatLng(lat, lon);
+
+            // 지도 생성
+            map = new kakao.maps.Map(document.getElementById('map'), {
+                center: locPosition,
+                level: 5
+            });
+
+            // Drawing Manager 생성
+            initializeDrawingManager();
+
+
+        }, function(error) {
+            var defaultPosition = new kakao.maps.LatLng(37.566826, 126.9786567);
+            initializeWithPosition(defaultPosition);
+        });
+    } else {
+        var defaultPosition = new kakao.maps.LatLng(37.566826, 126.9786567);
+        initializeWithPosition(defaultPosition);
+    }
+}
 
 // Drawing Manager 이벤트 처리를 위한 함수 수정
 function initializeDrawingManager() {
@@ -154,6 +103,8 @@ function initializeDrawingManager() {
        }
    });
 }
+
+
 
 // 마커 정보 입력 모달을 표시하는 함수
 function showMarkerInfoModal(lat, lng, marker, address) {
@@ -236,7 +187,6 @@ function showMarkerInfoModal(lat, lng, marker, address) {
     });
 }
 
-
 // 마커 정보를 저장하는 함수
 function saveMarkerInfo(lat, lng) {
     const storeNameElement = document.getElementById('storeName');
@@ -287,7 +237,7 @@ function saveMarkerInfo(lat, lng) {
     // 토큰이 없거나 잘못된 경우 처리
     if (!accessToken) {
         console.error("Error: No access token found in localStorage.");
-        alert("로그인 토큰이 존재하지 않습니다.");
+        alert("로그인이 필요합니다.");
         return;
     }
 
@@ -310,7 +260,7 @@ function saveMarkerInfo(lat, lng) {
         return response.json();
     })
     .then(data => {
-        alert(' 신규 장소가 성공적으로 등록되었습니다.\n 관리자의 검토 후 승인 절차가 완료되면 지도에 표시됩니다.\n 감사합니다.');
+        alert(' 신규 가맹점이 성공적으로 등록되었습니다.\n 관리자의 검토 후 승인 절차가 완료되면 지도에 표시됩니다.\n 감사합니다.');
         const modal = bootstrap.Modal.getInstance(document.getElementById('markerInfoModal'));
         modal.hide();
         searchPlaces(); // 새로 고침 또는 추가된 마커 표시
@@ -323,20 +273,21 @@ function saveMarkerInfo(lat, lng) {
 
 
 
-// 위치 정보로 지도 초기화하는 함수 수정
-//function initializeWithPosition(position) {
-//    map = new kakao.maps.Map(document.getElementById('map'), {
-//        center: position,
-//        level: 3
-//    });
-//
-//    // Drawing Manager 초기화
-//    initializeDrawingManager();
-//
-//    // 이벤트 리스너 등록
-//    kakao.maps.event.addListener(map, 'idle', searchPlaces);
-//}
 
+
+
+// 위치 정보로 지도 초기화하는 함수 수정
+function initializeWithPosition(position) {
+    map = new kakao.maps.Map(document.getElementById('map'), {
+        center: position,
+        level: 5
+    });
+
+    // Drawing Manager 초기화
+    initializeDrawingManager();
+
+
+}
 
 
 // 그리기 도구 선택 함수
@@ -403,11 +354,7 @@ function addEventHandle(target, type, callback) {
     }
 }
 
-let cachedFranchises = new Map(); // 가맹점 데이터를 저장할 캐시
-let lastFetchTime = null;         // 마지막으로 API를 호출한 시간
-const CACHE_DURATION = 5 * 60 * 1000; // 캐시 유효시간 (5분)
-const DISTANCE_THRESHOLD = 0.01;  // 새로운 데이터를 요청할 거리 기준 (약 1km)
-
+// 카테고리 검색을 요청하는 함수입니다
 function searchPlaces() {
     if (!currCategory) {
         return;
@@ -416,112 +363,26 @@ function searchPlaces() {
     // 커스텀 오버레이를 숨깁니다
     placeOverlay.setMap(null);
 
-    const currentCenter = map.getCenter();
-    const currentPosition = {
-        lat: currentCenter.getLat(),
-        lng: currentCenter.getLng()
-    };
+    // 지도에 표시되고 있는 마커를 제거합니다
+    removeMarker();
 
-    // 캐시 사용 여부 결정
-    if (shouldFetchNewData(currentPosition)) {
-        // 서버에서 새 데이터 요청
-        fetchFranchiseData(currentPosition);
-    } else {
-        // 캐시된 데이터 사용
-        displayPlaces(Array.from(cachedFranchises.values()));
-    }
+    // 서버로 모든 가맹점 데이터 요청
+    fetch(`/api/v1/franchise?la=${map.getCenter().getLat()}&lo=${map.getCenter().getLng()}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length > 0) {
+                displayPlaces(data);
+            } else {
+                alert('검색 결과가 없습니다.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
 }
-
-function shouldFetchNewData(currentPosition) {
-    // 캐시가 없거나 만료된 경우
-    if (!lastFetchTime || Date.now() - lastFetchTime > CACHE_DURATION) {
-        return true;
-    }
-
-    // 이전 위치에서 많이 벗어난 경우
-    if (hasMovedSignificantly(currentPosition)) {
-        return true;
-    }
-
-    return false;
-}
-
-function hasMovedSignificantly(currentPosition) {
-    if (!lastFetchedPosition) return true;  // 첫 요청인 경우
-
-    // 위도/경도 차이 계산
-    const latDiff = Math.abs(currentPosition.lat - lastFetchedPosition.lat);
-    const lngDiff = Math.abs(currentPosition.lng - lastFetchedPosition.lng);
-
-    // 설정한 임계값보다 많이 이동했는지 확인
-    return latDiff > DISTANCE_THRESHOLD || lngDiff > DISTANCE_THRESHOLD;
-}
-
-let lastFetchedPosition = null;
-
-function fetchFranchiseData(position) {
-     // 지도에 표시되고 있는 마커를 제거
-     removeMarker();
-
-     // URL 파라미터 유효성 검사 추가
-     if (!position || !position.lat || !position.lng) {
-         console.error('Invalid position data');
-         return;
-     }
-
-     fetch(`/api/v1/franchise?la=${position.lat}&lo=${position.lng}`)
-         .then(response => {
-             if (!response.ok) {
-                 throw new Error(`HTTP error! status: ${response.status}`);
-             }
-             return response.json();
-         })
-         .then(data => {
-             // 데이터 유효성 검사
-             if (!Array.isArray(data)) {
-                 throw new Error('Invalid data format received');
-             }
-
-             // 캐시 업데이트
-             cachedFranchises.clear();
-
-             if (data.length > 0) {
-                 data.forEach(franchise => {
-                     cachedFranchises.set(franchise.id, franchise);
-                 });
-                 lastFetchTime = Date.now();
-                 lastFetchedPosition = position;
-
-                 displayPlaces(data);
-             } else {
-                 // 사용자 친화적인 메시지 표시
-                 const message = `현재 위치 (${position.lat.toFixed(4)}, ${position.lng.toFixed(4)}) 근처에서
-                                검색된 프랜차이즈가 없습니다. 다른 위치를 시도해보세요.`;
-                 alert(message);
-
-                 // 이전 캐시된 데이터가 있다면 표시 여부를 사용자에게 물어보기
-                 if (cachedFranchises.size > 0) {
-                     const showCached = confirm('이전에 검색된 결과를 보시겠습니까?');
-                     if (showCached) {
-                         displayPlaces(Array.from(cachedFranchises.values()));
-                     }
-                 }
-             }
-         })
-         .catch(error => {
-             console.error('Error:', error);
-
-             // 네트워크 오류 발생 시 캐시된 데이터 활용
-             if (cachedFranchises.size > 0) {
-                 const showCached = confirm('네트워크 오류가 발생했습니다. 캐시된 데이터를 보시겠습니까?');
-                 if (showCached) {
-                     displayPlaces(Array.from(cachedFranchises.values()));
-                 }
-             } else {
-                 alert('데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.');
-             }
-         });
- }
 
 
 
@@ -608,7 +469,6 @@ function displayPlaceInfo(place) {
                               '</div>' +
                               '<div class="after"></div>';
 
-
     contentNode.innerHTML = content; // 커스텀 오버레이의 내용을 설정
     placeOverlay.setPosition(new kakao.maps.LatLng(place.latitude, place.longitude)); // 오버레이의 위치 설정
     placeOverlay.setMap(map); // 오버레이를 지도에 표시
@@ -673,21 +533,21 @@ if (navigator.geolocation) {
         var locPosition = new kakao.maps.LatLng(lat, lon); // 현재 위치
         var mapOption = {
             center: locPosition, // 현재 위치를 중심으로 지도 설정
-            level: 3 // 확대 레벨
+            level: 5 // 확대 레벨
         };
 
         // 지도 생성
         map = new kakao.maps.Map(document.getElementById('map'), mapOption);
 
         // idle 이벤트 등록 (지도가 움직일 때마다 검색 실행)
-//        kakao.maps.event.addListener(map, 'idle', searchPlaces);
+        kakao.maps.event.addListener(map, 'idle', searchPlaces);
 
     }, function(error) {
         console.error("Error Code = " + error.code + " - " + error.message);
         // 사용자의 위치를 못 가져왔을 때의 기본 지도 설정 (서울시청 중심)
         var mapOption = {
-            center: new kakao.maps.LatLng(37.7454814, 127.0233146), // 경민대학교 중심 좌표
-            level: 3 // 확대 레벨
+            center: new kakao.maps.LatLng(37.7454814, 127.0233146), // 서울시청 좌표
+            level: 5 // 확대 레벨
         };
 
         map = new kakao.maps.Map(document.getElementById('map'), mapOption);
@@ -696,7 +556,7 @@ if (navigator.geolocation) {
 } else {
     // 사용자의 위치를 지원하지 않는 경우 기본 위치 설정 (서울시청)
     var mapOption = {
-        center: new kakao.maps.LatLng(37.566826, 126.9786567), // 서울시청 좌표
+        center: new kakao.maps.LatLng(37.7454814, 127.0233146), // 서울시청 좌표
         level: 3 // 확대 레벨
     };
 
@@ -708,6 +568,7 @@ if (navigator.geolocation) {
 
 
 // 리뷰
+
 // 평점 버튼 클릭 시 모달을 여는 함수
 function ratePlace(placeName) {
     showReviewModal(placeName); // showReviewModal 호출
@@ -769,7 +630,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const base64Image = reader.result; // 이미지를 Base64로 변환
             saveReview(currentFranchiseName, rating, reviewText, base64Image);
             $('#reviewModal').modal('hide');
-            alert("등록이 완료되었습니다.");
+            alert("평점 등록이 완료되었습니다.");
         };
 
         if (files.length > 0) {
@@ -777,7 +638,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             saveReview(currentFranchiseName, rating, reviewText, null);
             $('#reviewModal').modal('hide');
-            alert("등록이 완료되었습니다.");
+            alert("평점 등록이 완료되었습니다.");
         }
     });
 });
@@ -1003,40 +864,3 @@ function displayPlacesOnSearch(places) {
     // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
     map.setBounds(bounds);
 }
-
-//fetch('/api/franchises/map')
-//    .then(response => response.json())
-//    .then(result => {
-//        if (result.response && Array.isArray(result.response)) {
-//            result.response.forEach(franchise => {
-//                if (franchise.lat && franchise.lot) {
-//                    var markerPosition = new kakao.maps.LatLng(franchise.lat, franchise.lot);
-//                    var marker = new kakao.maps.Marker({
-//                        position: markerPosition,
-//                        map: map
-//                    });
-//
-//                    var iwContent = `
-//                        <div>
-//                            <strong>${franchise.emd_nm}</strong><br>
-//                            읍면동명: ${franchise.emd_nm}
-//                        </div>
-//                    `;
-//                    var infowindow = new kakao.maps.InfoWindow({
-//                        content: iwContent
-//                    });
-//
-//                    kakao.maps.event.addListener(marker, 'mouseover', function() {
-//                        infowindow.open(map, marker);
-//                    });
-//                    kakao.maps.event.addListener(marker, 'mouseout', function() {
-//                        infowindow.close();
-//                    });
-//                }
-//            });
-//        } else {
-//            console.error('프랜차이즈 데이터가 올바르게 전달되지 않았습니다');
-//        }
-//    })
-//    .catch(error => console.error('Error:', error));
-
