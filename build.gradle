@@ -51,6 +51,9 @@ dependencies {
     // XML 처리를 위한 의존성
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
     implementation 'org.springframework:spring-oxm'
+
+    // H2 Database 의존성 추가
+    runtimeOnly 'com.h2database:h2'
 }
 
 test {
