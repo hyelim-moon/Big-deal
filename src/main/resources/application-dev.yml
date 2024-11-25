@@ -20,7 +20,7 @@ spring:
       data-locations: classpath:data.sql
 
   datasource:
-    url: jdbc:postgresql://localhost/franchise
+    url: jdbc:postgresql://localhost:5432/franchise  # DB URL 설정
     username: postgres
     password: qwer
     driver-class-name: org.postgresql.Driver
