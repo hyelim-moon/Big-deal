@@ -74,7 +74,7 @@ Big-deal
       └─ resources
          ├─ application.yml
          └─ templates
-
+```
 ---
 
 ##Build & Run
