@@ -77,9 +77,9 @@ Big-deal
 ```
 ---
 
-##Build & Run
+## Build & Run
 
-###Backend (Dev)
+### Backend (Dev)
 ```bash
 ./gradlew bootRun
 ```
