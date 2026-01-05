@@ -23,7 +23,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
     // OpenAPI, Mail, Redis, JWT
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0"
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
     implementation group: "org.springframework.boot", name: "spring-boot-starter-mail", version: "3.0.5"
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'it.ozimov:embedded-redis:0.7.2'
@@ -35,7 +35,7 @@ dependencies {
 
     // JPA, H2, Lombok (PostgreSQL 의존성 주석 처리, H2 의존성 추가)
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-//    implementation 'com.h2database:h2:2.1.214'  // H2 의존성 추가
+    implementation 'com.h2database:h2:2.1.214'  // H2 의존성 추가
     compileOnly('org.projectlombok:lombok')
     annotationProcessor('org.projectlombok:lombok')
 
